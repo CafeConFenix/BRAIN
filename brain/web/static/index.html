@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BRAIN</title>
+<link rel="icon" href="data:,">
+<style>
+  :root {
+    --fondo: #f4f5f7;
+    --panel: #ffffff;
+    --texto: #1b1f24;
+    --suave: #6b7280;
+    --borde: #e3e6ea;
+    --acento: #4f46e5;
+    --acento-texto: #ffffff;
+    --burbuja-ia: #eef0f4;
+    --ok: #16a34a;
+    --mal: #dc2626;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fondo: #0f1115;
+      --panel: #171a21;
+      --texto: #e6e8ec;
+      --suave: #8b93a1;
+      --borde: #262b35;
+      --acento: #6366f1;
+      --burbuja-ia: #212633;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 18px; background: var(--panel); border-bottom: 1px solid var(--borde);
+  }
+  header h1 { font-size: 18px; margin: 0; letter-spacing: 2px; }
+  header .estado { margin-left: auto; font-size: 13px; color: var(--suave); display: flex; align-items: center; gap: 6px; }
+  .punto { width: 10px; height: 10px; border-radius: 50%; background: var(--suave); display: inline-block; }
+  .punto.ok { background: var(--ok); }
+  .punto.mal { background: var(--mal); }
+  main { flex: 1; display: grid; grid-template-columns: 1fr 340px; min-height: 0; }
+  #chat { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--borde); }
+  #aviso { display: none; margin: 12px 18px 0; padding: 10px 14px; border-radius: 10px;
+           background: #fef3c7; color: #78350f; font-size: 14px; }
+  #mensajes { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .msg { max-width: 78%; padding: 10px 14px; border-radius: 14px; line-height: 1.45;
+         white-space: pre-wrap; word-wrap: break-word; }
+  .msg.yo { align-self: flex-end; background: var(--acento); color: var(--acento-texto); border-bottom-right-radius: 4px; }
+  .msg.ia { align-self: flex-start; background: var(--burbuja-ia); border-bottom-left-radius: 4px; }
+  .msg.error { align-self: flex-start; background: #fee2e2; color: #7f1d1d; }
+  .msg small { display: block; margin-top: 6px; color: var(--suave); font-size: 12px; }
+  .pensando { color: var(--suave); font-style: italic; }
+  form { display: flex; gap: 8px; padding: 12px 18px; background: var(--panel); border-top: 1px solid var(--borde); }
+  textarea {
+    flex: 1; resize: none; height: 44px; max-height: 140px; padding: 10px 12px;
+    border: 1px solid var(--borde); border-radius: 10px; font: inherit;
+    background: var(--fondo); color: var(--texto);
+  }
+  textarea:focus { outline: 2px solid var(--acento); }
+  button {
+    border: 0; border-radius: 10px; padding: 0 16px; font: inherit; cursor: pointer;
+    background: var(--acento); color: var(--acento-texto);
+  }
+  button.suave { background: var(--burbuja-ia); color: var(--texto); }
+  button.activo { background: var(--mal); color: #fff; }
+  button:disabled { opacity: .5; cursor: default; }
+  aside { overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; background: var(--fondo); }
+  .tarjeta { background: var(--panel); border: 1px solid var(--borde); border-radius: 12px; padding: 12px 14px; }
+  .tarjeta h2 { font-size: 13px; margin: 0 0 8px; color: var(--suave); text-transform: uppercase; letter-spacing: .6px; }
+  .grande { font-size: 28px; font-weight: 600; }
+  .tarjeta ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .tarjeta li { margin: 2px 0; }
+  .vacio { color: var(--suave); font-size: 14px; }
+  svg { width: 100%; height: 70px; display: block; margin-top: 6px; }
+  .despensa { max-height: 300px; overflow-y: auto; font-size: 14px; }
+  .despensa h3 { font-size: 12px; margin: 8px 0 2px; color: var(--acento); text-transform: capitalize; }
+  .despensa h3:first-child { margin-top: 0; }
+  .despensa .fila { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; border-bottom: 1px solid var(--borde); }
+  .despensa .fila span:last-child { color: var(--suave); white-space: nowrap; }
+  .energia { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+  .energia .dato b { display: block; font-size: 19px; }
+  .energia .dato span { font-size: 11px; color: var(--suave); }
+  .energia .compra b { color: var(--mal); }
+  .energia .venta b { color: var(--ok); }
+  .opciones { display: flex; gap: 8px; padding: 6px 18px 0; font-size: 13px; color: var(--suave); }
+  .opciones label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+  @media (max-width: 800px) {
+    main { grid-template-columns: 1fr; }
+    aside { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>BRAIN</h1>
+  <span id="version" class="vacio"></span>
+  <div class="estado"><span id="punto" class="punto"></span><span id="estado">Conectando...</span></div>
+</header>
+<main>
+  <section id="chat">
+    <div id="aviso"><span id="avisoTexto"></span> <button class="suave" id="reintentar" type="button" style="margin-left:8px;padding:2px 10px">Reintentar</button> <button id="descargar" type="button" style="display:none;margin-left:8px;padding:2px 10px">Descargar IA</button></div>
+    <div id="mensajes"></div>
+    <div class="opciones">
+      <label><input type="checkbox" id="hablar"> Leer las respuestas en voz alta</label>
+      <button class="suave" id="limpiar" type="button" style="margin-left:auto;padding:2px 10px">Borrar conversación</button>
+    </div>
+    <form id="formulario">
+      <textarea id="entrada" placeholder="Escribe aquí. Por ejemplo: «Hoy peso 88,4», «Apunta leche en la compra», «¿Qué tengo esta semana?»" autofocus></textarea>
+      <button class="suave" id="microfono" type="button" title="Hablar (necesita Chrome o Edge)">🎤</button>
+      <button id="enviar" type="submit">Enviar</button>
+    </form>
+  </section>
+  <aside id="panel">
+    <div class="tarjeta"><h2>Peso</h2><div id="peso"></div></div>
+    <div class="tarjeta"><h2>Agenda (14 días)</h2><div id="agenda"></div></div>
+    <div class="tarjeta"><h2>Lista de la compra</h2><div id="compra"></div></div>
+    <div class="tarjeta"><h2 id="tituloDespensa">Despensa</h2><div id="despensa" class="despensa"></div></div>
+    <div class="tarjeta"><h2>Energía ahora</h2><div id="energiaAhora"></div></div>
+    <div class="tarjeta"><h2>Producción solar (histórico)</h2><div id="solar"></div></div>
+    <div class="tarjeta"><h2>Casa</h2><div id="casa"></div></div>
+  </aside>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const mensajes = $("mensajes");
+let ocupado = false;
+
+async function api(ruta, opciones) {
+  const respuesta = await fetch(ruta, opciones);
+  const datos = await respuesta.json().catch(() => ({}));
+  if (!respuesta.ok) throw new Error(datos.error || "Error " + respuesta.status);
+  return datos;
+}
+
+function anadir(clase, texto, pie) {
+  const div = document.createElement("div");
+  div.className = "msg " + clase;
+  div.textContent = texto;
+  if (pie) {
+    const small = document.createElement("small");
+    small.textContent = pie;
+    div.appendChild(small);
+  }
+  mensajes.appendChild(div);
+  mensajes.scrollTop = mensajes.scrollHeight;
+  return div;
+}
+
+function vaciar(elemento) { while (elemento.firstChild) elemento.removeChild(elemento.firstChild); }
+
+function lista(elemento, items, vacio) {
+  vaciar(elemento);
+  if (!items.length) {
+    const p = document.createElement("div");
+    p.className = "vacio";
+    p.textContent = vacio;
+    elemento.appendChild(p);
+    return;
+  }
+  const ul = document.createElement("ul");
+  items.forEach((t) => { const li = document.createElement("li"); li.textContent = t; ul.appendChild(li); });
+  elemento.appendChild(ul);
+}
+
+function grafica(valores) {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "0 0 300 70");
+  svg.setAttribute("preserveAspectRatio", "none");
+  if (valores.length < 2) return svg;
+  const min = Math.min(...valores), max = Math.max(...valores);
+  const rango = (max - min) || 1;
+  const puntos = valores.map((v, i) =>
+    (i / (valores.length - 1) * 296 + 2).toFixed(1) + "," + (62 - (v - min) / rango * 54).toFixed(1)).join(" ");
+  const linea = document.createElementNS(ns, "polyline");
+  linea.setAttribute("points", puntos);
+  linea.setAttribute("fill", "none");
+  linea.setAttribute("stroke", "#6366f1");
+  linea.setAttribute("stroke-width", "2.5");
+  linea.setAttribute("vector-effect", "non-scaling-stroke");
+  svg.appendChild(linea);
+  return svg;
+}
+
+async function refrescarPanel() {
+  try {
+    const r = await api("/api/resumen");
+
+    const peso = $("peso"); vaciar(peso);
+    if (r.peso.length) {
+      const ultimo = r.peso[r.peso.length - 1];
+      const g = document.createElement("div"); g.className = "grande"; g.textContent = ultimo.peso + " kg";
+      const f = document.createElement("div"); f.className = "vacio"; f.textContent = "Registrado el " + ultimo.fecha;
+      peso.appendChild(g); peso.appendChild(f); peso.appendChild(grafica(r.peso.map((x) => x.peso)));
+    } else {
+      lista(peso, [], "Aún no hay pesos. Dime «hoy peso 88,4».");
+    }
+
+    const ag = r.agenda || {};
+    const eventos = (ag.eventos || []).map((e) => e.fecha + (e.hora ? " " + e.hora : "") + " · " + e.titulo);
+    const tareas = (ag.tareas_pendientes || []).map((t) => "☐ " + t.titulo + (t.fecha ? " (" + t.fecha + ")" : ""));
+    lista($("agenda"), eventos.concat(tareas), "Nada pendiente.");
+
+    lista($("compra"), r.compra.map((c) => c.cantidad + " × " + c.producto), "La lista está vacía.");
+
+    const s = r.solar || {};
+    const solar = $("solar"); vaciar(solar);
+    if (s.registros && s.registros.length) {
+      const g = document.createElement("div"); g.className = "grande"; g.textContent = s.total_kwh + " kWh";
+      const f = document.createElement("div"); f.className = "vacio";
+      f.textContent = "Últimos " + s.registros.length + " registros · media " + s.media_kwh + " kWh/día";
+      solar.appendChild(g); solar.appendChild(f);
+      solar.appendChild(grafica(s.registros.map((x) => x.produccion)));
+    } else {
+      lista(solar, [], "Sin datos de producción.");
+    }
+
+    const desp = $("despensa"); vaciar(desp);
+    const articulos = r.despensa || [];
+    $("tituloDespensa").textContent = "Despensa e inventario" + (articulos.length ? " (" + articulos.length + ")" : "");
+    if (articulos.length) {
+      let sitio = null;
+      articulos.forEach((a) => {
+        if (a.ubicacion !== sitio) {
+          sitio = a.ubicacion;
+          const h = document.createElement("h3"); h.textContent = sitio; desp.appendChild(h);
+        }
+        const fila = document.createElement("div"); fila.className = "fila";
+        const n = document.createElement("span"); n.textContent = a.nombre;
+        const c = document.createElement("span"); c.textContent = "× " + a.cantidad;
+        fila.appendChild(n); fila.appendChild(c); desp.appendChild(fila);
+      });
+    } else {
+      lista(desp, [], "Vacía. Dime lo que tienes: «he comprado leche y huevos».");
+    }
+
+    lista($("casa"),
+      [r.productos_inventario + " productos en el inventario", r.recuerdos + " cosas en la memoria de BRAIN"], "");
+  } catch (e) { /* el panel no es crítico */ }
+}
+
+function potencia(w) {
+  if (w === null || w === undefined) return "—";
+  return Math.abs(w) >= 1000 ? (w / 1000).toFixed(2) + " kW" : Math.round(w) + " W";
+}
+
+function dato(clase, valor, etiqueta) {
+  const d = document.createElement("div"); d.className = "dato " + clase;
+  const b = document.createElement("b"); b.textContent = valor;
+  const sp = document.createElement("span"); sp.textContent = etiqueta;
+  d.appendChild(b); d.appendChild(sp);
+  return d;
+}
+
+async function refrescarEnergia() {
+  const caja = $("energiaAhora");
+  try {
+    const e = await api("/api/energia");
+    vaciar(caja);
+    if (e.error || !e.configurado) {
+      lista(caja, [], e.error || e.mensaje || "Sin datos del inversor.");
+      return;
+    }
+    const rejilla = document.createElement("div"); rejilla.className = "energia";
+    rejilla.appendChild(dato("", potencia(e.produccion_w), "☀ Producción"));
+    rejilla.appendChild(dato("", potencia(e.consumo_w), "🏠 Consumo" + (e.consumo_calculado ? " (calc.)" : "")));
+    let etiquetaRed = "⚡ Red";
+    let clase = "";
+    if (e.estado_red === "comprando") { etiquetaRed = "⚡ Comprando"; clase = "compra"; }
+    else if (e.estado_red === "vendiendo") { etiquetaRed = "⚡ Vendiendo"; clase = "venta"; }
+    rejilla.appendChild(dato(clase, potencia(e.red_w === null ? null : Math.abs(e.red_w)), etiquetaRed));
+    caja.appendChild(rejilla);
+    const pie = document.createElement("div"); pie.className = "vacio"; pie.style.marginTop = "8px";
+    const trozos = [];
+    if (e.cubierto_por_solar_pct !== undefined) trozos.push(e.cubierto_por_solar_pct + " % del consumo cubierto por el sol");
+    if (e.bateria_pct !== null && e.bateria_pct !== undefined) trozos.push("batería " + e.bateria_pct + " %");
+    trozos.push("actualizado " + e.hora);
+    pie.textContent = trozos.join(" · ");
+    caja.appendChild(pie);
+  } catch (err) { /* el panel no es crítico */ }
+}
+
+async function refrescarEstado() {
+  try {
+    const e = await api("/api/estado");
+    $("version").textContent = "v" + e.version;
+    $("punto").className = "punto " + (e.ia_lista ? "ok" : "mal");
+    $("estado").textContent = e.ia_lista ? "IA lista · " + e.modelo : "IA no disponible";
+    const aviso = $("aviso");
+    aviso.style.display = e.ia_lista ? "none" : "block";
+    let texto = e.mensaje;
+    const d = e.descarga || {};
+    if (d.activa) texto = "Descargando " + d.modelo + ": " + d.porcentaje + "% (" + d.estado + "). No cierres esta ventana.";
+    else if (d.error && !e.ia_lista) texto += " Error en la descarga: " + d.error;
+    $("avisoTexto").textContent = texto;
+    $("descargar").style.display = (e.sin_modelos && !d.activa) ? "inline-block" : "none";
+    programarEstado(e.ia_lista ? 15000 : (d.activa ? 1500 : 3000));
+  } catch (e) {
+    $("punto").className = "punto mal";
+    $("estado").textContent = "Sin conexión con BRAIN";
+    programarEstado(5000);
+  }
+}
+
+let temporizadorEstado = null;
+function programarEstado(ms) {
+  clearTimeout(temporizadorEstado);
+  temporizadorEstado = setTimeout(refrescarEstado, ms);
+}
+
+async function reintentarIA() {
+  $("avisoTexto").textContent = "Reintentando...";
+  try {
+    await api("/api/reparar", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+  } catch (e) { /* se volverá a consultar enseguida */ }
+  programarEstado(500);
+}
+
+function leerEnVozAlta(texto) {
+  if (!$("hablar").checked || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const voz = new SpeechSynthesisUtterance(texto);
+  voz.lang = "es-ES";
+  window.speechSynthesis.speak(voz);
+}
+
+async function enviar(texto) {
+  if (ocupado || !texto.trim()) return;
+  ocupado = true;
+  $("enviar").disabled = true;
+  anadir("yo", texto);
+  const pensando = anadir("ia pensando", "BRAIN está pensando...");
+  try {
+    const r = await api("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mensaje: texto }),
+    });
+    pensando.remove();
+    const pie = r.herramientas.length ? "Acciones: " + r.herramientas.join(", ") : "";
+    anadir("ia", r.respuesta, pie);
+    leerEnVozAlta(r.respuesta);
+    refrescarPanel();
+  } catch (e) {
+    pensando.remove();
+    anadir("error", e.message);
+    refrescarEstado();
+  } finally {
+    ocupado = false;
+    $("enviar").disabled = false;
+    $("entrada").focus();
+  }
+}
+
+$("formulario").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const texto = $("entrada").value;
+  $("entrada").value = "";
+  enviar(texto);
+});
+
+$("entrada").addEventListener("keydown", (ev) => {
+  if (ev.key === "Enter" && !ev.shiftKey) {
+    ev.preventDefault();
+    $("formulario").requestSubmit();
+  }
+});
+
+$("limpiar").addEventListener("click", async () => {
+  if (!confirm("¿Borrar toda la conversación? Los datos guardados (peso, compra, etc.) no se tocan.")) return;
+  await api("/api/limpiar", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+  vaciar(mensajes);
+  anadir("ia", "Conversación borrada. ¿En qué te ayudo?");
+});
+
+// Dictado por voz (solo navegadores con reconocimiento de voz: Chrome y Edge)
+const Reconocimiento = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!Reconocimiento) {
+  $("microfono").style.display = "none";
+} else {
+  let escuchando = null;
+  $("microfono").addEventListener("click", () => {
+    if (escuchando) { escuchando.stop(); return; }
+    const rec = new Reconocimiento();
+    rec.lang = "es-ES";
+    rec.interimResults = false;
+    rec.onresult = (ev) => { $("entrada").value = ev.results[0][0].transcript; };
+    rec.onend = () => { escuchando = null; $("microfono").classList.remove("activo"); };
+    rec.onerror = () => { escuchando = null; $("microfono").classList.remove("activo"); };
+    escuchando = rec;
+    $("microfono").classList.add("activo");
+    rec.start();
+  });
+}
+
+(async function iniciar() {
+  try {
+    const h = await api("/api/historial");
+    h.mensajes.forEach((m) => anadir(m.role === "user" ? "yo" : "ia", m.content));
+  } catch (e) { /* sin historial */ }
+  if (!mensajes.children.length) {
+    anadir("ia", "Hola, soy BRAIN. Puedo apuntar tu peso, la lista de la compra, el inventario, tu agenda, la producción solar y recordar lo que me pidas. ¿Qué hacemos?");
+  }
+  refrescarEstado();
+  refrescarPanel();
+  refrescarEnergia();
+  setInterval(refrescarEnergia, 5000);
+  setInterval(refrescarPanel, 20000);
+  $("reintentar").addEventListener("click", reintentarIA);
+  $("descargar").addEventListener("click", async () => {
+    try { await api("/api/descargar", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }); } catch (e) {}
+    programarEstado(300);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+    "produccion": "sensor.goodwe_active_power_total",
+    "consumo": "sensor.goodwe_house_consumption",
+    "red": "sensor.goodwe_meter_active_power_total",
+    "bateria_pct": "sensor.ipad_de_luis_battery_level",
+    "red_invertida": true
+}
