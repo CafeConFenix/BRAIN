@@ -1,0 +1,1383 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BRAIN</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230F1722'/%3E%3Cpath d='M9 22V10h6.2c2.4 0 3.8 1.2 3.8 3.1 0 1.3-.7 2.3-1.9 2.7 1.5.3 2.4 1.4 2.4 2.9 0 2.1-1.6 3.3-4.2 3.3H9z' fill='%235CC8C0'/%3E%3Ccircle cx='23.5' cy='9.5' r='3' fill='%23F6BE55'/%3E%3C/svg%3E">
+<style>
+  :root {
+    color-scheme: dark;
+    --fondo: #0F1722;
+    --panel: #17212F;
+    --panel-2: #1D293A;
+    --linea: #2A384C;
+    --texto: #E8EDF4;
+    --suave: #93A1B5;
+    --acento: #5CC8C0;
+    --acento-fondo: #0B6F68;
+    --acento-texto: #FFFFFF;
+    --luz: #F6BE55;
+    --luz-fondo: #3A2E14;
+    --consumo: #7AA7FF;
+    --compra: #FF8A7A;
+    --venta: #64D6A0;
+    --peligro: #FF8A7A;
+    --sombra: 0 10px 30px rgba(0, 0, 0, .35);
+    --cifras: "Bahnschrift", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+    --texto-fuente: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  :root[data-tema="claro"] {
+    color-scheme: light;
+    --fondo: #EDF1F6;
+    --panel: #FFFFFF;
+    --panel-2: #F2F5F9;
+    --linea: #D9E0E9;
+    --texto: #14202E;
+    --suave: #5C6B7F;
+    --acento: #0E8F86;
+    --acento-fondo: #0B7A72;
+    --luz: #C98A0C;
+    --luz-fondo: #FFF1CF;
+    --consumo: #3B6FD8;
+    --compra: #D2523F;
+    --venta: #1E9A62;
+    --peligro: #C23B2A;
+    --sombra: 0 10px 30px rgba(20, 32, 46, .10);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-tema="oscuro"]) {
+      color-scheme: light;
+      --fondo: #EDF1F6;
+      --panel: #FFFFFF;
+      --panel-2: #F2F5F9;
+      --linea: #D9E0E9;
+      --texto: #14202E;
+      --suave: #5C6B7F;
+      --acento: #0E8F86;
+      --acento-fondo: #0B7A72;
+      --luz: #C98A0C;
+      --luz-fondo: #FFF1CF;
+      --consumo: #3B6FD8;
+      --compra: #D2523F;
+      --venta: #1E9A62;
+      --peligro: #C23B2A;
+      --sombra: 0 10px 30px rgba(20, 32, 46, .10);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font: 15px/1.5 var(--texto-fuente);
+    background: var(--fondo);
+    color: var(--texto);
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+
+  /* ---------- Barra superior ---------- */
+  .barra {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 20px; border-bottom: 1px solid var(--linea); background: var(--panel);
+  }
+  .marca { display: flex; align-items: center; gap: 10px; font: 700 19px var(--cifras); letter-spacing: .06em; }
+  .marca svg { width: 28px; height: 28px; }
+  .barra .version { color: var(--suave); font-size: 12px; }
+  .estado { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--suave); }
+  .punto { width: 9px; height: 9px; border-radius: 50%; background: var(--suave); }
+  .punto.ok { background: var(--venta); box-shadow: 0 0 0 4px color-mix(in srgb, var(--venta) 22%, transparent); }
+  .punto.mal { background: var(--peligro); }
+  .icono {
+    display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 10px;
+    border: 1px solid var(--linea); background: transparent; color: var(--suave);
+  }
+  .icono:hover { color: var(--texto); background: var(--panel-2); }
+  .icono svg { width: 18px; height: 18px; }
+
+  .pestanas { display: none; border-bottom: 1px solid var(--linea); background: var(--panel); }
+  .pestanas button {
+    flex: 1; padding: 11px; border: 0; background: transparent; color: var(--suave);
+    border-bottom: 2px solid transparent; font-weight: 600;
+  }
+  .pestanas button[aria-selected="true"] { color: var(--texto); border-bottom-color: var(--acento); }
+
+  main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 410px; min-height: 0; }
+
+  /* ---------- Chat ---------- */
+  #chat { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--linea); }
+  #aviso {
+    display: none; margin: 14px 20px 0; padding: 11px 14px; border-radius: 12px;
+    background: var(--luz-fondo); color: var(--luz); border: 1px solid color-mix(in srgb, var(--luz) 35%, transparent);
+    font-size: 14px; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  #mensajes { flex: 1; overflow-y: auto; padding: 22px 20px 12px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+  .msg { max-width: min(740px, 86%); padding: 11px 15px; border-radius: 16px; word-wrap: break-word; overflow-wrap: anywhere; }
+  .msg.yo { align-self: flex-end; background: var(--acento-fondo); color: var(--acento-texto); border-bottom-right-radius: 5px; white-space: pre-wrap; }
+  .msg.ia { align-self: flex-start; background: var(--panel); border: 1px solid var(--linea); border-bottom-left-radius: 5px; }
+  .msg.error { align-self: flex-start; background: color-mix(in srgb, var(--peligro) 14%, var(--panel)); border: 1px solid color-mix(in srgb, var(--peligro) 45%, transparent); }
+  .msg p { margin: 0 0 8px; }
+  .msg p:last-child, .msg ul:last-child, .msg ol:last-child { margin-bottom: 0; }
+  .msg ul, .msg ol { margin: 0 0 8px; padding-left: 22px; }
+  .msg li { margin: 2px 0; }
+  .msg code { font-family: Consolas, "Cascadia Mono", monospace; font-size: .92em; background: var(--panel-2); padding: 1px 5px; border-radius: 5px; }
+  .msg .titulo { font-weight: 700; margin: 6px 0 4px; }
+  .msg small { display: block; margin-top: 8px; color: var(--suave); font-size: 12px; }
+  .pensando { display: inline-flex; gap: 5px; padding: 4px 2px; }
+  .pensando i { width: 7px; height: 7px; border-radius: 50%; background: var(--suave); animation: late 1.2s infinite ease-in-out; }
+  .pensando i:nth-child(2) { animation-delay: .15s; }
+  .pensando i:nth-child(3) { animation-delay: .3s; }
+  @keyframes late { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+
+  .sugerencias { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 20px 10px; }
+  .sugerencias button {
+    padding: 6px 13px; border-radius: 999px; border: 1px solid var(--linea); background: var(--panel);
+    color: var(--suave); font-size: 13px;
+  }
+  .sugerencias button:hover { color: var(--texto); border-color: var(--acento); }
+
+  #avisoVoz {
+    display: none; margin: 0 20px 10px; padding: 11px 14px; border-radius: 12px; background: var(--panel);
+    border: 1px solid var(--linea); font-size: 14px; gap: 10px; align-items: center; flex-wrap: wrap;
+  }
+  #avisoVoz.grabando { border-color: var(--peligro); }
+  .nivel { flex: 1; min-width: 80px; height: 6px; border-radius: 3px; background: var(--panel-2); overflow: hidden; }
+  .nivel i { display: block; height: 100%; width: 0; background: var(--peligro); transition: width .08s linear; }
+
+  #formulario { display: flex; align-items: flex-end; gap: 8px; padding: 6px 20px 8px; }
+  #entrada {
+    flex: 1; resize: none; min-height: 46px; max-height: 160px; padding: 12px 14px; line-height: 1.4;
+    border: 1px solid var(--linea); border-radius: 14px; background: var(--panel);
+  }
+  #entrada:focus { outline: none; border-color: var(--acento); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acento) 25%, transparent); }
+  #microfono, #imagen { width: 46px; height: 46px; border-radius: 14px; }
+  #microfono.activo { background: var(--peligro); color: #fff; border-color: transparent; animation: aro 1.4s infinite; }
+  @keyframes aro { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--peligro) 55%, transparent); } 100% { box-shadow: 0 0 0 14px transparent; } }
+  .primario {
+    height: 46px; padding: 0 20px; border: 0; border-radius: 14px; background: var(--acento-fondo);
+    color: var(--acento-texto); font-weight: 600;
+  }
+  .primario:hover { filter: brightness(1.12); }
+  button:disabled { opacity: .5; cursor: default; }
+  .suave {
+    border: 1px solid var(--linea); background: transparent; color: var(--suave); border-radius: 9px; padding: 3px 11px; font-size: 13px;
+  }
+  .suave:hover { color: var(--texto); border-color: var(--suave); }
+  .suave.peligro { color: var(--peligro); border-color: color-mix(in srgb, var(--peligro) 50%, transparent); }
+  .opciones { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; padding: 0 20px 14px; font-size: 13px; color: var(--suave); }
+  .opciones label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .opciones .suave { margin-left: auto; }
+  input[type="checkbox"] { accent-color: var(--acento-fondo); width: 15px; height: 15px; }
+
+  /* ---------- Panel derecho ---------- */
+  #panel { overflow-y: auto; display: flex; flex-direction: column; background: var(--fondo); }
+
+  .energia {
+    margin: 16px 16px 6px; padding: 16px 18px 15px; border-radius: 20px; box-shadow: var(--sombra);
+    background: linear-gradient(160deg, var(--panel-2), var(--panel)); border: 1px solid var(--linea);
+  }
+  .energia-cab { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  .energia-cab .vivo { width: 8px; height: 8px; border-radius: 50%; background: var(--venta); animation: pulso 2.2s infinite; }
+  @keyframes pulso { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
+  .energia-cab time { margin-left: auto; font-size: 12px; color: var(--suave); font-weight: 400; }
+  .cifras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 14px 0 12px; }
+  .cifra { min-width: 0; }
+  .cifra .valor { font: 600 30px/1.05 var(--cifras); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .cifra .valor small { font-size: 14px; font-weight: 500; color: var(--suave); margin-left: 3px; letter-spacing: 0; }
+  .cifra .nombre { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--suave); margin-top: 3px; }
+  .cifra .nombre i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
+  .balance { display: flex; height: 9px; border-radius: 5px; overflow: hidden; background: var(--linea); gap: 2px; }
+  .balance i { display: block; height: 100%; transition: flex-grow .6s ease; }
+  .energia-pie { margin: 10px 0 0; font-size: 13px; color: var(--suave); }
+  .energia-pie b { color: var(--texto); font-weight: 600; }
+
+  .bloque { padding: 16px 20px 6px; border-bottom: 1px solid var(--linea); }
+  .bloque:last-of-type { border-bottom: 0; }
+  .bloque-cab { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; min-height: 28px; }
+  .bloque-cab h2 { font-size: 15px; margin: 0; font-weight: 650; }
+  .bloque-cab .cuenta { color: var(--suave); font-size: 13px; }
+  .bloque-cab .acciones { margin-left: auto; display: flex; gap: 6px; }
+  .vacio { color: var(--suave); font-size: 14px; margin: 2px 0 12px; }
+  .vacio b { color: var(--texto); font-weight: 600; }
+
+  .lista { list-style: none; margin: 0 0 12px; padding: 0; max-height: 280px; overflow-y: auto; }
+  .lista li, .fila-disp {
+    display: flex; align-items: center; gap: 10px; padding: 7px 4px; border-bottom: 1px solid color-mix(in srgb, var(--linea) 60%, transparent);
+    font-size: 14px;
+  }
+  .lista li:last-child { border-bottom: 0; }
+  .lista .nombre { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lista .cant { font: 600 13px var(--cifras); color: var(--suave); background: var(--panel-2); padding: 1px 8px; border-radius: 999px; }
+  .quitar {
+    width: 24px; height: 24px; border: 0; border-radius: 7px; background: transparent; color: var(--suave);
+    opacity: 0; display: grid; place-items: center; flex: none;
+  }
+  .lista li:hover .quitar, .quitar:focus-visible { opacity: 1; }
+  .quitar:hover { color: var(--peligro); background: var(--panel-2); }
+  @media (hover: none) { .quitar { opacity: .7; } }
+  .grupo { font-size: 12.5px; color: var(--suave); font-weight: 600; margin: 8px 0 2px; text-transform: none; }
+  .basicos { font-size: 12.5px; color: var(--suave); margin: 0 0 12px; }
+  .basicos summary { cursor: pointer; }
+
+  .habitacion { font-size: 12.5px; color: var(--suave); font-weight: 600; margin: 8px 0 1px; }
+  .fila-disp { justify-content: space-between; }
+  .fila-disp .nombre { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fila-disp .detalle { font-size: 12px; color: var(--suave); }
+  .interruptor {
+    position: relative; width: 44px; height: 26px; border-radius: 999px; border: 1px solid var(--linea);
+    background: var(--panel-2); padding: 0; flex: none; transition: background .2s, border-color .2s;
+  }
+  .interruptor::after {
+    content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--suave); transition: transform .2s, background .2s;
+  }
+  .interruptor[aria-checked="true"] { background: var(--luz-fondo); border-color: var(--luz); }
+  .interruptor[aria-checked="true"]::after { transform: translateX(18px); background: var(--luz); box-shadow: 0 0 12px var(--luz); }
+  .interruptor:disabled { opacity: .35; }
+  .escenas { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 12px; }
+  .escenas button {
+    padding: 5px 12px; border-radius: 999px; border: 1px solid var(--linea); background: var(--panel); font-size: 13px;
+  }
+  .escenas button:hover { border-color: var(--luz); color: var(--luz); }
+
+  .peso-valor { font: 600 30px/1.1 var(--cifras); font-variant-numeric: tabular-nums; }
+  .peso-valor small { font-size: 14px; color: var(--suave); margin-left: 4px; }
+  svg.linea { width: 100%; height: 56px; display: block; margin: 6px 0 12px; }
+  .pie-panel { padding: 12px 20px 20px; font-size: 13px; color: var(--suave); }
+
+  /* ---------- Conversaciones en paralelo ---------- */
+  .conv-barra { display: flex; gap: 6px; align-items: center; padding: 8px 20px 0; overflow-x: auto; scrollbar-width: thin; }
+  .conv-barra button {
+    flex: none; max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    height: 32px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--linea);
+    background: transparent; color: var(--suave); font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .conv-barra button:hover { color: var(--texto); border-color: var(--acento); }
+  .conv-barra button[aria-selected="true"] { color: var(--acento-texto); background: var(--acento-fondo); border-color: var(--acento-fondo); }
+  .conv-barra .mas { padding: 0 12px; font-size: 16px; line-height: 1; }
+  .conv-barra .accion { padding: 0 10px; }
+  .temas { display: flex; gap: 6px; flex-wrap: wrap; }
+  .temas button { height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--linea); background: transparent; color: var(--suave); font: inherit; font-size: 13px; cursor: pointer; }
+  .temas button:hover { color: var(--texto); border-color: var(--acento); }
+  .dlg input[type="text"], .dlg textarea.corto {
+    width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--linea);
+    background: var(--panel-2); color: var(--texto); font: inherit;
+  }
+  .dlg textarea.corto { min-height: 80px; resize: vertical; }
+
+  /* ---------- Diálogo de importar ---------- */
+  dialog {
+    width: min(600px, calc(100vw - 32px)); padding: 0; border: 1px solid var(--linea); border-radius: 20px;
+    background: var(--panel); color: var(--texto); box-shadow: var(--sombra);
+  }
+  dialog::backdrop { background: rgba(5, 10, 18, .6); backdrop-filter: blur(3px); }
+  .dlg { padding: 22px 24px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .dlg h2 { margin: 0; font-size: 19px; }
+  .dlg p { margin: 0; color: var(--suave); font-size: 14px; }
+  .destinos { display: flex; gap: 6px; flex-wrap: wrap; }
+  .destinos label {
+    padding: 6px 13px; border-radius: 999px; border: 1px solid var(--linea); font-size: 13px; cursor: pointer; color: var(--suave);
+  }
+  .destinos input { position: absolute; opacity: 0; pointer-events: none; }
+  .destinos label:has(input:checked) { border-color: var(--acento); color: var(--texto); background: color-mix(in srgb, var(--acento) 16%, transparent); }
+  .destinos label:has(input:focus-visible) { outline: 2px solid var(--acento); outline-offset: 2px; }
+  #textoImportar {
+    min-height: 190px; resize: vertical; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--linea);
+    background: var(--fondo); font: 14px/1.5 Consolas, "Cascadia Mono", monospace;
+  }
+  #textoImportar:focus { outline: none; border-color: var(--acento); }
+  .vista-previa { font-size: 13.5px; min-height: 22px; color: var(--suave); }
+  .vista-previa b { color: var(--texto); }
+  .dlg-botones { display: flex; justify-content: flex-end; gap: 10px; }
+  .dlg-botones .secundario { height: 42px; padding: 0 18px; border-radius: 12px; border: 1px solid var(--linea); background: transparent; }
+
+  /* ---------- Campana de avisos ---------- */
+  .campana { position: relative; }
+  .campana .contador {
+    position: absolute; top: 1px; right: 1px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px;
+    background: var(--peligro); color: #fff; font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; display: none;
+  }
+  .campana.con-avisos .contador { display: block; }
+  #bandeja {
+    position: fixed; top: 54px; right: 12px; width: min(380px, calc(100vw - 24px)); max-height: 70vh; overflow: auto; z-index: 40;
+    background: var(--panel); border: 1px solid var(--linea); border-radius: 14px; box-shadow: var(--sombra); display: none;
+  }
+  #bandeja.abierta { display: block; }
+  #bandeja header { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--linea); font-weight: 600; }
+  #bandeja ul { list-style: none; margin: 0; padding: 0; }
+  #bandeja li { padding: 11px 14px; border-bottom: 1px solid var(--linea); font-size: 14px; }
+  #bandeja li.nuevo { background: color-mix(in srgb, var(--acento) 10%, transparent); }
+  #bandeja li.critico { border-left: 3px solid var(--peligro); }
+  #bandeja li small { display: block; color: var(--suave); margin-top: 3px; font-size: 12px; }
+  #bandeja .vacio { padding: 18px 14px; color: var(--suave); font-size: 14px; }
+  .toast.aviso-brain { border-color: var(--acento); }
+  .toast.aviso-brain.critico { border-color: var(--peligro); }
+  .toast strong { display: block; margin-bottom: 2px; }
+
+  /* ---------- Avisos flotantes ---------- */
+  #toasts { position: fixed; right: 18px; bottom: 18px; display: flex; flex-direction: column; gap: 8px; z-index: 50; }
+  .toast {
+    max-width: 340px; padding: 11px 15px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--linea);
+    box-shadow: var(--sombra); font-size: 14px;
+  }
+  .toast.error { border-color: var(--peligro); }
+
+  /* ---------- Móvil ---------- */
+  @media (max-width: 900px) {
+    main { grid-template-columns: minmax(0, 1fr); }
+    #chat, #panel { min-width: 0; }
+    .pestanas { display: flex; }
+    #chat, #panel { border-right: 0; }
+    body[data-vista="chat"] #panel, body[data-vista="casa"] #chat { display: none; }
+    .msg { max-width: 94%; }
+    .cifra .valor { font-size: 25px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body data-vista="chat">
+
+<header class="barra">
+  <div class="marca">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--panel-2)"/><path d="M9 22V10h6.2c2.4 0 3.8 1.2 3.8 3.1 0 1.3-.7 2.3-1.9 2.7 1.5.3 2.4 1.4 2.4 2.9 0 2.1-1.6 3.3-4.2 3.3H9z" fill="var(--acento)"/><circle cx="23.5" cy="9.5" r="3" fill="var(--luz)"/></svg>
+    BRAIN <span id="version" class="version"></span>
+  </div>
+  <div class="estado"><span id="punto" class="punto"></span><span id="estado">Conectando...</span></div>
+  <button class="icono campana" id="campana" type="button" title="Avisos" aria-label="Avisos" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 8-3 8h18s-3-1-3-8M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>
+    <span class="contador" id="contadorAvisos">0</span>
+  </button>
+  <button class="icono" id="tema" type="button" title="Cambiar entre tema claro y oscuro" aria-label="Cambiar tema">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+
+<nav class="pestanas" aria-label="Vista">
+  <button type="button" data-vista="chat" aria-selected="true">Chat</button>
+  <button type="button" data-vista="casa" aria-selected="false">Casa</button>
+</nav>
+
+<main>
+  <section id="chat" aria-label="Conversación con BRAIN">
+    <div id="aviso"><span id="avisoTexto"></span>
+      <button class="suave" id="reintentar" type="button">Reintentar</button>
+      <button class="primario" id="descargar" type="button" style="display:none;height:32px;padding:0 14px">Descargar IA</button>
+    </div>
+    <div class="conv-barra" id="conversaciones" role="tablist" aria-label="Conversaciones"></div>
+    <div id="mensajes" aria-live="polite"></div>
+    <div class="sugerencias" id="sugerencias"></div>
+    <div id="avisoVoz" role="status"></div>
+    <form id="formulario">
+      <textarea id="entrada" rows="1" placeholder="Escríbeme o pulsa el micrófono" aria-label="Mensaje para BRAIN" autofocus></textarea>
+      <button class="icono" id="microfono" type="button" title="Hablar con BRAIN" aria-label="Hablar con BRAIN">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+      </button>
+      <button class="icono" id="imagen" type="button" title="Enviar una captura de la báscula" aria-label="Enviar una captura de la báscula">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+      </button>
+      <input type="file" id="archivoImagen" accept="image/*" hidden>
+      <button class="primario" id="enviar" type="submit">Enviar</button>
+    </form>
+    <div class="opciones">
+      <label><input type="checkbox" id="autoenviar" checked> Enviar al terminar de hablar</label>
+      <label><input type="checkbox" id="hablar"> Leer las respuestas en voz alta</label>
+      <button class="suave" id="limpiar" type="button">Borrar conversación</button>
+    </div>
+  </section>
+
+  <aside id="panel" aria-label="Estado de la casa">
+    <section class="energia" id="energia" aria-label="Energía ahora">
+      <div class="energia-cab"><span class="vivo" aria-hidden="true"></span>Energía ahora<time id="energiaHora"></time></div>
+      <div id="energiaCuerpo"></div>
+    </section>
+
+    <section class="bloque" aria-labelledby="tCasa">
+      <div class="bloque-cab"><h2 id="tCasa">Casa</h2><span class="cuenta" id="casaCuenta"></span></div>
+      <div id="dispositivos"></div>
+      <div class="escenas" id="escenas"></div>
+    </section>
+
+    <section class="bloque" aria-labelledby="tCompra">
+      <div class="bloque-cab">
+        <h2 id="tCompra">Lista de la compra</h2><span class="cuenta" id="compraCuenta"></span>
+        <span class="acciones">
+          <button class="suave" id="importarCompra" type="button">Importar</button>
+          <button class="suave" id="vaciarCompra" type="button">Vaciar</button>
+        </span>
+      </div>
+      <ul class="lista" id="compra"></ul>
+    </section>
+
+    <section class="bloque" aria-labelledby="tDespensa">
+      <div class="bloque-cab">
+        <h2 id="tDespensa">Despensa</h2><span class="cuenta" id="despensaCuenta"></span>
+        <span class="acciones">
+          <button class="suave" id="importarDespensa" type="button">Importar lista</button>
+          <button class="suave" id="vaciarDespensa" type="button">Vaciar</button>
+        </span>
+      </div>
+      <div class="lista" id="despensa" style="max-height:300px"></div>
+      <details class="basicos" id="basicos"><summary id="basicosResumen">Básicos de casa para las recetas</summary><span id="basicosTexto"></span></details>
+    </section>
+
+    <section class="bloque" aria-labelledby="tPeso">
+      <div class="bloque-cab"><h2 id="tPeso">Peso</h2></div>
+      <div id="peso"></div>
+    </section>
+
+    <section class="bloque" aria-labelledby="tCopias">
+      <div class="bloque-cab">
+        <h2 id="tCopias">Copias de seguridad</h2><span class="cuenta" id="copiasCuenta"></span>
+        <span class="acciones"><button class="suave" id="crearCopia" type="button">Crear copia ahora</button></span>
+      </div>
+      <div id="alertasCasa"></div>
+      <ul class="lista" id="copias"></ul>
+      <p class="basicos" id="copiasNota"></p>
+    </section>
+
+    <section class="bloque" aria-labelledby="tAgenda">
+      <div class="bloque-cab"><h2 id="tAgenda">Agenda de los próximos 14 días</h2></div>
+      <ul class="lista" id="agenda"></ul>
+    </section>
+
+    <p class="pie-panel" id="memoria"></p>
+  </aside>
+</main>
+
+<dialog id="dlgConversacion" aria-labelledby="dlgConvTitulo">
+  <form method="dialog" class="dlg" id="formConversacion">
+    <h2 id="dlgConvTitulo">Nueva conversación</h2>
+    <p>Cada conversación tiene su propio hilo. Si le das un tema, BRAIN lo seguirá solo en esa conversación.</p>
+    <input type="text" id="convTitulo" maxlength="60" placeholder="Título (por ejemplo: Recetas)" aria-label="Título">
+    <div class="temas" id="convTemas" aria-label="Temas sugeridos"></div>
+    <textarea class="corto" id="convTema" maxlength="500" placeholder="Tema (opcional). Por ejemplo: Esta conversación es solo de cocina y recetas." aria-label="Tema"></textarea>
+    <div class="dlg-botones">
+      <button type="button" class="secundario" id="cancelarConv">Cancelar</button>
+      <button type="submit" class="primario" id="crearConv">Crear</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlgImportar" aria-labelledby="dlgTitulo">
+  <form method="dialog" class="dlg" id="formImportar">
+    <h2 id="dlgTitulo">Importar una lista de productos</h2>
+    <p>Pega la lista tal cual, un producto por línea. Vale cualquiera de estas formas: <code>Leche, 2 unidades</code>, <code>Pan: 3 unids</code>, <code>2 x huevos</code>, <code>Sal</code>.</p>
+    <div class="destinos" id="destinos" role="radiogroup" aria-label="Dónde guardarlo">
+      <label><input type="radio" name="destino" value="despensa" checked> Despensa</label>
+      <label><input type="radio" name="destino" value="frigorifico"> Nevera</label>
+      <label><input type="radio" name="destino" value="congelador"> Congelador</label>
+      <label><input type="radio" name="destino" value="compra"> Lista de la compra</label>
+    </div>
+    <textarea id="textoImportar" spellcheck="false" placeholder="- Leche entera 1 L: 6 unidades&#10;- Arroz redondo 1 kg: 2 unidades&#10;- Aceite de oliva 5 L: 1 unidad"></textarea>
+    <div class="vista-previa" id="vistaPrevia" aria-live="polite"></div>
+    <div class="dlg-botones">
+      <button type="button" class="secundario" id="cancelarImportar">Cancelar</button>
+      <button type="submit" class="primario" id="confirmarImportar" disabled>Añadir</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="bandeja" role="dialog" aria-label="Avisos">
+  <header><span>Avisos</span><button class="suave" id="leerAvisos" type="button">Marcar leídos</button></header>
+  <ul id="listaAvisos"></ul>
+</div>
+
+<div id="toasts" aria-live="assertive"></div>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const mensajes = $("mensajes");
+let ocupado = false;
+
+/* ---------------------------------------------------------------- utilidades */
+function guardar(clave, valor) { try { localStorage.setItem(clave, valor); } catch (e) { /* sin almacenamiento */ } }
+function leer(clave) { try { return localStorage.getItem(clave); } catch (e) { return null; } }
+
+async function api(ruta, opciones) {
+  const respuesta = await fetch(ruta, opciones);
+  const datos = await respuesta.json().catch(() => ({}));
+  if (!respuesta.ok) throw new Error(datos.error || "Error " + respuesta.status);
+  return datos;
+}
+function enviarJSON(ruta, cuerpo) {
+  return api(ruta, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cuerpo || {}) });
+}
+
+function el(etiqueta, clase, texto) {
+  const e = document.createElement(etiqueta);
+  if (clase) e.className = clase;
+  if (texto !== undefined && texto !== null) e.textContent = texto;
+  return e;
+}
+function vaciar(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+
+function aviso(texto, error) {
+  const t = el("div", "toast" + (error ? " error" : ""), texto);
+  $("toasts").appendChild(t);
+  setTimeout(() => t.remove(), error ? 6500 : 3500);
+}
+
+const NOMBRES_SITIO = { frigorifico: "Nevera", congelador: "Congelador", despensa: "Despensa", herramientas: "Herramientas", consumibles: "Consumibles" };
+const ICONO_X = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+/* Botón de dos pasos: el primer clic pide confirmación, el segundo lo hace. */
+function confirmar(boton, accion, textoInicial) {
+  let temporizador = null;
+  boton.addEventListener("click", () => {
+    if (boton.dataset.confirmar === "1") {
+      clearTimeout(temporizador);
+      boton.dataset.confirmar = "0";
+      boton.textContent = textoInicial;
+      boton.classList.remove("peligro");
+      accion();
+      return;
+    }
+    boton.dataset.confirmar = "1";
+    boton.textContent = "¿Seguro?";
+    boton.classList.add("peligro");
+    temporizador = setTimeout(() => {
+      boton.dataset.confirmar = "0";
+      boton.textContent = textoInicial;
+      boton.classList.remove("peligro");
+    }, 3500);
+  });
+}
+
+/* ------------------------------------------------- texto del chat con formato */
+function enLinea(padre, texto) {
+  const patron = /(\*\*[^*]+\*\*|`[^`]+`|\*[^*\s][^*]*\*)/g;
+  let ultimo = 0, m;
+  while ((m = patron.exec(texto)) !== null) {
+    if (m.index > ultimo) padre.appendChild(document.createTextNode(texto.slice(ultimo, m.index)));
+    const t = m[0];
+    let nodo;
+    if (t.startsWith("**")) { nodo = el("strong", "", t.slice(2, -2)); }
+    else if (t.startsWith("`")) { nodo = el("code", "", t.slice(1, -1)); }
+    else { nodo = el("em", "", t.slice(1, -1)); }
+    padre.appendChild(nodo);
+    ultimo = m.index + t.length;
+  }
+  if (ultimo < texto.length) padre.appendChild(document.createTextNode(texto.slice(ultimo)));
+}
+
+/* Formato mínimo y seguro (negritas, cursivas, listas, títulos) sin usar innerHTML. */
+function renderizar(contenedor, texto) {
+  const lineas = String(texto).replace(/\r/g, "").split("\n");
+  let lista = null, parrafo = null;
+  const cerrar = () => { lista = null; parrafo = null; };
+  lineas.forEach((linea) => {
+    const vineta = linea.match(/^\s*[-*•]\s+(.*)$/);
+    const numero = linea.match(/^\s*\d+[.)]\s+(.*)$/);
+    const titulo = linea.match(/^\s*#{1,4}\s+(.*)$/);
+    if (!linea.trim()) { cerrar(); return; }
+    if (vineta || numero) {
+      const tipo = vineta ? "UL" : "OL";
+      if (!lista || lista.tagName !== tipo) { lista = el(tipo.toLowerCase()); contenedor.appendChild(lista); parrafo = null; }
+      const li = el("li"); enLinea(li, (vineta || numero)[1]); lista.appendChild(li);
+      return;
+    }
+    if (titulo) { cerrar(); const t = el("div", "titulo"); enLinea(t, titulo[1]); contenedor.appendChild(t); return; }
+    lista = null;
+    if (!parrafo) { parrafo = el("p"); contenedor.appendChild(parrafo); } else { parrafo.appendChild(document.createElement("br")); }
+    enLinea(parrafo, linea);
+  });
+}
+
+function anadir(clase, texto, pie) {
+  const div = el("div", "msg " + clase);
+  if (clase === "ia") renderizar(div, texto); else div.textContent = texto;
+  if (pie) div.appendChild(el("small", "", pie));
+  mensajes.appendChild(div);
+  mensajes.scrollTop = mensajes.scrollHeight;
+  return div;
+}
+function pensando() {
+  const div = el("div", "msg ia");
+  const p = el("span", "pensando"); p.appendChild(el("i")); p.appendChild(el("i")); p.appendChild(el("i"));
+  div.appendChild(p);
+  mensajes.appendChild(div);
+  mensajes.scrollTop = mensajes.scrollHeight;
+  return div;
+}
+
+/* ---------------------------------------------------------------- gráficas */
+function lineaPeso(valores) {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("class", "linea");
+  svg.setAttribute("viewBox", "0 0 300 56");
+  svg.setAttribute("preserveAspectRatio", "none");
+  if (valores.length < 2) return svg;
+  const min = Math.min(...valores), max = Math.max(...valores), rango = (max - min) || 1;
+  const puntos = valores.map((v, i) => (i / (valores.length - 1) * 296 + 2).toFixed(1) + "," + (50 - (v - min) / rango * 44).toFixed(1)).join(" ");
+  const l = document.createElementNS(ns, "polyline");
+  l.setAttribute("points", puntos);
+  l.setAttribute("fill", "none");
+  l.setAttribute("stroke", "var(--acento)");
+  l.setAttribute("stroke-width", "2.5");
+  l.setAttribute("stroke-linecap", "round");
+  l.setAttribute("stroke-linejoin", "round");
+  l.setAttribute("vector-effect", "non-scaling-stroke");
+  svg.appendChild(l);
+  return svg;
+}
+
+/* ------------------------------------------------------- panel: compra, despensa */
+function fila(nombre, cantidad, alQuitar) {
+  const li = el("li");
+  li.appendChild(el("span", "nombre", nombre)).title = nombre;
+  if (cantidad !== null) li.appendChild(el("span", "cant", "×" + cantidad));
+  const b = el("button", "quitar"); b.type = "button"; b.innerHTML = ICONO_X;
+  b.setAttribute("aria-label", "Quitar " + nombre); b.title = "Quitar";
+  b.addEventListener("click", alQuitar);
+  li.appendChild(b);
+  return li;
+}
+
+async function quitar(ruta, cuerpo, ok) {
+  try { await enviarJSON(ruta, cuerpo); aviso(ok); refrescarPanel(); }
+  catch (e) { aviso(e.message, true); }
+}
+
+async function refrescarPanel() {
+  refrescarCopias();
+  try {
+    const r = await api("/api/resumen");
+
+    /* compra */
+    const compra = $("compra"); vaciar(compra);
+    $("compraCuenta").textContent = r.compra.length ? "(" + r.compra.length + ")" : "";
+    $("vaciarCompra").style.display = $("importarCompra").nextElementSibling.style.display = r.compra.length ? "" : "none";
+    if (r.compra.length) {
+      r.compra.forEach((c) => compra.appendChild(fila(c.producto, c.cantidad, () => quitar("/api/compra/quitar", { producto: c.producto }, "Quitado de la compra"))));
+    } else {
+      compra.appendChild(el("li", "vacio", "No falta nada. Dime «apunta leche» o importa una lista."));
+    }
+
+    /* despensa */
+    const desp = $("despensa"); vaciar(desp);
+    const articulos = r.despensa || [];
+    $("despensaCuenta").textContent = articulos.length ? "(" + articulos.length + ")" : "";
+    $("vaciarDespensa").style.display = articulos.length ? "" : "none";
+    if (articulos.length) {
+      let sitio = null, ul = null;
+      articulos.forEach((a) => {
+        if (a.ubicacion !== sitio) {
+          sitio = a.ubicacion;
+          desp.appendChild(el("div", "grupo", NOMBRES_SITIO[sitio] || sitio));
+          ul = el("ul"); ul.style.cssText = "list-style:none;margin:0;padding:0";
+          desp.appendChild(ul);
+        }
+        ul.appendChild(fila(a.nombre, a.cantidad, () => quitar("/api/inventario/borrar", { nombre: a.nombre, ubicacion: a.ubicacion }, "Quitado de la despensa")));
+      });
+    } else {
+      desp.appendChild(el("p", "vacio", "Está vacía. Pulsa «Importar lista» y pega lo que tienes."));
+    }
+    const basicos = r.basicos || [];
+    $("basicos").style.display = basicos.length ? "" : "none";
+    $("basicosTexto").textContent = " " + basicos.join(", ") + ". Cuenta con ellos aunque no estén en la despensa.";
+
+    /* peso */
+    const peso = $("peso"); vaciar(peso);
+    if (r.peso.length) {
+      const u = r.peso[r.peso.length - 1];
+      const v = el("div", "peso-valor", String(u.peso)); v.appendChild(el("small", "", "kg"));
+      peso.appendChild(v);
+      peso.appendChild(el("div", "vacio", "Registrado el " + u.fecha));
+      peso.appendChild(lineaPeso(r.peso.map((x) => x.peso)));
+    } else {
+      peso.appendChild(el("p", "vacio", "Aún no hay pesos. Dime «hoy peso 88,4»."));
+    }
+
+    /* agenda */
+    const ag = r.agenda || {};
+    const agenda = $("agenda"); vaciar(agenda);
+    const eventos = (ag.eventos || []).map((e) => e.fecha + (e.hora ? " " + e.hora : "") + " " + e.titulo);
+    const tareas = (ag.tareas_pendientes || []).map((t) => "Pendiente: " + t.titulo + (t.fecha ? " (" + t.fecha + ")" : ""));
+    const todo = eventos.concat(tareas);
+    if (todo.length) todo.forEach((t) => agenda.appendChild(el("li", "", t)));
+    else agenda.appendChild(el("li", "vacio", "Nada pendiente."));
+
+    $("memoria").textContent = r.recuerdos + (r.recuerdos === 1 ? " cosa recordada" : " cosas recordadas") + " en la memoria de BRAIN.";
+  } catch (e) { /* el panel no es crítico */ }
+}
+
+/* ------------------------------------------------------------------ energía */
+function potencia(w) {
+  if (w === null || w === undefined) return { n: "—", u: "" };
+  return Math.abs(w) >= 1000 ? { n: (Math.abs(w) / 1000).toFixed(2), u: "kW" } : { n: String(Math.round(Math.abs(w))), u: "W" };
+}
+function cifra(color, valor, nombre) {
+  const c = el("div", "cifra");
+  const v = el("div", "valor", valor.n);
+  if (valor.u) v.appendChild(el("small", "", valor.u));
+  const n = el("div", "nombre"); const punto = el("i"); punto.style.background = color;
+  n.appendChild(punto); n.appendChild(document.createTextNode(nombre));
+  c.appendChild(v); c.appendChild(n);
+  return c;
+}
+function tramo(color, w) { const i = el("i"); i.style.flexGrow = String(Math.max(w, 0)); i.style.flexBasis = "0"; i.style.background = color; return i; }
+
+async function refrescarCopias() {
+  try {
+    const r = await api("/api/sistema");
+    const lista = $("copias"); vaciar(lista);
+    $("copiasCuenta").textContent = r.copias.length ? "(" + r.copias.length + "/5)" : "";
+    r.copias.forEach((c) => {
+      const li = el("li");
+      li.appendChild(el("span", "nombre", c.fecha.replace("T", " ") + " · " + c.tamano_kb + " KB"));
+      const b = el("button", "suave", "Restaurar");
+      b.type = "button";
+      b.addEventListener("click", async () => {
+        if (!confirm("¿Restaurar la copia del " + c.fecha.replace("T", " ") + "? Se sustituirán los datos actuales (antes se guarda una copia previa).")) return;
+        try { await enviarJSON("/api/copia/restaurar", { nombre: c.nombre }); aviso("Copia restaurada"); refrescarPanel(); }
+        catch (e) { aviso(e.message, true); }
+      });
+      li.appendChild(b);
+      lista.appendChild(li);
+    });
+    if (!r.copias.length) lista.appendChild(el("li", "vacio", "Aún no hay copias. Se hace una al día automáticamente."));
+    $("copiasNota").textContent = r.planificador_activo ? "Copia automática diaria activa. Se guardan las 5 últimas." : "Las tareas automáticas están desactivadas.";
+    const alertas = $("alertasCasa"); vaciar(alertas);
+    (r.alertas || []).forEach((a) => alertas.appendChild(el("p", "vacio", "⚠ " + a.nombre + " (" + a.tipo + ") activado")));
+  } catch (e) { /* el panel sigue funcionando sin esta tarjeta */ }
+}
+
+$("crearCopia").addEventListener("click", async () => {
+  try { const r = await enviarJSON("/api/copia/crear"); aviso("Copia creada: " + r.copia.archivo); refrescarCopias(); }
+  catch (e) { aviso(e.message, true); }
+});
+
+async function refrescarEnergia() {
+  const caja = $("energiaCuerpo");
+  try {
+    const e = await api("/api/energia");
+    vaciar(caja);
+    if (e.error || !e.configurado) {
+      const p = el("p", "vacio", e.error || e.mensaje || "Sin datos del inversor.");
+      p.style.marginTop = "10px";
+      caja.appendChild(p);
+      if (!e.error) caja.appendChild(el("p", "vacio", "Cuando conectes Home Assistant verás aquí lo que producen las placas y lo que gasta la casa."));
+      $("energiaHora").textContent = "";
+      return;
+    }
+    const compra = e.estado_red === "comprando", venta = e.estado_red === "vendiendo";
+    const cifras = el("div", "cifras");
+    cifras.appendChild(cifra("var(--luz)", potencia(e.produccion_w), "Placas"));
+    cifras.appendChild(cifra("var(--consumo)", potencia(e.consumo_w), "Casa" + (e.consumo_calculado ? " (calculado)" : "")));
+    cifras.appendChild(cifra(compra ? "var(--compra)" : venta ? "var(--venta)" : "var(--suave)", potencia(e.red_w), compra ? "Comprando" : venta ? "Vendiendo" : "Red"));
+    caja.appendChild(cifras);
+
+    const prod = e.produccion_w || 0, cons = e.consumo_w || 0;
+    const barra = el("div", "balance");
+    barra.setAttribute("role", "img");
+    barra.appendChild(tramo("var(--luz)", Math.min(prod, cons)));
+    if (cons > prod) barra.appendChild(tramo("var(--compra)", cons - prod));
+    if (prod > cons) barra.appendChild(tramo("var(--venta)", prod - cons));
+    if (!prod && !cons) barra.appendChild(tramo("var(--linea)", 1));
+    caja.appendChild(barra);
+
+    const pie = el("p", "energia-pie");
+    const trozos = [];
+    if (e.cubierto_por_solar_pct !== undefined) { const b = el("b", "", e.cubierto_por_solar_pct + " %"); pie.appendChild(b); pie.appendChild(document.createTextNode(" del consumo lo cubre el sol")); }
+    if (e.bateria_pct !== null && e.bateria_pct !== undefined) pie.appendChild(document.createTextNode((pie.firstChild ? ". " : "") + "Batería al " + e.bateria_pct + " %"));
+    if (pie.firstChild) caja.appendChild(pie);
+    $("energiaHora").textContent = e.hora || "";
+  } catch (err) { /* el panel no es crítico */ }
+}
+
+/* ---------------------------------------------------------------- domótica */
+let dispositivosOcupados = 0;
+
+function interruptor(d) {
+  const b = el("button", "interruptor"); b.type = "button";
+  b.setAttribute("role", "switch");
+  b.setAttribute("aria-checked", d.encendido ? "true" : "false");
+  b.setAttribute("aria-label", d.nombre);
+  b.disabled = d.encendido === null;
+  b.addEventListener("click", async () => {
+    const nuevo = b.getAttribute("aria-checked") !== "true";
+    b.setAttribute("aria-checked", nuevo ? "true" : "false");   // se ve al instante
+    dispositivosOcupados = Date.now();
+    try { await enviarJSON("/api/dispositivo", { entidad: d.entidad, encendido: nuevo }); setTimeout(refrescarDispositivos, 900); }
+    catch (e) { b.setAttribute("aria-checked", nuevo ? "false" : "true"); aviso(d.nombre + ": " + e.message, true); }
+  });
+  return b;
+}
+
+function textoDetalle(d) {
+  if (d.tipo === "light" && d.encendido && d.brillo_pct !== undefined) return d.brillo_pct + " %";
+  if (d.tipo === "cover") return d.posicion_pct !== undefined ? d.posicion_pct + " % abierta" : (d.encendido ? "abierta" : "cerrada");
+  if (d.tipo === "climate" && d.temperatura_actual !== undefined) return d.temperatura_actual + " °C";
+  return "";
+}
+
+async function refrescarDispositivos() {
+  if (Date.now() - dispositivosOcupados < 1500) return;   // no pisar un interruptor recién pulsado
+  const caja = $("dispositivos"), escenas = $("escenas");
+  try {
+    const r = await api("/api/dispositivos");
+    vaciar(caja); vaciar(escenas);
+    if (!r.conectado) {
+      const p = el("p", "vacio");
+      p.appendChild(document.createTextNode("Para encender luces y ver tus dispositivos aquí, conecta Home Assistant con "));
+      p.appendChild(el("b", "", "CONFIGURAR_DOMOTICA.bat"));
+      p.appendChild(document.createTextNode("."));
+      caja.appendChild(p);
+      $("casaCuenta").textContent = "";
+      return;
+    }
+    if (r.error) { caja.appendChild(el("p", "vacio", r.error)); return; }
+    $("casaCuenta").textContent = r.total ? "(" + r.total + ")" : "";
+    if (!r.total) caja.appendChild(el("p", "vacio", "Home Assistant no tiene luces, enchufes ni persianas todavía."));
+    r.grupos.forEach((g) => {
+      caja.appendChild(el("div", "habitacion", g.habitacion));
+      g.dispositivos.forEach((d) => {
+        const f = el("div", "fila-disp");
+        const n = el("span", "nombre", d.nombre); n.title = d.nombre;
+        f.appendChild(n);
+        const det = textoDetalle(d);
+        if (det) f.appendChild(el("span", "detalle", det));
+        f.appendChild(interruptor(d));
+        caja.appendChild(f);
+      });
+    });
+    r.escenas.forEach((s) => {
+      const b = el("button", "", s.nombre); b.type = "button"; b.title = "Activar la escena " + s.nombre;
+      b.addEventListener("click", async () => {
+        try { await enviarJSON("/api/escena", { entidad: s.entidad }); aviso("Escena «" + s.nombre + "» activada"); setTimeout(refrescarDispositivos, 900); }
+        catch (e) { aviso(e.message, true); }
+      });
+      escenas.appendChild(b);
+    });
+  } catch (e) { /* el panel no es crítico */ }
+}
+
+/* ------------------------------------------------------- estado de la IA */
+let temporizadorEstado = null;
+function programarEstado(ms) { clearTimeout(temporizadorEstado); temporizadorEstado = setTimeout(refrescarEstado, ms); }
+
+async function refrescarEstado() {
+  try {
+    const e = await api("/api/estado");
+    $("version").textContent = "v" + e.version;
+    $("punto").className = "punto " + (e.ia_lista ? "ok" : "mal");
+    $("estado").textContent = e.ia_lista ? "IA lista (" + e.modelo + ")" : "IA no disponible";
+    let texto = e.mensaje;
+    const d = e.descarga || {};
+    if (d.activa) texto = "Descargando " + d.modelo + ": " + d.porcentaje + " % (" + d.estado + "). No cierres esta ventana.";
+    else if (d.error && !e.ia_lista) texto += " Error en la descarga: " + d.error;
+    $("aviso").style.display = e.ia_lista ? "none" : "flex";
+    $("avisoTexto").textContent = texto;
+    $("descargar").style.display = (e.sin_modelos && !d.activa) ? "inline-block" : "none";
+    programarEstado(e.ia_lista ? 15000 : (d.activa ? 1500 : 3000));
+  } catch (err) {
+    $("punto").className = "punto mal";
+    $("estado").textContent = "Sin conexión con BRAIN";
+    programarEstado(5000);
+  }
+}
+
+/* ------------------------------------------------------------------- chat */
+function leerEnVozAlta(texto) {
+  if (!$("hablar").checked || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const voz = new SpeechSynthesisUtterance(texto.replace(/[*`#]/g, ""));
+  voz.lang = "es-ES";
+  window.speechSynthesis.speak(voz);
+}
+
+let conversacionActual = "general";
+
+async function enviar(texto) {
+  if (ocupado || !texto.trim()) return;
+  ocupado = true;
+  $("enviar").disabled = true;
+  $("sugerencias").style.display = "none";
+  anadir("yo", texto);
+  const espera = pensando();
+  try {
+    const r = await enviarJSON("/api/chat", { mensaje: texto, conversacion: conversacionActual });
+    espera.remove();
+    anadir("ia", r.respuesta, r.herramientas.length ? "Acciones: " + r.herramientas.join(", ") : "");
+    leerEnVozAlta(r.respuesta);
+    refrescarPanel(); refrescarDispositivos(); refrescarEnergia(); cargarConversaciones();
+  } catch (e) {
+    espera.remove();
+    anadir("error", e.message);
+  } finally {
+    ocupado = false;
+    $("enviar").disabled = false;
+    $("entrada").focus();
+  }
+}
+
+function ajustarEntrada() {
+  const t = $("entrada");
+  t.style.height = "auto";
+  t.style.height = Math.min(t.scrollHeight, 160) + "px";
+}
+$("entrada").addEventListener("input", ajustarEntrada);
+$("entrada").addEventListener("keydown", (ev) => {
+  if (ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); $("formulario").requestSubmit(); }
+});
+$("formulario").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const texto = $("entrada").value;
+  $("entrada").value = "";
+  ajustarEntrada();
+  enviar(texto);
+});
+$("limpiar").addEventListener("click", async () => {
+  try { await enviarJSON("/api/limpiar", { conversacion: conversacionActual }); } catch (e) { /* nada */ }
+  vaciar(mensajes);
+  saludo();
+  $("sugerencias").style.display = "";
+});
+$("reintentar").addEventListener("click", async () => {
+  $("avisoTexto").textContent = "Reintentando...";
+  try { await enviarJSON("/api/reparar"); } catch (e) { /* se volverá a consultar */ }
+  programarEstado(500);
+});
+$("descargar").addEventListener("click", async () => {
+  try { await enviarJSON("/api/descargar"); } catch (e) { /* idem */ }
+  programarEstado(300);
+});
+
+const SUGERENCIAS = ["¿Qué puedo cocinar hoy?", "Enciende la luz del salón", "Se ha acabado la leche", "¿Cuánto estoy consumiendo?"];
+function saludo() {
+  anadir("ia", "Hola, soy BRAIN. Puedo encender tus luces, llevar la despensa y la compra, proponerte recetas con lo que tienes, apuntar tu peso y tu agenda, y decirte cuánto gasta la casa. ¿Qué hacemos?");
+}
+SUGERENCIAS.forEach((t) => {
+  const b = el("button", "", t); b.type = "button";
+  b.addEventListener("click", () => enviar(t));
+  $("sugerencias").appendChild(b);
+});
+
+/* --------------------------------------------------------- importar listas */
+const dlg = $("dlgImportar");
+let temporizadorVista = null, ultimaVista = 0;
+
+function destinoElegido() { return document.querySelector('input[name="destino"]:checked').value; }
+
+function abrirImportar(destino) {
+  document.querySelector('input[name="destino"][value="' + destino + '"]').checked = true;
+  $("textoImportar").value = "";
+  $("vistaPrevia").textContent = "";
+  $("confirmarImportar").disabled = true;
+  $("confirmarImportar").textContent = "Añadir";
+  dlg.showModal();
+  $("textoImportar").focus();
+}
+
+async function vistaPrevia() {
+  const texto = $("textoImportar").value;
+  const caja = $("vistaPrevia");
+  if (!texto.trim()) { caja.textContent = ""; $("confirmarImportar").disabled = true; return; }
+  const turno = ++ultimaVista;
+  try {
+    const r = await enviarJSON("/api/importar", { texto, destino: destinoElegido(), solo_vista_previa: true });
+    if (turno !== ultimaVista) return;
+    vaciar(caja);
+    caja.appendChild(document.createTextNode("He entendido "));
+    caja.appendChild(el("b", "", r.total + (r.total === 1 ? " producto" : " productos")));
+    const ejemplos = r.productos.slice(0, 4).map((p) => p.cantidad + " × " + p.nombre).join(", ");
+    caja.appendChild(document.createTextNode(": " + ejemplos + (r.total > 4 ? "..." : "")));
+    $("confirmarImportar").disabled = false;
+    $("confirmarImportar").textContent = "Añadir " + r.total + (r.total === 1 ? " producto" : " productos");
+  } catch (e) {
+    if (turno !== ultimaVista) return;
+    caja.textContent = e.message;
+    $("confirmarImportar").disabled = true;
+  }
+}
+function programarVista() { clearTimeout(temporizadorVista); temporizadorVista = setTimeout(vistaPrevia, 300); }
+
+$("textoImportar").addEventListener("input", programarVista);
+document.querySelectorAll('input[name="destino"]').forEach((r) => r.addEventListener("change", programarVista));
+$("cancelarImportar").addEventListener("click", () => dlg.close());
+$("formImportar").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  $("confirmarImportar").disabled = true;
+  try {
+    const r = await enviarJSON("/api/importar", { texto: $("textoImportar").value, destino: destinoElegido() });
+    dlg.close();
+    aviso(r.texto);
+    refrescarPanel();
+  } catch (e) { aviso(e.message, true); $("confirmarImportar").disabled = false; }
+});
+$("importarDespensa").addEventListener("click", () => abrirImportar("despensa"));
+$("importarCompra").addEventListener("click", () => abrirImportar("compra"));
+confirmar($("vaciarCompra"), () => quitar("/api/compra/vaciar", {}, "Lista de la compra vaciada"), "Vaciar");
+confirmar($("vaciarDespensa"), () => quitar("/api/inventario/vaciar", {}, "Despensa vaciada"), "Vaciar");
+
+/* ----------------------------------------------------------------- micrófono */
+const boton = $("microfono"), cajaVoz = $("avisoVoz");
+const ReconocimientoNavegador = window.SpeechRecognition || window.webkitSpeechRecognition;
+const esBrave = !!(navigator.brave && navigator.brave.isBrave);
+let grabacion = null;
+
+function mostrarVoz(texto, grabando) {
+  cajaVoz.style.display = texto ? "flex" : "none";
+  cajaVoz.classList.toggle("grabando", !!grabando);
+  vaciar(cajaVoz);
+  if (texto) cajaVoz.appendChild(el("span", "", texto));
+  return cajaVoz;
+}
+
+function resultadoVoz(texto) {
+  mostrarVoz("");
+  texto = (texto || "").trim();
+  if (!texto) { aviso("No he oído nada. Pulsa el micrófono y habla cerca.", true); return; }
+  if ($("autoenviar").checked) enviar(texto);
+  else { $("entrada").value = texto; ajustarEntrada(); $("entrada").focus(); }
+}
+
+function aWav(trozos, frecuenciaOrigen) {
+  const total = trozos.reduce((n, t) => n + t.length, 0);
+  const crudo = new Float32Array(total);
+  let pos = 0; trozos.forEach((t) => { crudo.set(t, pos); pos += t.length; });
+  const destino = 16000, razon = frecuenciaOrigen / destino;
+  const n = Math.floor(total / razon);
+  const pcm = new Int16Array(n);
+  for (let i = 0; i < n; i++) {                       // media de cada tramo = filtro sencillo
+    const a = Math.floor(i * razon), b = Math.max(a + 1, Math.floor((i + 1) * razon));
+    let suma = 0; for (let j = a; j < b && j < total; j++) suma += crudo[j];
+    const v = Math.max(-1, Math.min(1, suma / (b - a)));
+    pcm[i] = v < 0 ? v * 32768 : v * 32767;
+  }
+  const buffer = new ArrayBuffer(44 + pcm.length * 2), vista = new DataView(buffer);
+  const texto = (o, s) => { for (let i = 0; i < s.length; i++) vista.setUint8(o + i, s.charCodeAt(i)); };
+  texto(0, "RIFF"); vista.setUint32(4, 36 + pcm.length * 2, true); texto(8, "WAVE"); texto(12, "fmt ");
+  vista.setUint32(16, 16, true); vista.setUint16(20, 1, true); vista.setUint16(22, 1, true);
+  vista.setUint32(24, destino, true); vista.setUint32(28, destino * 2, true); vista.setUint16(32, 2, true); vista.setUint16(34, 16, true);
+  texto(36, "data"); vista.setUint32(40, pcm.length * 2, true);
+  new Int16Array(buffer, 44).set(pcm);
+  return new Blob([buffer], { type: "audio/wav" });
+}
+
+async function empezarGrabacion() {
+  let flujo;
+  try { flujo = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true } }); }
+  catch (e) {
+    aviso("No puedo usar el micrófono. Permítelo en el candado de la barra de direcciones y vuelve a intentarlo.", true);
+    return;
+  }
+  const contexto = new (window.AudioContext || window.webkitAudioContext)();
+  const fuente = contexto.createMediaStreamSource(flujo);
+  const proceso = contexto.createScriptProcessor(4096, 1, 1);
+  const trozos = [];
+  let oyoVoz = false, silencio = 0;
+  const inicio = Date.now();
+  const barra = el("span", "nivel"); const nivel = el("i"); barra.appendChild(nivel);
+
+  const parar = async (cancelar) => {
+    if (!grabacion) return;
+    grabacion = null;
+    proceso.disconnect(); fuente.disconnect(); flujo.getTracks().forEach((t) => t.stop());
+    const frecuencia = contexto.sampleRate; contexto.close();
+    boton.classList.remove("activo");
+    if (cancelar || !oyoVoz) { mostrarVoz(""); if (!cancelar) aviso("No he oído nada. Pulsa el micrófono y habla cerca.", true); return; }
+    mostrarVoz("Transcribiendo...");
+    try {
+      const r = await api("/api/voz", { method: "POST", headers: { "Content-Type": "audio/wav" }, body: aWav(trozos, frecuencia) });
+      resultadoVoz(r.texto);
+    } catch (e) { mostrarVoz(""); aviso(e.message, true); }
+  };
+
+  proceso.onaudioprocess = (ev) => {
+    const datos = new Float32Array(ev.inputBuffer.getChannelData(0));
+    trozos.push(datos);
+    let suma = 0; for (let i = 0; i < datos.length; i++) suma += datos[i] * datos[i];
+    const rms = Math.sqrt(suma / datos.length);
+    nivel.style.width = Math.min(100, rms * 600) + "%";
+    if (rms > 0.02) { oyoVoz = true; silencio = 0; } else if (oyoVoz) { silencio += datos.length / contexto.sampleRate; }
+    if ((oyoVoz && silencio > 1.4) || Date.now() - inicio > 45000) parar(false);
+  };
+  fuente.connect(proceso); proceso.connect(contexto.destination);
+  grabacion = { parar };
+  boton.classList.add("activo");
+  const caja = mostrarVoz("Te escucho. Habla y haré una pausa cuando termines.", true);
+  caja.appendChild(barra);
+  const fin = el("button", "suave", "Terminar"); fin.type = "button"; fin.addEventListener("click", () => parar(false));
+  const cancelar = el("button", "suave", "Cancelar"); cancelar.type = "button"; cancelar.addEventListener("click", () => parar(true));
+  caja.appendChild(fin); caja.appendChild(cancelar);
+}
+
+function usarReconocimientoNavegador() {
+  const rec = new ReconocimientoNavegador();
+  rec.lang = "es-ES"; rec.interimResults = false;
+  rec.onresult = (ev) => resultadoVoz(ev.results[0][0].transcript);
+  rec.onerror = (ev) => {
+    boton.classList.remove("activo");
+    if (ev.error === "network" || ev.error === "service-not-allowed") ofrecerInstalarVoz("Este navegador no puede reconocer voz por sí solo.");
+    else if (ev.error !== "no-speech" && ev.error !== "aborted") aviso("Error del micrófono: " + ev.error, true);
+    else mostrarVoz("");
+  };
+  rec.onend = () => { boton.classList.remove("activo"); grabacion = null; };
+  grabacion = { parar: () => rec.stop() };
+  boton.classList.add("activo");
+  mostrarVoz("Te escucho...", true);
+  rec.start();
+}
+
+function ofrecerInstalarVoz(motivo) {
+  boton.classList.remove("activo");
+  const caja = mostrarVoz(motivo + " BRAIN puede reconocer tu voz en este ordenador, sin enviar nada a internet. Se instala una sola vez (unos 500 MB).");
+  const b = el("button", "primario", "Instalar voz"); b.type = "button"; b.style.cssText = "height:34px;padding:0 16px";
+  b.addEventListener("click", async () => {
+    b.disabled = true;
+    try { await enviarJSON("/api/voz/instalar"); seguirInstalacionVoz(); } catch (e) { aviso(e.message, true); b.disabled = false; }
+  });
+  caja.appendChild(b);
+}
+
+async function seguirInstalacionVoz() {
+  try {
+    const r = await api("/api/voz");
+    if (r.error) { mostrarVoz("No se ha podido instalar la voz: " + r.error); return; }
+    if (r.disponible && !r.instalando) { mostrarVoz(""); aviso("Voz lista. Pulsa el micrófono y habla."); return; }
+    mostrarVoz(r.paso || "Instalando...");
+    setTimeout(seguirInstalacionVoz, 2000);
+  } catch (e) { setTimeout(seguirInstalacionVoz, 3000); }
+}
+
+boton.addEventListener("click", async () => {
+  if (grabacion) { grabacion.parar(false); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    aviso("Este navegador no permite usar el micrófono aquí. Abre BRAIN en http://127.0.0.1:8765.", true);
+    return;
+  }
+  let voz = { disponible: false };
+  try { voz = await api("/api/voz"); } catch (e) { /* se usa el navegador */ }
+  if (voz.instalando) { seguirInstalacionVoz(); return; }
+  if (voz.disponible) { empezarGrabacion(); return; }
+  if (ReconocimientoNavegador && !esBrave) { usarReconocimientoNavegador(); return; }
+  ofrecerInstalarVoz(esBrave ? "Brave no trae reconocimiento de voz." : "Este navegador no trae reconocimiento de voz.");
+});
+
+/* ------------------------------------------------------- tema y pestañas */
+function aplicarTema(t) { if (t) document.documentElement.setAttribute("data-tema", t); else document.documentElement.removeAttribute("data-tema"); }
+aplicarTema(leer("brain-tema"));
+$("tema").addEventListener("click", () => {
+  const claro = getComputedStyle(document.documentElement).colorScheme === "light";
+  const nuevo = claro ? "oscuro" : "claro";
+  aplicarTema(nuevo); guardar("brain-tema", nuevo);
+});
+document.querySelectorAll(".pestanas button").forEach((b) => b.addEventListener("click", () => {
+  document.body.dataset.vista = b.dataset.vista;
+  document.querySelectorAll(".pestanas button").forEach((x) => x.setAttribute("aria-selected", x === b ? "true" : "false"));
+}));
+
+/* ------------------------------------------------------------------ inicio */
+/* ---------------------------------------------------------------- avisos */
+let ultimoAviso = null;   // null = primera consulta (no suena lo antiguo)
+let sonidoActual = null;
+
+function tocarSonido(archivo) {
+  try {
+    if (sonidoActual) sonidoActual.pause();
+    sonidoActual = archivo ? new Audio("/api/sonido/" + encodeURIComponent(archivo)) : null;
+    if (sonidoActual) sonidoActual.play().catch(() => {});
+    else pitido();
+  } catch (e) { /* el navegador puede bloquear el audio hasta que se pulse algo */ }
+}
+function pitido() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.frequency.value = 880; g.gain.value = 0.08;
+    o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + 0.25);
+  } catch (e) { /* sin audio */ }
+}
+
+function mostrarAviso(a) {
+  const t = el("div", "toast aviso-brain" + (a.nivel === "critico" ? " critico" : ""));
+  t.appendChild(el("strong", "", a.titulo));
+  if (a.mensaje) t.appendChild(el("span", "", a.mensaje));
+  $("toasts").appendChild(t);
+  setTimeout(() => t.remove(), a.nivel === "critico" ? 15000 : 8000);
+  if (a.sonar_web) tocarSonido(a.sonido);
+  try {
+    if ("Notification" in window && Notification.permission === "granted" && document.hidden)
+      new Notification(a.titulo, { body: a.mensaje || "" });
+  } catch (e) { /* notificaciones no disponibles */ }
+}
+
+function pintarBandeja(avisos) {
+  const lista = $("listaAvisos"); vaciar(lista);
+  if (!avisos.length) { lista.appendChild(el("li", "vacio", "No hay avisos todavía.")); return; }
+  avisos.slice().reverse().forEach((a) => {
+    const li = el("li", (a.leido ? "" : "nuevo ") + (a.nivel === "critico" ? "critico" : ""));
+    li.appendChild(el("strong", "", a.titulo));
+    if (a.mensaje) li.appendChild(el("div", "", a.mensaje));
+    li.appendChild(el("small", "", a.fecha.replace("T", " ").slice(0, 16) + " · " + a.tipo));
+    lista.appendChild(li);
+  });
+}
+
+async function refrescarAvisos() {
+  try {
+    const r = await api("/api/avisos?despues=0");
+    const mayor = r.avisos.length ? r.avisos[r.avisos.length - 1].id : 0;
+    if (ultimoAviso === null) ultimoAviso = mayor;
+    else r.avisos.filter((a) => a.id > ultimoAviso).forEach(mostrarAviso);
+    ultimoAviso = Math.max(ultimoAviso, mayor);
+    $("contadorAvisos").textContent = r.no_leidos > 99 ? "99+" : r.no_leidos;
+    $("campana").classList.toggle("con-avisos", r.no_leidos > 0);
+    pintarBandeja(r.avisos);
+  } catch (e) { /* sin conexión: se reintenta */ }
+}
+
+$("campana").addEventListener("click", () => {
+  const abierta = $("bandeja").classList.toggle("abierta");
+  $("campana").setAttribute("aria-expanded", abierta ? "true" : "false");
+  try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch (e) { /* nada */ }
+});
+document.addEventListener("click", (ev) => {
+  if (!$("bandeja").contains(ev.target) && !$("campana").contains(ev.target)) $("bandeja").classList.remove("abierta");
+});
+$("leerAvisos").addEventListener("click", async () => { try { await enviarJSON("/api/avisos/leer"); refrescarAvisos(); } catch (e) { aviso(e.message, true); } });
+
+
+/* ------------------------------------------------- conversaciones paralelas */
+const TEMAS = [
+  ["Recetas", "Esta conversación es solo de cocina: recetas, menús y qué cocinar con lo que hay en casa."],
+  ["Casa", "Esta conversación es sobre la casa: domótica, energía y electrodomésticos."],
+  ["Salud", "Esta conversación es sobre mi peso, mis medidas y mis hábitos de salud."],
+];
+let listaConversaciones = [];
+
+function pintarConversaciones() {
+  const barra = $("conversaciones");
+  vaciar(barra);
+  listaConversaciones.forEach((c) => {
+    const b = el("button", "", c.titulo); b.type = "button";
+    b.setAttribute("role", "tab");
+    b.setAttribute("aria-selected", c.id === conversacionActual ? "true" : "false");
+    b.title = c.instrucciones || c.titulo;
+    b.addEventListener("click", () => abrirConversacion(c.id));
+    barra.appendChild(b);
+  });
+  const mas = el("button", "mas", "+"); mas.type = "button"; mas.title = "Nueva conversación"; mas.setAttribute("aria-label", "Nueva conversación");
+  mas.addEventListener("click", () => { $("convTitulo").value = ""; $("convTema").value = ""; $("dlgConversacion").showModal(); $("convTitulo").focus(); });
+  barra.appendChild(mas);
+  if (conversacionActual !== "general") {
+    const actual = listaConversaciones.find((c) => c.id === conversacionActual);
+    const ren = el("button", "accion", "Renombrar"); ren.type = "button";
+    ren.addEventListener("click", async () => {
+      const nuevo = prompt("Nuevo título:", actual ? actual.titulo : "");
+      if (!nuevo) return;
+      try { await enviarJSON("/api/conversaciones/renombrar", { id: conversacionActual, titulo: nuevo }); cargarConversaciones(); } catch (e) { aviso(e.message, true); }
+    });
+    const bor = el("button", "accion", "Eliminar"); bor.type = "button";
+    bor.addEventListener("click", async () => {
+      if (!confirm("¿Eliminar esta conversación y todo su historial?")) return;
+      try { await enviarJSON("/api/conversaciones/borrar", { id: conversacionActual }); abrirConversacion("general"); } catch (e) { aviso(e.message, true); }
+    });
+    barra.appendChild(ren); barra.appendChild(bor);
+  }
+}
+async function cargarConversaciones() {
+  try { listaConversaciones = (await api("/api/conversaciones")).conversaciones; pintarConversaciones(); } catch (e) { /* sin conexión */ }
+}
+async function abrirConversacion(id) {
+  try {
+    const h = await api("/api/historial?conversacion=" + encodeURIComponent(id));
+    conversacionActual = id;
+    try { localStorage.setItem("brain.conversacion", id); } catch (e) { /* sin almacenamiento */ }
+    vaciar(mensajes);
+    h.mensajes.forEach((m) => anadir(m.role === "user" ? "yo" : "ia", m.content));
+    if (!h.mensajes.length) saludo();
+    $("sugerencias").style.display = h.mensajes.length ? "none" : "";
+    await cargarConversaciones();
+  } catch (e) { aviso(e.message, true); conversacionActual = "general"; }
+}
+TEMAS.forEach(([titulo, tema]) => {
+  const b = el("button", "", titulo); b.type = "button";
+  b.addEventListener("click", () => { $("convTitulo").value = titulo; $("convTema").value = tema; });
+  $("convTemas").appendChild(b);
+});
+$("cancelarConv").addEventListener("click", () => $("dlgConversacion").close());
+$("formConversacion").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  try {
+    const r = await enviarJSON("/api/conversaciones/crear", { titulo: $("convTitulo").value, instrucciones: $("convTema").value });
+    $("dlgConversacion").close();
+    await abrirConversacion(r.conversacion.id);
+  } catch (e) { aviso(e.message, true); }
+});
+
+/* ------------------------------------------ captura de la báscula (imagen) */
+function reducirImagen(archivo, maximo) {
+  return new Promise((resolver, rechazar) => {
+    const url = URL.createObjectURL(archivo);
+    const img = new Image();
+    img.onload = () => {
+      const escala = Math.min(1, maximo / Math.max(img.width, img.height));
+      const lienzo = document.createElement("canvas");
+      lienzo.width = Math.round(img.width * escala); lienzo.height = Math.round(img.height * escala);
+      lienzo.getContext("2d").drawImage(img, 0, 0, lienzo.width, lienzo.height);
+      URL.revokeObjectURL(url);
+      lienzo.toBlob((b) => (b ? resolver(b) : rechazar(new Error("No he podido preparar la imagen."))), "image/jpeg", 0.88);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rechazar(new Error("No he podido abrir esa imagen.")); };
+    img.src = url;
+  });
+}
+$("imagen").addEventListener("click", () => $("archivoImagen").click());
+$("archivoImagen").addEventListener("change", async () => {
+  const archivo = $("archivoImagen").files[0];
+  $("archivoImagen").value = "";
+  if (!archivo || ocupado) return;
+  ocupado = true;
+  $("sugerencias").style.display = "none";
+  anadir("yo", "📷 Captura de la báscula");
+  const espera = pensando();
+  try {
+    const blob = await reducirImagen(archivo, 1400);
+    const respuesta = await fetch("/api/imagen?conversacion=" + encodeURIComponent(conversacionActual), { method: "POST", headers: { "Content-Type": "image/jpeg" }, body: blob });
+    const datos = await respuesta.json().catch(() => ({}));
+    espera.remove();
+    if (!respuesta.ok) throw new Error(datos.error || "Error " + respuesta.status);
+    anadir("ia", datos.respuesta);
+    refrescarPanel(); cargarConversaciones();
+  } catch (e) {
+    espera.remove();
+    anadir("error", e.message);
+  } finally {
+    ocupado = false;
+  }
+});
+
+(async function iniciar() {
+  try { const guardada = localStorage.getItem("brain.conversacion"); if (guardada) conversacionActual = guardada; } catch (e) { /* nada */ }
+  try {
+    let h;
+    try { h = await api("/api/historial?conversacion=" + encodeURIComponent(conversacionActual)); }
+    catch (e) { conversacionActual = "general"; h = await api("/api/historial"); }
+    h.mensajes.forEach((m) => anadir(m.role === "user" ? "yo" : "ia", m.content));
+    if (h.mensajes.length) $("sugerencias").style.display = "none";
+  } catch (e) { /* sin historial */ }
+  if (!mensajes.children.length) saludo();
+  cargarConversaciones();
+  refrescarEstado();
+  refrescarPanel();
+  refrescarEnergia();
+  refrescarDispositivos();
+  refrescarAvisos();
+  setInterval(refrescarAvisos, 8000);
+  setInterval(refrescarEnergia, 5000);
+  setInterval(refrescarDispositivos, 6000);
+  setInterval(refrescarPanel, 20000);
+})();
+</script>
+</body>
+</html>

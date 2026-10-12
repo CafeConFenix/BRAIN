@@ -1,0 +1,9 @@
+# Los scripts de Windows deben tener saltos de linea de Windows (CRLF).
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# El resto del proyecto usa LF.
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.html text eol=lf
