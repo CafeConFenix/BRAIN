@@ -1,5 +1,9 @@
 from brain.modules.compras import Compras
+<<<<<<< HEAD
 from brain.modules.inventario import Inventario, mismo_producto, parsear_lista
+=======
+from brain.modules.inventario import Inventario, parsear_lista
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 from brain.tools.decorators import tool
 
 inventario = Inventario()
@@ -151,6 +155,7 @@ def buscar_inventario(texto: str):
         return {"mensaje": f"No hay nada parecido a '{texto}' en el inventario."}
 
     return {"encontrados": encontrados}
+<<<<<<< HEAD
 
 
 @tool(
@@ -300,3 +305,5 @@ def anadir_faltantes_receta_a_compra(ingredientes: str, receta: str = None):
         "agotados": comparacion["agotados"],
         "resumen": " ".join(partes),
     }
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6

@@ -24,7 +24,11 @@ class TestIA(CasoBrain):
         peticion = self.ollama.peticiones[0]
 
         self.assertGreater(len(peticion["tools"]), 5)
+<<<<<<< HEAD
         self.assertEqual(peticion["options"]["num_ctx"], 16384)
+=======
+        self.assertEqual(peticion["options"]["num_ctx"], 8192)
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
         self.assertFalse(peticion["stream"])
 
     def test_el_prompt_incluye_fecha_personalidad_y_memoria(self):

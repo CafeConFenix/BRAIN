@@ -4,6 +4,7 @@ Todos los cambios relevantes de BRAIN se documentan en este archivo.
 
 ---
 
+<<<<<<< HEAD
 ## [0.10.0] - 2026-10-11
 
 ### Añadido
@@ -63,6 +64,8 @@ Todos los cambios relevantes de BRAIN se documentan en este archivo.
 
 ---
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 ## [0.7.0] - 2026-10-07
 
 ### Corregido

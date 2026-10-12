@@ -4,6 +4,7 @@ import time
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+<<<<<<< HEAD
 from urllib.parse import parse_qs, unquote, urlparse
 
 from brain.ai.ollama import OllamaError, buscar_ejecutable
@@ -16,15 +17,26 @@ from brain.integrations.home_assistant import HomeAssistantError
 from brain.modules.sistema import CopiaError
 from brain.utils.listas import DESTINOS, aplicar_lista, interpretar_lista
 from brain.voice.reconocimiento import Reconocedor, VozError
+=======
+from urllib.parse import urlparse
+
+from brain.ai.ollama import OllamaError, buscar_ejecutable
+from brain.core import logger
+from brain.core.config import Config
+from brain.core.hardware import alternativas, guardar_modelo, recomendar_modelo
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
 ESTATICOS = Path(__file__).resolve().parent / "static"
 
 MAX_MENSAJE = 4000
 MAX_CUERPO = 64 * 1024
+<<<<<<< HEAD
 MAX_AUDIO = 4 * 1024 * 1024
 
 # Reconocimiento de voz local (el micrófono de la web).
 reconocedor = Reconocedor()
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
 
 def leer_energia():
@@ -40,6 +52,7 @@ def leer_energia():
         return {"configurado": True, "error": f"No he podido leer el inversor: {error}"}
 
 
+<<<<<<< HEAD
 def construir_sistema(brain):
     """Copias de seguridad, tareas en segundo plano y alertas de Home Assistant."""
 
@@ -84,6 +97,8 @@ def construir_avisos(brain, despues=0):
     }
 
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 def construir_resumen(brain):
     """Datos para el panel lateral de la interfaz."""
 
@@ -103,7 +118,10 @@ def construir_resumen(brain):
         "agenda": calendario.agenda(14) if calendario else {},
         "solar": energia.produccion(14) if energia else {},
         "despensa": inventario.todo() if inventario else [],
+<<<<<<< HEAD
         "basicos": inventario.basicos() if inventario else [],
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
         "productos_inventario": productos,
         "recuerdos": recuerdos,
     }
@@ -266,6 +284,7 @@ def construir_estado(brain):
     return estado
 
 
+<<<<<<< HEAD
 def leer_dispositivos(brain):
     """Dispositivos de domótica para el panel (nunca rompe la web)."""
 
@@ -387,6 +406,8 @@ RUTAS_DATOS = (
 )
 
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 def crear_manejador(brain):
     bloqueo_chat = threading.Lock()
 
@@ -457,6 +478,7 @@ def crear_manejador(brain):
 
             return datos if isinstance(datos, dict) else None
 
+<<<<<<< HEAD
         def _imagen(self):
             """Recibe una captura de la báscula, la lee con un modelo de visión y guarda el peso."""
 
@@ -522,6 +544,8 @@ def crear_manejador(brain):
 
                 return self._enviar(500, {"error": f"No he podido transcribir el audio: {error}"})
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
         # ----------------------------------------------------------
         # GET
         # ----------------------------------------------------------
@@ -549,6 +573,7 @@ def crear_manejador(brain):
             if ruta == "/api/energia":
                 return self._enviar(200, leer_energia())
 
+<<<<<<< HEAD
             if ruta == "/api/sistema":
                 return self._enviar(200, construir_sistema(brain))
 
@@ -587,6 +612,10 @@ def crear_manejador(brain):
                     return self._enviar(200, {"mensajes": brain.conversaciones.obtener(id_conversacion).mensajes()})
                 except KeyError:
                     return self._enviar(404, {"error": "Esa conversación no existe."})
+=======
+            if ruta == "/api/historial":
+                return self._enviar(200, {"mensajes": brain.conversacion.mensajes()})
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
             if ruta == "/api/herramientas":
                 return self._enviar(
@@ -613,6 +642,7 @@ def crear_manejador(brain):
             if not self._origen_valido():
                 return self._enviar(403, {"error": "Acceso no permitido."})
 
+<<<<<<< HEAD
             ruta = urlparse(self.path).path
 
             if ruta == "/api/voz":
@@ -624,6 +654,13 @@ def crear_manejador(brain):
             if "application/json" not in self.headers.get("Content-Type", ""):
                 return self._enviar(415, {"error": "Se esperaba JSON."})
 
+=======
+            if "application/json" not in self.headers.get("Content-Type", ""):
+                return self._enviar(415, {"error": "Se esperaba JSON."})
+
+            ruta = urlparse(self.path).path
+
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
             if ruta == "/api/reparar":
                 lanzar_reparacion(brain, forzar=True)
 
@@ -634,6 +671,7 @@ def crear_manejador(brain):
 
                 return self._enviar(200, construir_estado(brain))
 
+<<<<<<< HEAD
             if ruta == "/api/voz/instalar":
                 reconocedor.instalar()
 
@@ -676,6 +714,10 @@ def crear_manejador(brain):
                     brain.conversaciones.obtener(datos.get("conversacion")).limpiar()
                 except KeyError:
                     return self._enviar(404, {"error": "Esa conversación no existe."})
+=======
+            if ruta == "/api/limpiar":
+                brain.conversacion.limpiar()
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
                 return self._enviar(200, {"ok": True})
 
@@ -690,6 +732,7 @@ def crear_manejador(brain):
                 if len(mensaje) > MAX_MENSAJE:
                     return self._enviar(400, {"error": "El mensaje es demasiado largo."})
 
+<<<<<<< HEAD
                 id_conversacion = (datos or {}).get("conversacion") or "general"
 
                 try:
@@ -700,6 +743,11 @@ def crear_manejador(brain):
                 with bloqueo_chat:
                     try:
                         respuesta = brain.conversaciones.preguntar(id_conversacion, mensaje)
+=======
+                with bloqueo_chat:
+                    try:
+                        respuesta = brain.conversacion.preguntar(mensaje)
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
                     except OllamaError as error:
                         return self._enviar(503, {"error": str(error)})

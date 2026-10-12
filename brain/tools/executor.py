@@ -40,7 +40,14 @@ class ToolExecutor:
 
         return self.registry.obtener(nombre)
 
+<<<<<<< HEAD
     def esquemas(self, categorias=None):
         """Devuelve las herramientas en formato JSON Schema para Ollama."""
 
         return self.registry.esquemas(categorias)
+=======
+    def esquemas(self):
+        """Devuelve las herramientas en formato JSON Schema para Ollama."""
+
+        return self.registry.esquemas()
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6

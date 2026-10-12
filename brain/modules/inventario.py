@@ -42,13 +42,18 @@ def normalizar(texto):
     return _sin_acentos(texto).strip().lower()
 
 
+<<<<<<< HEAD
 UNIDADES = (
     r"(?:unidades|unidad|unids?\.?|unds?\.?|uds?\.?|u\.?|piezas?|pzs?\.?|paquetes?|botellas?|latas?|briks?|packs?)"
 )
+=======
+UNIDADES = r"(?:unidades|unidad|uds?\.?|unid\.?|u\.?|piezas?|pzs?\.?|paquetes?|botellas?|latas?|briks?|packs?)"
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
 # "- ", "• ", "* ", "1. ", "2) " al principio de una línea de lista.
 VIÑETA = re.compile(r"^\s*(?:[-•*·–]|\d+[.)])\s+")
 
+<<<<<<< HEAD
 SEPARADOR = r"[,;:\s\-–]+"
 
 CANTIDAD_FINAL = re.compile(rf"{SEPARADOR}(\d+(?:[.,]\d+)?)\s*{UNIDADES}\s*$", re.IGNORECASE)
@@ -65,6 +70,12 @@ def _positivo(valor):
         return float(valor) > 0
     except (TypeError, ValueError):
         return True
+=======
+CANTIDAD_FINAL = re.compile(rf"[,;:\s]+(\d+(?:[.,]\d+)?)\s*{UNIDADES}\s*$", re.IGNORECASE)
+CANTIDAD_X_FINAL = re.compile(r"\s+[xX×]\s*(\d+(?:[.,]\d+)?)\s*$")
+CANTIDAD_INICIAL = re.compile(rf"^\s*(\d+(?:[.,]\d+)?)\s*(?:[xX×]|{UNIDADES}\s+de|{UNIDADES})\s+(.+)$", re.IGNORECASE)
+CANTIDAD_SOLO_COMA = re.compile(r",\s*(\d+(?:[.,]\d+)?)\s*$")
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
 
 def _numero(texto):
@@ -73,6 +84,7 @@ def _numero(texto):
     return int(numero) if numero == int(numero) else numero
 
 
+<<<<<<< HEAD
 def parsear_lineas(texto):
     """
     Convierte un texto con varios productos en [(nombre, cantidad, explicita)].
@@ -85,6 +97,15 @@ def parsear_lineas(texto):
 
     Las líneas que acaban en ":" son títulos y se ignoran. Si un producto
     se repite, se suman las cantidades.
+=======
+def parsear_lista(texto):
+    """
+    Convierte un texto con varios productos en [(nombre, cantidad), ...].
+
+    Entiende una línea por producto (o separados por ";") y cantidades como:
+      "Leche entera, 2 unidades" · "2 x leche" · "Leche x2" · "Pan, 3" · "Sal"
+    Sin cantidad se entiende 1. Si un producto se repite, se suman.
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
     """
 
     if isinstance(texto, (list, tuple)):
@@ -96,6 +117,7 @@ def parsear_lineas(texto):
     orden = []
 
     for linea in lineas:
+<<<<<<< HEAD
         linea = VIÑETA.sub("", linea).strip()
 
         if not linea or linea.endswith(":"):
@@ -108,11 +130,25 @@ def parsear_lineas(texto):
         nombre = linea
 
         for patron in (CANTIDAD_FINAL, CANTIDAD_X_FINAL, CANTIDAD_ENTRE_PARENTESIS, CANTIDAD_SOLO_COMA):
+=======
+        linea = VIÑETA.sub("", linea).strip().strip(".").strip()
+
+        if not linea:
+            continue
+
+        cantidad = 1
+        nombre = linea
+
+        for patron in (CANTIDAD_FINAL, CANTIDAD_X_FINAL, CANTIDAD_SOLO_COMA):
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
             coincidencia = patron.search(nombre)
 
             if coincidencia:
                 cantidad = _numero(coincidencia.group(1))
+<<<<<<< HEAD
                 explicita = True
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
                 nombre = nombre[: coincidencia.start()]
                 break
         else:
@@ -120,10 +156,16 @@ def parsear_lineas(texto):
 
             if inicial:
                 cantidad = _numero(inicial.group(1))
+<<<<<<< HEAD
                 explicita = True
                 nombre = inicial.group(2)
 
         nombre = APROX.sub("", nombre).strip(" ,;:-–")
+=======
+                nombre = inicial.group(2)
+
+        nombre = nombre.strip(" ,;:-")
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
         if not nombre or cantidad <= 0:
             continue
@@ -132,6 +174,7 @@ def parsear_lineas(texto):
 
         if clave in acumulado:
             acumulado[clave][1] += cantidad
+<<<<<<< HEAD
             acumulado[clave][2] = acumulado[clave][2] or explicita
         else:
             acumulado[clave] = [nombre, cantidad, explicita]
@@ -234,11 +277,19 @@ def limpiar_ingrediente(nombre, cantidad=1):
             texto = suelta.group(2).strip()
 
     return (texto or str(nombre).strip()), cantidad
+=======
+        else:
+            acumulado[clave] = [nombre, cantidad]
+            orden.append(clave)
+
+    return [(acumulado[c][0], acumulado[c][1]) for c in orden]
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
 
 class Inventario(ModuloBase):
     nombre = "inventario"
 
+<<<<<<< HEAD
     # ------------------------------------------------------------------
     # Recetas: qué falta
     # ------------------------------------------------------------------
@@ -336,6 +387,8 @@ class Inventario(ModuloBase):
 
         return {"inventario": comida, "basicos": self.basicos()}
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
     def normalizar_ubicacion(self, ubicacion, estricta=False):
         """
         Devuelve la ubicación oficial. Si no se reconoce y `estricta` es
@@ -487,6 +540,7 @@ class Inventario(ModuloBase):
 
         raise ValueError(f"No encuentro '{nombre}' en el inventario.")
 
+<<<<<<< HEAD
     def borrar(self, nombre, ubicacion=None):
         """
         Elimina por completo un producto (sin importar cuántas unidades haya).
@@ -533,6 +587,8 @@ class Inventario(ModuloBase):
 
         return total
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
     def listar(self, ubicacion=None):
         """Devuelve el inventario de una ubicación o de todas."""
 

@@ -1,7 +1,10 @@
 from datetime import datetime
 
 from brain.base.modulo import ModuloBase
+<<<<<<< HEAD
 from brain.core.database import Database
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 from brain.modules.inventario import normalizar
 
 TIPOS = ("temperatura", "humedad", "presencia", "agua", "luminosidad")
@@ -16,10 +19,13 @@ SINONIMOS = {
 class Sensores(ModuloBase):
     nombre = "sensores"
 
+<<<<<<< HEAD
     def __init__(self):
         super().__init__()
         self.db = Database()
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
     def normalizar_tipo(self, tipo):
         clave = normalizar(tipo)
 
@@ -39,14 +45,22 @@ class Sensores(ModuloBase):
             "fecha": datetime.now().isoformat(timespec="seconds"),
         }
 
+<<<<<<< HEAD
         self.db.guardar_lectura_sensor(tipo, valor, ubicacion, lectura["fecha"])
+=======
+        self.añadir_registro(tipo, lectura)
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
         return {"sensor": tipo, **lectura}
 
     def ultima(self, tipo):
         tipo = self.normalizar_tipo(tipo)
 
+<<<<<<< HEAD
         lecturas = self.db.lecturas_sensor(tipo, limite=1)
+=======
+        lecturas = self.obtener_seccion(tipo)
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
         if not lecturas:
             return None

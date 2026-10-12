@@ -33,6 +33,7 @@ Escribe como hablarías con una persona:
 * «Tengo dentista el viernes a las 18:30» · «Apúntame que tengo que pagar la luz» · «¿Qué tengo esta semana?»
 * «Las placas han producido 32,5 kWh hoy» · «¿Cuánto han producido esta semana?» · «¿Cuánto estoy consumiendo ahora?»
 * «He metido 6 huevos en la nevera» · «¿Cuántos huevos quedan?» · «Se ha acabado el aceite» (lo apunta en la compra solo)
+<<<<<<< HEAD
 * Pega una lista entera de productos («Leche: 6 unidades», «Arroz, 2», «2 x huevos»...) y BRAIN la guarda **en la despensa** de una vez. También puedes usar el botón **Importar lista** del panel, que te enseña lo que ha entendido antes de guardar. Para la compra, empieza el mensaje con «lista de la compra».
 * «¿Qué puedo cocinar hoy?» · «Dame una receta con lo que tengo» (usa la despensa y los básicos de casa: aceite, sal, agua, harina, azúcar y especias)
 * «Borra la lista de la compra» · «Quita el pan de la compra» · «Ya no tengo comino» (lo quita de los básicos)
@@ -48,6 +49,13 @@ Pulsa 🎤 y habla; BRAIN envía lo que dices cuando haces una pausa.
 * Si el navegador pregunta por el permiso del micrófono, acéptalo. Si lo bloqueaste antes, pulsa el candado de la barra de direcciones y permítelo.
 
 La casilla «Leer las respuestas en voz alta» hace que BRAIN hable.
+=======
+* Pega una lista entera de productos («Leche, 6 unidades», «Arroz, 2»...) y BRAIN la guarda de una vez.
+* «Enciende la luz del salón» · «Baja la persiana del dormitorio» · «Pon el termostato a 22» (necesita [`GUIA_DOMOTICA.md`](GUIA_DOMOTICA.md))
+* «Recuerda que mi hermana se llama Ana» · «¿Qué sabes de mí?» · «Olvida lo de mi hermana»
+
+El micrófono 🎤 (solo en Chrome y Edge) sirve para dictar, y la casilla «Leer las respuestas en voz alta» hace que BRAIN hable.
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
 Si prefieres la ventana negra sin navegador, usa **`INICIAR_CONSOLA.bat`**.
 

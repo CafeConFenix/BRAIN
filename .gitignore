@@ -40,6 +40,7 @@ datos/conversaciones/
 *.corrupto
 
 datos/domotica/home_assistant.json
+<<<<<<< HEAD
 
 # Modelos de voz descargados (cientos de MB)
 datos/voz/
@@ -47,3 +48,5 @@ datos/voz/
 # Base de datos y copias locales
 datos/brain.db
 datos/backups/
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6

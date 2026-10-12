@@ -1,7 +1,10 @@
 import json
 import re
 
+<<<<<<< HEAD
 from brain.ai.herramientas_relevantes import categorias_relevantes, filtrar
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 from brain.ai.ollama import Ollama, SinHerramientasError
 from brain.core import logger
 from brain.utils.fechas import ahora_texto
@@ -17,11 +20,14 @@ REGLAS:
 - Puedes usar varias herramientas seguidas si hace falta.
 - Si el usuario te da una LISTA de productos (de la despensa, de la compra...), usa UNA sola vez anadir_varios_inventario o anadir_varias_a_compra con TODA la lista copiada tal cual. No llames a la herramienta producto por producto.
 - Si el usuario dice que algo se ha acabado o que ya no queda ("se ha acabado la leche"), usa se_ha_acabado: lo quita del inventario y lo apunta en la lista de la compra.
+<<<<<<< HEAD
 - Si el usuario pide una receta, una idea para comer o cenar, o qué puede cocinar: llama PRIMERO a ingredientes_disponibles. Propón platos hechos solo con esos ingredientes (la despensa más los básicos de casa), con pasos claros y cantidades. Si falta algo, dilo y ofrece apuntarlo en la lista de la compra.
 - Si el usuario elige una receta y quiere comprar lo que le falta (o pide "apunta lo que me falta"), llama a anadir_faltantes_receta_a_compra con TODOS los ingredientes de la receta: ella compara con la despensa y los básicos y apunta solo lo necesario. No vayas ingrediente por ingrediente.
 - Si la pregunta puede estar en las notas o manuales del usuario (lavadora, caldera, wifi, apuntes), llama a buscar_en_documentos antes de contestar y di de qué documento sale. Si no hay nada, dilo; no inventes.
 - Para copias de seguridad usa crear_copia_seguridad. Antes de restaurar_copia_seguridad pide confirmación al usuario: sustituye sus datos actuales.
 - Para borrar la lista de la compra entera usa vaciar_lista_compra; para quitar un solo producto, quitar_de_compra. Para el inventario, borrar_del_inventario o vaciar_inventario. Solo cuando el usuario lo pida.
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 - NUNCA digas que has guardado, añadido o hecho algo si no has recibido el resultado de la herramienta. Si la herramienta devuelve un error, cuéntaselo al usuario con claridad en lugar de inventar que funcionó.
 - Si el usuario te pide recordar algo ("recuerda que...", "apunta que..."), usa la herramienta recordar.
 - Si falta un dato imprescindible (por ejemplo cuánto pesa), pregúntaselo antes de guardar nada.
@@ -80,12 +86,15 @@ class BrainAI:
         # Herramientas usadas en la última pregunta (para mostrarlas en pantalla).
         self.herramientas_usadas = []
 
+<<<<<<< HEAD
         # Tema de la conversación en curso ("solo recetas"...), si lo tiene.
         self.contexto_extra = None
 
         # Categorías de herramientas que se enseñan en la pregunta en curso.
         self._categorias = None
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
     def modelos(self):
         """Devuelve los modelos disponibles."""
         return self.ollama.modelos()
@@ -108,7 +117,11 @@ class BrainAI:
     def _descripcion_herramientas(self):
         """Lista de herramientas en texto (solo para el modo texto)."""
 
+<<<<<<< HEAD
         herramientas = filtrar(self._herramientas(), self._categorias)
+=======
+        herramientas = self._herramientas()
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
         if not herramientas:
             return "No tienes herramientas disponibles."
@@ -136,9 +149,12 @@ class BrainAI:
 
             partes.append(personalidad or PERSONALIDAD_BASICA)
 
+<<<<<<< HEAD
         if self.contexto_extra:
             partes.append("TEMA DE ESTA CONVERSACIÓN (síguelo): " + self.contexto_extra)
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
         partes.append(f"FECHA Y HORA ACTUALES: {ahora_texto()}")
 
         recuerdos = self.gestor.recuerdos() if self.gestor else ""
@@ -268,10 +284,14 @@ class BrainAI:
         """Respuesta de emergencia si el modelo no escribe texto final."""
 
         if not self.herramientas_usadas:
+<<<<<<< HEAD
             return (
                 "No he sabido qué hacer con eso. Prueba a pedírmelo de otra forma, por ejemplo: "
                 "«enciende la luz del salón», «apunta leche en la compra» o «qué puedo cocinar hoy»."
             )
+=======
+            return "No he podido generar una respuesta. Prueba a reformular la pregunta."
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
         ultima = self.herramientas_usadas[-1]
 
@@ -330,10 +350,13 @@ class BrainAI:
         return self._resumen_sin_texto()
 
     def _bucle(self, mensaje, system, modelo, historial, modo_texto):
+<<<<<<< HEAD
         # Solo se describen las herramientas de los temas de los que se habla:
         # con todas, las descripciones llenan la memoria de trabajo del modelo.
         self._categorias = categorias_relevantes(mensaje, historial)
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
         mensajes = [
             {
                 "role": "system",
@@ -349,9 +372,13 @@ class BrainAI:
         esquemas = None
 
         if self.tools is not None and not modo_texto:
+<<<<<<< HEAD
             esquemas = self.tools.esquemas(self._categorias)
 
         vacios = 0
+=======
+            esquemas = self.tools.esquemas()
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
         for _ in range(self.MAX_PASOS):
             respuesta = self.ollama.chat_completo(
@@ -368,6 +395,7 @@ class BrainAI:
                 llamadas = self._llamadas_desde_texto(contenido)
 
             if not llamadas:
+<<<<<<< HEAD
                 if contenido.strip():
                     return contenido.strip()
 
@@ -389,6 +417,9 @@ class BrainAI:
                 )
 
                 continue
+=======
+                return contenido.strip() or self._resumen_sin_texto()
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
             mensajes.append(
                 {

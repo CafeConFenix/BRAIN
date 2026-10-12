@@ -32,7 +32,11 @@ En Linux o macOS: `python3 main.py` (web), `python3 main.py --consola` o `python
 
 ## Estado del proyecto
 
+<<<<<<< HEAD
 **Versión:** 0.10.0
+=======
+**Versión:** 0.7.0
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
 ### Núcleo
 
@@ -60,11 +64,18 @@ En Linux o macOS: `python3 main.py` (web), `python3 main.py --consola` o `python
 Las herramientas son funciones que la IA puede usar para consultar y modificar datos. Se registran con un decorador y se descubren solas: basta con crear un archivo en `brain/tools/builtin/`.
 
 * **Salud:** `guardar_peso`, `obtener_peso`, `peso_en_fecha`, `historial_peso`
+<<<<<<< HEAD
 * **Inventario:** `anadir_inventario`, `anadir_varios_inventario`, `quitar_inventario`, `se_ha_acabado`, `ver_inventario`, `buscar_inventario`, `borrar_del_inventario`, `vaciar_inventario`
 * **Compras:** `anadir_a_compra`, `anadir_varias_a_compra`, `ver_lista_compra`, `marcar_comprado`, `quitar_de_compra`, `vaciar_lista_compra`
 * **Calendario:** `anadir_evento`, `anadir_tarea`, `completar_tarea`, `ver_agenda`
 * **Energía:** `guardar_produccion_solar`, `ver_produccion_solar`, `ver_energia_ahora`
 * **Recetas:** `ingredientes_disponibles` (despensa + básicos de casa), `ver_basicos`, `anadir_basico`, `quitar_basico`
+=======
+* **Inventario:** `anadir_inventario`, `anadir_varios_inventario`, `quitar_inventario`, `se_ha_acabado`, `ver_inventario`, `buscar_inventario`
+* **Compras:** `anadir_a_compra`, `anadir_varias_a_compra`, `ver_lista_compra`, `marcar_comprado`
+* **Calendario:** `anadir_evento`, `anadir_tarea`, `completar_tarea`, `ver_agenda`
+* **Energía:** `guardar_produccion_solar`, `ver_produccion_solar`, `ver_energia_ahora`
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 * **Memoria:** `recordar`, `consultar_memoria`, `olvidar`
 * **Sensores:** `guardar_sensor`, `ver_sensor`
 * **Domótica:** `encender`, `apagar`, `regular_luz`, `mover_persiana`, `poner_temperatura`, `activar_escena`, `ver_dispositivos`, `estado_dispositivo`
@@ -82,12 +93,20 @@ Las herramientas son funciones que la IA puede usar para consultar y modificar d
 
 * ✅ Historial de conversación persistente (se recuerda al cerrar y abrir)
 * ✅ Consultas históricas ("¿cuánto pesaba el 5 de agosto?")
+<<<<<<< HEAD
 * ✅ Interfaz web local (tema claro/oscuro, móvil): energía en directo, dispositivos con interruptores, despensa, compra, importación de listas, micrófono local (funciona en Brave) y lectura en voz alta
+=======
+* ✅ Interfaz web local con panel de datos, dictado por voz y lectura en voz alta
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 * ✅ Chat por consola
 
 ### Tests
 
+<<<<<<< HEAD
 * ✅ 177 tests automáticos que no necesitan Ollama ni tocan tus datos
+=======
+* ✅ 139 tests automáticos que no necesitan Ollama ni tocan tus datos
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 * ✅ `scripts/probar_ia.py` para una prueba con tu Ollama real
 
 ```text
@@ -154,7 +173,11 @@ BRAIN/
 
 ## Almacenamiento
 
+<<<<<<< HEAD
 Los datos se guardan dentro de `datos/` (puedes cambiar la carpeta con `BRAIN_DATOS`). Lo que crece sin parar (peso, sensores, producción solar y energía) está en una base SQLite, `datos/brain.db`; el resto (despensa, compra, agenda, memoria y configuración) son archivos JSON que puedes abrir con el Bloc de notas. BRAIN hace una copia diaria en `datos/backups/` (se guardan las 5 últimas) y puedes pedirle "haz una copia de seguridad" o "restaura la última copia". Para que consulte tus manuales y notas, guarda archivos `.txt`, `.md` o `.json` en `datos/documentos/`. Para cambiar los sonidos de los avisos, copia tus `.wav`, `.mp3` u `.ogg` en `datos/sonidos/` y dile a BRAIN qué sonido quieres para cada tipo de aviso.
+=======
+Los datos de los módulos se guardan en archivos JSON independientes dentro de `datos/` (puedes cambiar la carpeta con la variable de entorno `BRAIN_DATOS`). Son archivos de texto: puedes abrirlos con el Bloc de notas y hacer copia de seguridad copiando la carpeta.
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
 El objetivo es mantener la lógica de los módulos separada de la implementación del almacenamiento.
 
@@ -171,9 +194,14 @@ Opcional, mediante variables de entorno:
 | `BRAIN_OLLAMA_URL` | Dirección de Ollama (si no existe se usa `OLLAMA_HOST`) | `http://127.0.0.1:11434` |
 | `BRAIN_HA_URL` / `BRAIN_HA_TOKEN` | Home Assistant (alternativa a `CONFIGURAR_DOMOTICA.bat`) | los de `datos/domotica/` |
 | `BRAIN_PENSAR` | `1` activa el "modo pensar" de Qwen 3 (más lento, más preciso) | desactivado |
+<<<<<<< HEAD
 | `BRAIN_CONTEXTO` | Memoria de trabajo de la IA, en tokens | `16384` |
 | `BRAIN_PUERTO` | Puerto de la interfaz web | `8765` |
 | `BRAIN_VOZ_MODELO` | Modelo Whisper del micrófono (`base`, `small`, `medium`) | según tu RAM |
+=======
+| `BRAIN_CONTEXTO` | Memoria de trabajo de la IA, en tokens | `8192` |
+| `BRAIN_PUERTO` | Puerto de la interfaz web | `8765` |
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
 ---
 

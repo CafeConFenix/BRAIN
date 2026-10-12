@@ -98,12 +98,15 @@ def main(argumentos=None):
         diagnostico(brain)
         return 0
 
+<<<<<<< HEAD
     # Tareas en segundo plano (copias de seguridad, sondeo de Home Assistant):
     # corren en su propio hilo y no bloquean ni la consola ni la web.
     from brain.core.scheduler import iniciar_planificador
 
     iniciar_planificador()
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
     if opciones.consola:
         listo, mensaje = preparar_ia(brain, interactivo=True)
 

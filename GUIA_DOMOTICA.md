@@ -13,10 +13,13 @@ Una vez que tus aparatos aparecen en Home Assistant, BRAIN los controla solo. T�
 
 Si hay dos aparatos que encajan («la luz» y tienes varias), BRAIN te pregunta cuál en lugar de adivinar.
 
+<<<<<<< HEAD
 ## El panel «Casa»
 
 Al conectar Home Assistant, el panel de la derecha muestra tus dispositivos **agrupados por habitación**, cada uno con un **interruptor** para encenderlo o apagarlo (luces, enchufes, ventiladores, persianas, climatización, televisiones) y botones para activar tus escenas. Se actualiza solo cada pocos segundos. Si un aparato no está en la habitación correcta, cámbialo en Home Assistant (*Ajustes → Áreas*).
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 ## Ver el inversor solar y el consumo en tiempo real
 
 Si tu inversor (Huawei, Fronius, SolarEdge, Growatt, Solax, GoodWe, Victron, SMA...) o tu contador (por ejemplo un Shelly EM) ya aparecen en Home Assistant, BRAIN los lee en directo:

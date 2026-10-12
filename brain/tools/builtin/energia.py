@@ -49,6 +49,7 @@ def ver_energia_ahora():
     lectura = tiempo_real.leer()
 
     return {**lectura, "resumen": describir(lectura)}
+<<<<<<< HEAD
 
 
 @tool(
@@ -71,3 +72,5 @@ def ver_consejo_energia(dias: int = 14):
         analisis["ahora"] = ahora
 
     return analisis
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6

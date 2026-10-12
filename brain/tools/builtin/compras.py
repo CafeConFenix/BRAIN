@@ -70,6 +70,7 @@ def marcar_comprado(producto: str):
     """Marca un producto como comprado."""
 
     return {"comprado": compras.comprado(producto)}
+<<<<<<< HEAD
 
 
 @tool(
@@ -94,3 +95,5 @@ def vaciar_lista_compra():
     """Vacía la lista de la compra."""
 
     return {"borrados": compras.vaciar()}
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6

@@ -98,20 +98,30 @@ class ToolRegistry:
 
         return None
 
+<<<<<<< HEAD
     def esquemas(self, categorias=None):
         """
         Describe las herramientas en el formato de "tool calling" de
         Ollama (JSON Schema), para que el modelo las pueda invocar.
 
         Con `categorias` solo se describen las de esas categorías.
+=======
+    def esquemas(self):
+        """
+        Describe las herramientas en el formato de "tool calling" de
+        Ollama (JSON Schema), para que el modelo las pueda invocar.
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
         """
 
         esquemas = []
 
         for herramienta in REGISTRO_HERRAMIENTAS:
+<<<<<<< HEAD
             if categorias and herramienta["categoria"] not in categorias:
                 continue
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
             propiedades = {}
 
             for parametro in herramienta["parametros"]:

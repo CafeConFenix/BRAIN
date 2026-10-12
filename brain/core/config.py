@@ -66,10 +66,15 @@ class Config:
     - BRAIN_OLLAMA_URL:  dirección de Ollama (por defecto 127.0.0.1:11434).
     - BRAIN_MODELO:      modelo a usar (por defecto, el mejor instalado).
     - BRAIN_PENSAR:      1 para activar el "modo pensar" de Qwen3 (más lento).
+<<<<<<< HEAD
     - BRAIN_CONTEXTO:    tamaño de memoria de la IA en tokens (por defecto 16384).
     - BRAIN_PUERTO:      puerto de la interfaz web (por defecto 8765).
     - BRAIN_SONDEO_SEGUNDOS: cada cuántos segundos revisa Home Assistant en segundo plano (por defecto 120).
     - BRAIN_PLANIFICADOR: 0 para desactivar las tareas en segundo plano.
+=======
+    - BRAIN_CONTEXTO:    tamaño de memoria de la IA en tokens (por defecto 8192).
+    - BRAIN_PUERTO:      puerto de la interfaz web (por defecto 8765).
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
     """
 
     # Carpeta del paquete "brain"
@@ -102,6 +107,7 @@ class Config:
 
     PENSAR = _entorno_bool("BRAIN_PENSAR", False)
 
+<<<<<<< HEAD
     # Memoria de trabajo de la IA (tokens). Ollama usa 4096 por defecto. Solo
     # las descripciones de las herramientas de BRAIN ocupan unos 5.000 tokens,
     # así que con 8192 el modelo perdía sus instrucciones y contestaba vacío.
@@ -117,5 +123,17 @@ class Config:
     MODELO_POR_DEFECTO = "qwen3:4b"
 
     VERSION = "0.10.0"
+=======
+    # Memoria de trabajo de la IA (tokens). Ollama usa 4096 por defecto,
+    # que se queda corto con la personalidad y las herramientas de BRAIN.
+    CONTEXTO = _entorno_int("BRAIN_CONTEXTO", 8192)
+
+    PUERTO_WEB = _entorno_int("BRAIN_PUERTO", 8765)
+
+    # Modelo que descarga el instalador / el asistente de primer uso.
+    MODELO_POR_DEFECTO = "qwen3:4b"
+
+    VERSION = "0.7.0"
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
     NOMBRE = "BRAIN"

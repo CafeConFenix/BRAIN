@@ -386,6 +386,7 @@ class Ollama:
 
         return mensaje
 
+<<<<<<< HEAD
     def capacidades(self, modelo):
         """Capacidades que declara Ollama para un modelo ("completion", "vision", "tools"...)."""
 
@@ -422,6 +423,8 @@ class Ollama:
 
         return self._enviar([mensaje], modelo=modelo)["content"]
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
     def chat(self, mensajes, modelo=None):
         """
         Envía una lista de mensajes ({"role": ..., "content": ...}) y

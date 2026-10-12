@@ -25,7 +25,10 @@ class OllamaFalso:
         self.peticiones = []
         self.pull_ok = True
         self.descargados = []
+<<<<<<< HEAD
         self.con_vision = set()  # modelos que declaran la capacidad "vision"
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
 
         falso = self
 
@@ -51,10 +54,13 @@ class OllamaFalso:
                 longitud = int(self.headers.get("Content-Length", "0"))
                 datos = json.loads(self.rfile.read(longitud).decode("utf-8"))
 
+<<<<<<< HEAD
                 if self.path == "/api/show":
                     capacidades = ["completion", "tools"] + (["vision"] if datos.get("model") in falso.con_vision else [])
                     return self._enviar(200, {"capabilities": capacidades})
 
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
                 if self.path == "/api/pull":
                     if falso.pull_ok:
                         falso.modelos.append(datos["model"])
