@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div align="center">
 
 <img src="brain/web/static/iconos/icono-192.png" width="112" alt="BRAIN logo">
