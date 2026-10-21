@@ -1,0 +1,4 @@
+# BRAIN no necesita instalar ningun paquete externo para funcionar:
+# solo usa la biblioteca estandar de Python (3.9 o superior).
+#
+# Las herramientas para desarrollar estan en requirements-dev.txt

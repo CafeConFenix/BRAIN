@@ -1,0 +1,43 @@
+@echo off
+chcp 65001 >nul
+cd /d "%~dp0"
+title Cerrar BRAIN
+set "PYTHONUTF8=1"
+
+call :buscar_python
+if not defined PY (
+    echo No encuentro Python en este equipo, asi que BRAIN no puede estar abierto.
+    pause
+    exit /b 0
+)
+
+%PY% main.py --cerrar
+echo.
+pause
+exit /b 0
+
+
+:buscar_python
+set "PY="
+rem Primero el Python portable de BRAIN (carpeta python), si el instalador tuvo que usarlo.
+call :probar_ruta "%~dp0python\python.exe"
+call :probar "py -3"
+call :probar "python"
+for %%V in (314 313 312 311 310 39) do (
+    call :probar_ruta "%LOCALAPPDATA%\Programs\Python\Python%%V\python.exe"
+    call :probar_ruta "%ProgramFiles%\Python%%V\python.exe"
+)
+exit /b 0
+
+:probar
+if defined PY exit /b 0
+%~1 -c "import sys; sys.exit(0 if sys.version_info>=(3,9) else 1)" >nul 2>nul
+if not errorlevel 1 set "PY=%~1"
+exit /b 0
+
+:probar_ruta
+if defined PY exit /b 0
+if not exist "%~1" exit /b 0
+"%~1" -c "import sys; sys.exit(0 if sys.version_info>=(3,9) else 1)" >nul 2>nul
+if not errorlevel 1 set "PY="%~1""
+exit /b 0
