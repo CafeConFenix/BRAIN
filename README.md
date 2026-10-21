@@ -324,7 +324,3 @@ Tools are functions that the AI can invoke to query and modify data. They use a 
 
 - ✅ 177 automated tests (run locally without needing Ollama or touching your personal data)
 - ✅ `scripts/probar_ia.py` utility for real Ollama connection testing
-
-```text
-python -m unittest discover -s tests -t .
->>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
