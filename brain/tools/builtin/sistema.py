@@ -50,6 +50,7 @@ def restaurar_copia_seguridad(nombre: str = None):
         return {"restaurado": sistema.restaurar_copia(nombre)}
     except CopiaError as error:
         return {"error": str(error)}
+<<<<<<< HEAD
 
 
 @tool(
@@ -64,3 +65,5 @@ def configurar_destino_copias(ruta: str = ""):
         return sistema.configurar_destino(ruta)
     except CopiaError as error:
         return {"error": str(error)}
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80

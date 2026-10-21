@@ -7,7 +7,10 @@ import time
 
 from brain.ai.ollama import OllamaError, buscar_ejecutable
 from brain.core.config import Config
+<<<<<<< HEAD
 from brain.utils.procesos import ejecutar
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 from brain.core.hardware import alternativas, detectar_hardware, guardar_modelo, recomendar_modelo
 
 AYUDA = """
@@ -86,7 +89,11 @@ def _salida_de(comando, espera=15):
     """
 
     try:
+<<<<<<< HEAD
         resultado = ejecutar(comando, capture_output=True, timeout=espera)
+=======
+        resultado = subprocess.run(comando, capture_output=True, timeout=espera)
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     except (OSError, subprocess.SubprocessError):
         return ""
 

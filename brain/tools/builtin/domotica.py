@@ -121,6 +121,7 @@ def estado_dispositivo(dispositivo: str):
     """Estado de un aparato."""
 
     return _seguro(domotica.estado_de, dispositivo)
+<<<<<<< HEAD
 
 
 @tool(
@@ -142,3 +143,5 @@ def dispositivos_con_problemas(bateria_minima: float = 20):
     """Dispositivos con problemas."""
 
     return _seguro(domotica.con_problemas, float(bateria_minima))
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80

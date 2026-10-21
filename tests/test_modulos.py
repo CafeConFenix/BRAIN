@@ -10,7 +10,15 @@ class TestModulos(CasoBrain):
     def test_se_cargan_todos_los_modulos(self):
         self.assertEqual(
             self.brain.modules.listar(),
+<<<<<<< HEAD
             ["automatizaciones", "avisos", "calendario", "compras", "documentos", "domotica", "electrodomesticos", "energia", "gastos", "habitos", "hogar", "inventario", "memoria", "menu", "perfiles", "resumen", "rutinas", "salud", "sensores", "sistema"],
+=======
+<<<<<<< HEAD
+            ["automatizaciones", "avisos", "calendario", "compras", "documentos", "domotica", "electrodomesticos", "energia", "inventario", "memoria", "resumen", "salud", "sensores", "sistema"],
+=======
+            ["calendario", "compras", "domotica", "energia", "inventario", "memoria", "salud", "sensores"],
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         )
 
     # -- salud ---------------------------------------------------------

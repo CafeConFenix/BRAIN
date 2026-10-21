@@ -21,7 +21,10 @@ import wave
 
 from brain.core import logger
 from brain.core.config import Config
+<<<<<<< HEAD
 from brain.utils.procesos import ejecutar
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 MAX_SEGUNDOS = 60
 
@@ -58,6 +61,7 @@ def _paquete_instalado():
     return importlib.util.find_spec("faster_whisper") is not None
 
 
+<<<<<<< HEAD
 def remuestrear(audio, origen, destino=16000):
     """
     Cambia la frecuencia de muestreo de un audio (array float32).
@@ -91,6 +95,8 @@ def remuestrear(audio, origen, destino=16000):
     return numpy.interp(posiciones, numpy.arange(len(audio)), audio).astype(numpy.float32)
 
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 def wav_a_audio(contenido):
     """
     Convierte un WAV (16 bits, mono o estéreo) en un array float32 a 16 kHz.
@@ -123,7 +129,14 @@ def wav_a_audio(contenido):
         audio = audio[: len(audio) // canales * canales].reshape(-1, canales).mean(axis=1)
 
     if frecuencia != 16000 and len(audio):
+<<<<<<< HEAD
         audio = remuestrear(audio, frecuencia, 16000)
+=======
+        destino = int(len(audio) * 16000 / frecuencia)
+        audio = numpy.interp(numpy.linspace(0, len(audio) - 1, destino), numpy.arange(len(audio)), audio).astype(
+            numpy.float32
+        )
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
     return audio
 
@@ -176,7 +189,11 @@ class Reconocedor:
             if not _paquete_instalado():
                 self._instalacion["paso"] = "Instalando el reconocimiento de voz (1-2 minutos)..."
 
+<<<<<<< HEAD
                 resultado = ejecutar(
+=======
+                resultado = subprocess.run(
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
                     [sys.executable, "-m", "pip", "install", "--disable-pip-version-check", "faster-whisper"],
                     capture_output=True,
                 )

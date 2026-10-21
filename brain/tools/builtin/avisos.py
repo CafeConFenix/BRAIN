@@ -18,6 +18,7 @@ def _error(error):
         "mensaje": "Qué hay que recordar",
         "en_minutos": "Minutos desde ahora. Omitir si das fecha_hora.",
         "fecha_hora": "AAAA-MM-DD HH:MM, o solo HH:MM (hoy, o mañana si ya pasó). Omitir si das en_minutos.",
+<<<<<<< HEAD
         "persona": "Para quién es el recordatorio, si no es para el usuario que habla (opcional).",
     },
 )
@@ -27,6 +28,13 @@ def crear_recordatorio(mensaje: str, en_minutos: float = None, fecha_hora: str =
     if persona:
         mensaje = f"Para {persona.strip()[:30]}: {mensaje}"
 
+=======
+    },
+)
+def crear_recordatorio(mensaje: str, en_minutos: float = None, fecha_hora: str = None):
+    """Programa un recordatorio."""
+
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     try:
         return {"programado": avisos.crear_recordatorio(mensaje, en_minutos, fecha_hora)}
     except ValueError as error:

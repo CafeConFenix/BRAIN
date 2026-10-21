@@ -17,7 +17,10 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from brain.base.modulo import ModuloBase
+<<<<<<< HEAD
 from brain.core import logger
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 from brain.core.config import Config
 from brain.core.database import NOMBRE_ARCHIVO, Database
 
@@ -172,10 +175,15 @@ class Sistema(ModuloBase):
         total = self._escribir_zip(destino)
 
         eliminadas = self._rotar()
+<<<<<<< HEAD
         extra = self.copiar_a_destino(destino)
 
         return {
             "destino_extra": extra,
+=======
+
+        return {
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             "archivo": destino.name,
             "archivos_incluidos": total,
             "tamano_kb": round(destino.stat().st_size / 1024),
@@ -183,6 +191,7 @@ class Sistema(ModuloBase):
             "copias_guardadas": len(self.listar_copias()),
         }
 
+<<<<<<< HEAD
     # ------------------------------------------------------------------
     # Segundo destino (carpeta, USB, OneDrive...)
     # ------------------------------------------------------------------
@@ -290,6 +299,8 @@ class Sistema(ModuloBase):
 
         return {"traida": nombre}
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def _rotar(self):
         copias = sorted(p for p in self.carpeta_copias.iterdir() if PATRON.match(p.name))
         sobran = copias[: max(0, len(copias) - COPIAS_A_CONSERVAR)]

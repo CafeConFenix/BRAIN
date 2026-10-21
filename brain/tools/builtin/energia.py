@@ -49,6 +49,10 @@ def ver_energia_ahora():
     lectura = tiempo_real.leer()
 
     return {**lectura, "resumen": describir(lectura)}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 
 @tool(
@@ -71,6 +75,7 @@ def ver_consejo_energia(dias: int = 14):
         analisis["ahora"] = ahora
 
     return analisis
+<<<<<<< HEAD
 
 
 @tool(
@@ -138,3 +143,7 @@ def ver_horas_baratas():
     """Horas baratas de la luz."""
 
     return energia.horas_baratas()
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80

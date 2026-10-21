@@ -1,9 +1,14 @@
 import re
 import unicodedata
+<<<<<<< HEAD
 from datetime import date, timedelta
 
 from brain.base.modulo import ModuloBase
 from brain.utils.fechas import validar_fecha
+=======
+
+from brain.base.modulo import ModuloBase
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 UBICACIONES = ("frigorifico", "congelador", "despensa", "herramientas", "consumibles")
 
@@ -44,13 +49,27 @@ def normalizar(texto):
     return _sin_acentos(texto).strip().lower()
 
 
+<<<<<<< HEAD
 UNIDADES = (
     r"(?:unidades|unidad|unids?\.?|unds?\.?|uds?\.?|u\.?|piezas?|pzs?\.?|paquetes?|botellas?|latas?|briks?|packs?)"
 )
+=======
+<<<<<<< HEAD
+UNIDADES = (
+    r"(?:unidades|unidad|unids?\.?|unds?\.?|uds?\.?|u\.?|piezas?|pzs?\.?|paquetes?|botellas?|latas?|briks?|packs?)"
+)
+=======
+UNIDADES = r"(?:unidades|unidad|uds?\.?|unid\.?|u\.?|piezas?|pzs?\.?|paquetes?|botellas?|latas?|briks?|packs?)"
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 # "- ", "• ", "* ", "1. ", "2) " al principio de una línea de lista.
 VIÑETA = re.compile(r"^\s*(?:[-•*·–]|\d+[.)])\s+")
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 SEPARADOR = r"[,;:\s\-–]+"
 
 CANTIDAD_FINAL = re.compile(rf"{SEPARADOR}(\d+(?:[.,]\d+)?)\s*{UNIDADES}\s*$", re.IGNORECASE)
@@ -67,6 +86,15 @@ def _positivo(valor):
         return float(valor) > 0
     except (TypeError, ValueError):
         return True
+<<<<<<< HEAD
+=======
+=======
+CANTIDAD_FINAL = re.compile(rf"[,;:\s]+(\d+(?:[.,]\d+)?)\s*{UNIDADES}\s*$", re.IGNORECASE)
+CANTIDAD_X_FINAL = re.compile(r"\s+[xX×]\s*(\d+(?:[.,]\d+)?)\s*$")
+CANTIDAD_INICIAL = re.compile(rf"^\s*(\d+(?:[.,]\d+)?)\s*(?:[xX×]|{UNIDADES}\s+de|{UNIDADES})\s+(.+)$", re.IGNORECASE)
+CANTIDAD_SOLO_COMA = re.compile(r",\s*(\d+(?:[.,]\d+)?)\s*$")
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 
 def _numero(texto):
@@ -75,6 +103,10 @@ def _numero(texto):
     return int(numero) if numero == int(numero) else numero
 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 def parsear_lineas(texto):
     """
     Convierte un texto con varios productos en [(nombre, cantidad, explicita)].
@@ -87,6 +119,18 @@ def parsear_lineas(texto):
 
     Las líneas que acaban en ":" son títulos y se ignoran. Si un producto
     se repite, se suman las cantidades.
+<<<<<<< HEAD
+=======
+=======
+def parsear_lista(texto):
+    """
+    Convierte un texto con varios productos en [(nombre, cantidad), ...].
+
+    Entiende una línea por producto (o separados por ";") y cantidades como:
+      "Leche entera, 2 unidades" · "2 x leche" · "Leche x2" · "Pan, 3" · "Sal"
+    Sin cantidad se entiende 1. Si un producto se repite, se suman.
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     """
 
     if isinstance(texto, (list, tuple)):
@@ -98,6 +142,10 @@ def parsear_lineas(texto):
     orden = []
 
     for linea in lineas:
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         linea = VIÑETA.sub("", linea).strip()
 
         if not linea or linea.endswith(":"):
@@ -110,11 +158,32 @@ def parsear_lineas(texto):
         nombre = linea
 
         for patron in (CANTIDAD_FINAL, CANTIDAD_X_FINAL, CANTIDAD_ENTRE_PARENTESIS, CANTIDAD_SOLO_COMA):
+<<<<<<< HEAD
+=======
+=======
+        linea = VIÑETA.sub("", linea).strip().strip(".").strip()
+
+        if not linea:
+            continue
+
+        cantidad = 1
+        nombre = linea
+
+        for patron in (CANTIDAD_FINAL, CANTIDAD_X_FINAL, CANTIDAD_SOLO_COMA):
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             coincidencia = patron.search(nombre)
 
             if coincidencia:
                 cantidad = _numero(coincidencia.group(1))
+<<<<<<< HEAD
                 explicita = True
+=======
+<<<<<<< HEAD
+                explicita = True
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
                 nombre = nombre[: coincidencia.start()]
                 break
         else:
@@ -122,10 +191,22 @@ def parsear_lineas(texto):
 
             if inicial:
                 cantidad = _numero(inicial.group(1))
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
                 explicita = True
                 nombre = inicial.group(2)
 
         nombre = APROX.sub("", nombre).strip(" ,;:-–")
+<<<<<<< HEAD
+=======
+=======
+                nombre = inicial.group(2)
+
+        nombre = nombre.strip(" ,;:-")
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
         if not nombre or cantidad <= 0:
             continue
@@ -134,6 +215,10 @@ def parsear_lineas(texto):
 
         if clave in acumulado:
             acumulado[clave][1] += cantidad
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             acumulado[clave][2] = acumulado[clave][2] or explicita
         else:
             acumulado[clave] = [nombre, cantidad, explicita]
@@ -236,11 +321,25 @@ def limpiar_ingrediente(nombre, cantidad=1):
             texto = suelta.group(2).strip()
 
     return (texto or str(nombre).strip()), cantidad
+<<<<<<< HEAD
+=======
+=======
+        else:
+            acumulado[clave] = [nombre, cantidad]
+            orden.append(clave)
+
+    return [(acumulado[c][0], acumulado[c][1]) for c in orden]
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 
 class Inventario(ModuloBase):
     nombre = "inventario"
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     # ------------------------------------------------------------------
     # Recetas: qué falta
     # ------------------------------------------------------------------
@@ -338,6 +437,11 @@ class Inventario(ModuloBase):
 
         return {"inventario": comida, "basicos": self.basicos()}
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def normalizar_ubicacion(self, ubicacion, estricta=False):
         """
         Devuelve la ubicación oficial. Si no se reconoce y `estricta` es
@@ -401,12 +505,18 @@ class Inventario(ModuloBase):
 
         for sitio in UBICACIONES:
             for producto in sorted(self.obtener_seccion(sitio), key=lambda p: normalizar(p.get("nombre", ""))):
+<<<<<<< HEAD
                 fila = {"ubicacion": sitio, "nombre": producto.get("nombre", ""), "cantidad": producto.get("cantidad", 1)}
 
                 if producto.get("caduca"):
                     fila["caduca"] = producto["caduca"]
 
                 plano.append(fila)
+=======
+                plano.append(
+                    {"ubicacion": sitio, "nombre": producto.get("nombre", ""), "cantidad": producto.get("cantidad", 1)}
+                )
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
         return plano
 
@@ -415,6 +525,7 @@ class Inventario(ModuloBase):
 
         self.añadir_registro(seccion, producto)
 
+<<<<<<< HEAD
     def añadir(self, nombre, cantidad=1, ubicacion="despensa", caduca=None):
         """
         Añade unidades de un producto. Si ya existe en esa ubicación,
@@ -423,6 +534,14 @@ class Inventario(ModuloBase):
 
         caduca = validar_fecha(caduca) if caduca not in (None, "") else None
 
+=======
+    def añadir(self, nombre, cantidad=1, ubicacion="despensa"):
+        """
+        Añade unidades de un producto. Si ya existe en esa ubicación,
+        suma la cantidad.
+        """
+
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         ubicacion = self.normalizar_ubicacion(ubicacion)
 
         cantidad = float(cantidad)
@@ -438,19 +557,25 @@ class Inventario(ModuloBase):
         for producto in productos:
             if normalizar(producto.get("nombre", "")) == normalizar(nombre):
                 producto["cantidad"] = producto.get("cantidad", 0) + cantidad
+<<<<<<< HEAD
 
                 if caduca:
                     producto["caduca"] = caduca
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
                 self.guardar_seccion(ubicacion, productos)
 
                 return {**producto, "ubicacion": ubicacion}
 
         nuevo = {"nombre": str(nombre).strip(), "cantidad": cantidad}
 
+<<<<<<< HEAD
         if caduca:
             nuevo["caduca"] = caduca
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         productos.append(nuevo)
 
         self.guardar_seccion(ubicacion, productos)
@@ -501,6 +626,10 @@ class Inventario(ModuloBase):
 
         raise ValueError(f"No encuentro '{nombre}' en el inventario.")
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def borrar(self, nombre, ubicacion=None):
         """
         Elimina por completo un producto (sin importar cuántas unidades haya).
@@ -547,6 +676,11 @@ class Inventario(ModuloBase):
 
         return total
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def listar(self, ubicacion=None):
         """Devuelve el inventario de una ubicación o de todas."""
 
@@ -570,6 +704,7 @@ class Inventario(ModuloBase):
                     encontrados.append({**producto, "ubicacion": sitio})
 
         return encontrados
+<<<<<<< HEAD
 
     # ------------------------------------------------------------------
     # Caducidades
@@ -657,3 +792,5 @@ class Inventario(ModuloBase):
         from brain.modules.avisos import Avisos
 
         return Avisos().avisar("Cosas que caducan pronto", ", ".join(frase(p) for p in lista[:8]) + ". Pídeme una receta para aprovecharlas.", tipo="alerta", nivel="importante")
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80

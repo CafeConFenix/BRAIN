@@ -5,7 +5,14 @@ from brain.core.gestor_conocimiento import GestorConocimiento
 from brain.core.module_loader import ModuleLoader
 from brain.tools.executor import ToolExecutor
 from brain.voice import Conversation
+<<<<<<< HEAD
 from brain.voice.conversation import GestorConversaciones
+=======
+<<<<<<< HEAD
+from brain.voice.conversation import GestorConversaciones
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 
 class Brain:
@@ -30,6 +37,10 @@ class Brain:
             gestor=self.gestor,
         )
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         # Varias conversaciones en paralelo; "conversacion" es la principal.
         self.conversaciones = GestorConversaciones(
             self,
@@ -38,6 +49,16 @@ class Brain:
 
         self.conversacion = self.conversaciones.obtener("general")
 
+<<<<<<< HEAD
+=======
+=======
+        self.conversacion = Conversation(
+            brain=self,
+            persistente=historial_persistente,
+        )
+
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         if not silencioso:
             print("=" * 50)
             print(f"BRAIN {Config.VERSION} iniciado correctamente")

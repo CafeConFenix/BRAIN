@@ -17,7 +17,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from brain.core.config import Config
+<<<<<<< HEAD
 from brain.utils.procesos import ejecutar
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 GB = 1024**3
 
@@ -102,7 +105,11 @@ def _ram_linux():
 
 
 def _ram_mac():
+<<<<<<< HEAD
     salida = ejecutar(["sysctl", "-n", "hw.memsize"], capture_output=True, timeout=5)
+=======
+    salida = subprocess.run(["sysctl", "-n", "hw.memsize"], capture_output=True, timeout=5)
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
     return int(salida.stdout.decode("utf-8", errors="replace").strip()) / GB
 
@@ -153,7 +160,11 @@ def detectar_gpu_nvidia():
         return "", 0.0
 
     try:
+<<<<<<< HEAD
         salida = ejecutar(
+=======
+        salida = subprocess.run(
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             [ruta, "--query-gpu=name,memory.total", "--format=csv,noheader,nounits"],
             capture_output=True,
             timeout=15,

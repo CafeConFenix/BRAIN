@@ -371,6 +371,7 @@ def mantenimiento() -> str:
     return f"{Avisos().depurar(90)} avisos antiguos borrados"
 
 
+<<<<<<< HEAD
 def revisar_caducidades() -> str:
     """Avisa (una vez al día) de lo que caduca pronto."""
 
@@ -395,6 +396,8 @@ def revisar_tareas_hogar() -> str:
     return f"{Hogar().avisar_de_hoy()} tareas del hogar avisadas"
 
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 planificador = Planificador()
 sondeo = SondeoHomeAssistant()
 
@@ -409,9 +412,12 @@ def registrar_tareas_por_defecto(plan: Planificador) -> Planificador:
     plan.registrar("automatizaciones", MotorAutomatizaciones(), segundos=30, retraso_inicial=10)
     plan.registrar("resumen_diario", resumen_diario, segundos=60, retraso_inicial=30)
     plan.registrar("mantenimiento", mantenimiento, horas=24, retraso_inicial=300)
+<<<<<<< HEAD
     plan.registrar("caducidades", revisar_caducidades, segundos=1800, retraso_inicial=90)
     plan.registrar("habitos", revisar_habitos, segundos=60, retraso_inicial=45)
     plan.registrar("tareas_hogar", revisar_tareas_hogar, segundos=1800, retraso_inicial=120)
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
     return plan
 

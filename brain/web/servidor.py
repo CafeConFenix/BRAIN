@@ -4,6 +4,10 @@ import time
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 from urllib.parse import parse_qs, unquote, urlparse
 
 from brain.ai.ollama import OllamaError, buscar_ejecutable
@@ -16,17 +20,37 @@ from brain.integrations.home_assistant import HomeAssistantError
 from brain.modules.sistema import CopiaError
 from brain.utils.listas import DESTINOS, aplicar_lista, interpretar_lista
 from brain.voice.reconocimiento import Reconocedor, VozError
+<<<<<<< HEAD
 from brain.web import casa, configuracion
 from brain.web.acceso import DURACION_SESION, NOMBRE_COOKIE, Acceso
+=======
+=======
+from urllib.parse import urlparse
+
+from brain.ai.ollama import OllamaError, buscar_ejecutable
+from brain.core import logger
+from brain.core.config import Config
+from brain.core.hardware import alternativas, guardar_modelo, recomendar_modelo
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 ESTATICOS = Path(__file__).resolve().parent / "static"
 
 MAX_MENSAJE = 4000
 MAX_CUERPO = 64 * 1024
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 MAX_AUDIO = 4 * 1024 * 1024
 
 # Reconocimiento de voz local (el micrófono de la web).
 reconocedor = Reconocedor()
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 
 def leer_energia():
@@ -42,6 +66,10 @@ def leer_energia():
         return {"configurado": True, "error": f"No he podido leer el inversor: {error}"}
 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 def construir_sistema(brain):
     """Copias de seguridad, tareas en segundo plano y alertas de Home Assistant."""
 
@@ -86,6 +114,11 @@ def construir_avisos(brain, despues=0):
     }
 
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 def construir_resumen(brain):
     """Datos para el panel lateral de la interfaz."""
 
@@ -105,7 +138,14 @@ def construir_resumen(brain):
         "agenda": calendario.agenda(14) if calendario else {},
         "solar": energia.produccion(14) if energia else {},
         "despensa": inventario.todo() if inventario else [],
+<<<<<<< HEAD
         "basicos": inventario.basicos() if inventario else [],
+=======
+<<<<<<< HEAD
+        "basicos": inventario.basicos() if inventario else [],
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         "productos_inventario": productos,
         "recuerdos": recuerdos,
     }
@@ -268,6 +308,10 @@ def construir_estado(brain):
     return estado
 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 def leer_dispositivos(brain):
     """Dispositivos de domótica para el panel (nunca rompe la web)."""
 
@@ -363,12 +407,15 @@ def _accion_datos(brain, ruta, datos):
         if ruta == "/api/escena":
             return 200, domotica.lanzar_escena(datos.get("entidad", ""))
 
+<<<<<<< HEAD
         if ruta == "/api/gastos/anadir":
             return 200, {"apuntado": brain.modules.obtener("gastos").anadir(datos.get("importe"), datos.get("concepto", ""), datos.get("categoria", ""), datos.get("fecha") or None)}
 
         if ruta == "/api/gastos/borrar":
             return 200, {"borrado": brain.modules.obtener("gastos").borrar(datos.get("id", ""))}
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     except HomeAssistantError as error:
         return 502, {"error": str(error)}
 
@@ -392,6 +439,7 @@ RUTAS_DATOS = (
     "/api/inventario/vaciar",
     "/api/dispositivo",
     "/api/escena",
+<<<<<<< HEAD
     "/api/gastos/anadir",
     "/api/gastos/borrar",
 )
@@ -447,6 +495,18 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
 
     class Manejador(BaseHTTPRequestHandler):
         server_version = f"BRAIN/{Config.VERSION}"
+=======
+)
+
+
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+def crear_manejador(brain):
+    bloqueo_chat = threading.Lock()
+
+    class Manejador(BaseHTTPRequestHandler):
+        server_version = "BRAIN"
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         protocol_version = "HTTP/1.1"
 
         # ----------------------------------------------------------
@@ -457,6 +517,7 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
             # Se silencia el registro de cada petición en la consola.
             pass
 
+<<<<<<< HEAD
         def _host(self):
             return self.headers.get("Host", "")
 
@@ -481,11 +542,27 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
             """
 
             if self._modo() is None:
+=======
+        def _hosts_permitidos(self):
+            puerto = self.server.server_address[1]
+
+            return {f"127.0.0.1:{puerto}", f"localhost:{puerto}"}
+
+        def _origen_valido(self):
+            """
+            Protege BRAIN de páginas web externas: solo se aceptan
+            peticiones dirigidas a localhost y que vengan de la propia
+            interfaz de BRAIN.
+            """
+
+            if self.headers.get("Host", "") not in self._hosts_permitidos():
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
                 return False
 
             origen = self.headers.get("Origin")
 
             if origen is not None:
+<<<<<<< HEAD
                 return urlparse(origen).netloc.lower() == self._host().lower()
 
             return True
@@ -545,6 +622,13 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
             return self._enviar(200, {"ok": True}, cabeceras={"Set-Cookie": cookie})
 
         def _enviar(self, codigo, cuerpo, tipo="application/json; charset=utf-8", cabeceras=None):
+=======
+                return urlparse(origen).netloc in self._hosts_permitidos()
+
+            return True
+
+        def _enviar(self, codigo, cuerpo, tipo="application/json; charset=utf-8"):
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             if not isinstance(cuerpo, bytes):
                 cuerpo = json.dumps(cuerpo, ensure_ascii=False, default=str).encode("utf-8")
 
@@ -558,10 +642,13 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
             self.send_header("Connection", "close")
             self.close_connection = True
             self.send_header("X-Content-Type-Options", "nosniff")
+<<<<<<< HEAD
 
             for nombre, valor in (cabeceras or {}).items():
                 self.send_header(nombre, valor)
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             self.end_headers()
             self.wfile.write(cuerpo)
 
@@ -581,6 +668,10 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
 
             return datos if isinstance(datos, dict) else None
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         def _imagen(self):
             """Recibe una captura de la báscula, la lee con un modelo de visión y guarda el peso."""
 
@@ -622,6 +713,7 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
 
             return self._enviar(200, {"respuesta": texto, "peso": lectura["peso"], "fecha": lectura["fecha"], "medidas": lectura["medidas"]})
 
+<<<<<<< HEAD
         def _subir_sonido(self):
             """Recibe un sonido (.wav, .mp3 u .ogg) y lo guarda en datos/sonidos/."""
 
@@ -668,6 +760,8 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
 
             return self._enviar(200, {"guardado": guardado, "documentos": brain.modules.obtener("documentos").listar()})
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         def _voz(self):
             """Recibe un audio WAV del micrófono y devuelve el texto."""
 
@@ -692,10 +786,16 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
 
                 return self._enviar(500, {"error": f"No he podido transcribir el audio: {error}"})
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         # ----------------------------------------------------------
         # GET
         # ----------------------------------------------------------
 
+<<<<<<< HEAD
         def _seguro(self, accion):
             """Un fallo inesperado responde con un error claro en vez de cortar la conexión."""
 
@@ -757,6 +857,14 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
 
                 return self._enviar(200, avisos.ver_sonidos() if avisos else {"archivos": [], "asignados": {}, "tipos": []})
 
+=======
+        def do_GET(self):
+            if not self._origen_valido():
+                return self._enviar(403, {"error": "Acceso no permitido."})
+
+            ruta = urlparse(self.path).path
+
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             if ruta in ("/", "/index.html"):
                 try:
                     contenido = (ESTATICOS / "index.html").read_bytes()
@@ -774,11 +882,15 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
             if ruta == "/api/energia":
                 return self._enviar(200, leer_energia())
 
+<<<<<<< HEAD
             if ruta == "/api/gastos":
                 mes = parse_qs(urlparse(self.path).query).get("mes", [None])[0]
 
                 return self._enviar(200, brain.modules.obtener("gastos").resumen(mes))
 
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             if ruta == "/api/sistema":
                 return self._enviar(200, construir_sistema(brain))
 
@@ -817,6 +929,13 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
                     return self._enviar(200, {"mensajes": brain.conversaciones.obtener(id_conversacion).mensajes()})
                 except KeyError:
                     return self._enviar(404, {"error": "Esa conversación no existe."})
+<<<<<<< HEAD
+=======
+=======
+            if ruta == "/api/historial":
+                return self._enviar(200, {"mensajes": brain.conversacion.mensajes()})
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
             if ruta == "/api/herramientas":
                 return self._enviar(
@@ -833,6 +952,7 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
                     },
                 )
 
+<<<<<<< HEAD
             respuesta = configuracion.manejar(brain, "GET", ruta, {}, self._modo() == "local")
 
             if respuesta is None:
@@ -841,12 +961,15 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
             if respuesta is not None:
                 return self._enviar(*respuesta)
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             return self._enviar(404, {"error": "No encontrado."})
 
         # ----------------------------------------------------------
         # POST
         # ----------------------------------------------------------
 
+<<<<<<< HEAD
         def _post(self):
             if not self._origen_valido():
                 return self._enviar(403, {"error": "Acceso no permitido.", "host": self._host()[:100], "version": Config.VERSION})
@@ -868,12 +991,25 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
             if ruta == "/api/documentos/subir":
                 return self._subir_documento()
 
+=======
+        def do_POST(self):
+            if not self._origen_valido():
+                return self._enviar(403, {"error": "Acceso no permitido."})
+
+<<<<<<< HEAD
+            ruta = urlparse(self.path).path
+
+            if ruta == "/api/voz":
+                return self._voz()
+
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             if ruta == "/api/imagen":
                 return self._imagen()
 
             if "application/json" not in self.headers.get("Content-Type", ""):
                 return self._enviar(415, {"error": "Se esperaba JSON."})
 
+<<<<<<< HEAD
             if ruta == "/api/acceso/clave":
                 if self._modo() != "local":
                     return self._enviar(403, {"error": "La contraseña solo se cambia desde el ordenador de casa."})
@@ -923,6 +1059,15 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
 
                 return self._enviar(200, avisos.ver_sonidos())
 
+=======
+=======
+            if "application/json" not in self.headers.get("Content-Type", ""):
+                return self._enviar(415, {"error": "Se esperaba JSON."})
+
+            ruta = urlparse(self.path).path
+
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             if ruta == "/api/reparar":
                 lanzar_reparacion(brain, forzar=True)
 
@@ -933,17 +1078,24 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
 
                 return self._enviar(200, construir_estado(brain))
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             if ruta == "/api/voz/instalar":
                 reconocedor.instalar()
 
                 return self._enviar(200, reconocedor.estado())
 
+<<<<<<< HEAD
             if ruta in casa.RUTAS_POST:
                 respuesta = casa.manejar(brain, "POST", self.path, self._leer_json() or {}, self._modo() == "local")
 
                 if respuesta is not None:
                     return self._enviar(*respuesta)
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
             if ruta in RUTAS_DATOS:
                 datos = self._leer_json()
 
@@ -981,6 +1133,13 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
                     brain.conversaciones.obtener(datos.get("conversacion")).limpiar()
                 except KeyError:
                     return self._enviar(404, {"error": "Esa conversación no existe."})
+<<<<<<< HEAD
+=======
+=======
+            if ruta == "/api/limpiar":
+                brain.conversacion.limpiar()
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
                 return self._enviar(200, {"ok": True})
 
@@ -995,6 +1154,10 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
                 if len(mensaje) > MAX_MENSAJE:
                     return self._enviar(400, {"error": "El mensaje es demasiado largo."})
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
                 id_conversacion = (datos or {}).get("conversacion") or "general"
 
                 try:
@@ -1005,6 +1168,14 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
                 with bloqueo_chat:
                     try:
                         respuesta = brain.conversaciones.preguntar(id_conversacion, mensaje)
+<<<<<<< HEAD
+=======
+=======
+                with bloqueo_chat:
+                    try:
+                        respuesta = brain.conversacion.preguntar(mensaje)
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
                     except OllamaError as error:
                         return self._enviar(503, {"error": str(error)})
@@ -1023,6 +1194,7 @@ def crear_manejador(brain, acceso=None, al_mostrar=None, acciones=None, ajustes=
     return Manejador
 
 
+<<<<<<< HEAD
 def crear_servidor(brain, puerto=None, acceso=None, al_mostrar=None, acciones=None, ajustes=None):
     """Abre el servidor web en 127.0.0.1 (si el puerto está ocupado, prueba los siguientes)."""
 
@@ -1046,6 +1218,30 @@ def servir(brain, puerto=None, abrir_navegador=True):
     """Arranca la interfaz web de BRAIN en http://127.0.0.1:<puerto>."""
 
     servidor, puerto = crear_servidor(brain, puerto)
+=======
+def servir(brain, puerto=None, abrir_navegador=True):
+    """Arranca la interfaz web de BRAIN en http://127.0.0.1:<puerto>."""
+
+    puerto = puerto or Config.PUERTO_WEB
+
+    manejador = crear_manejador(brain)
+
+    servidor = None
+
+    # Si el puerto está ocupado se prueba con los siguientes.
+    for intento in range(puerto, puerto + 10):
+        try:
+            servidor = ThreadingHTTPServer(("127.0.0.1", intento), manejador)
+            puerto = intento
+            break
+        except OSError:
+            continue
+
+    if servidor is None:
+        raise OSError(f"No he podido abrir ningún puerto entre {puerto} y {puerto + 9}.")
+
+    servidor.daemon_threads = True
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
     url = f"http://127.0.0.1:{puerto}"
 

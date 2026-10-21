@@ -124,9 +124,18 @@ TEMPERATURAS_COLOR = {
 
 SEGUNDOS_CACHE_CATALOGO = 60
 
+<<<<<<< HEAD
 # Tipos que se muestran con un interruptor en el panel de la web.
 PANEL_INTERRUPTORES = ("light", "switch", "fan", "cover", "climate", "input_boolean", "media_player", "humidifier")
 
+=======
+<<<<<<< HEAD
+# Tipos que se muestran con un interruptor en el panel de la web.
+PANEL_INTERRUPTORES = ("light", "switch", "fan", "cover", "climate", "input_boolean", "media_player", "humidifier")
+
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 def normalizar(texto):
     """Minúsculas y sin acentos."""
@@ -170,9 +179,19 @@ class Domotica(ModuloBase):
 
         self._ha = None
         self._catalogo = None
+<<<<<<< HEAD
         self._catalogo_hora = 0.0
         self._areas = None
         self._areas_hora = 0.0
+=======
+<<<<<<< HEAD
+        self._catalogo_hora = 0.0
+        self._areas = None
+        self._areas_hora = 0.0
+=======
+        self._catalogo_hasta = 0.0
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
     # ------------------------------------------------------------------
     # Conexión
@@ -187,7 +206,14 @@ class Domotica(ModuloBase):
         if self._ha is None or (self._ha.url, self._ha.token) != (url, token):
             self._ha = HomeAssistant(url, token)
             self.olvidar_catalogo()
+<<<<<<< HEAD
             self._areas = None
+=======
+<<<<<<< HEAD
+            self._areas = None
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
         return self._ha
 
@@ -195,15 +221,27 @@ class Domotica(ModuloBase):
         return self.ha.configurado
 
     def olvidar_catalogo(self):
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         """Fuerza a volver a pedir los estados la próxima vez (las habitaciones se conservan)."""
 
         self._catalogo = None
         self._catalogo_hora = 0.0
+<<<<<<< HEAD
+=======
+=======
+        self._catalogo = None
+        self._catalogo_hasta = 0.0
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
     # ------------------------------------------------------------------
     # Catálogo de aparatos
     # ------------------------------------------------------------------
 
+<<<<<<< HEAD
     # ------------------------------------------------------------------
     # Dispositivos que el usuario no quiere ver
     # ------------------------------------------------------------------
@@ -274,11 +312,24 @@ class Domotica(ModuloBase):
 
     def _catalogo_completo(self, ttl=SEGUNDOS_CACHE_CATALOGO):
         """Lista de aparatos con nombre, tipo, habitación y estado (reutiliza lo leído hace menos de `ttl` s)."""
+=======
+<<<<<<< HEAD
+    def _cargar_catalogo(self, ttl=SEGUNDOS_CACHE_CATALOGO):
+        """Lista de aparatos con nombre, tipo, habitación y estado (reutiliza lo leído hace menos de `ttl` s)."""
+=======
+    def _cargar_catalogo(self):
+        """Lista de aparatos con nombre, tipo, habitación y estado."""
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
         ahora = time.time()
 
         cliente = self.ha  # si cambió la configuración, vacía el catálogo
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         if self._catalogo is not None and ahora - self._catalogo_hora < ttl:
             return self._catalogo
 
@@ -290,6 +341,16 @@ class Domotica(ModuloBase):
             self._areas_hora = ahora
 
         areas = self._areas
+<<<<<<< HEAD
+=======
+=======
+        if self._catalogo is not None and ahora < self._catalogo_hasta:
+            return self._catalogo
+
+        estados = cliente.estados()
+        areas = cliente.areas()
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
         catalogo = []
 
@@ -327,7 +388,15 @@ class Domotica(ModuloBase):
             )
 
         self._catalogo = catalogo
+<<<<<<< HEAD
         self._catalogo_hora = ahora
+=======
+<<<<<<< HEAD
+        self._catalogo_hora = ahora
+=======
+        self._catalogo_hasta = ahora + SEGUNDOS_CACHE_CATALOGO
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
         return catalogo
 
@@ -673,6 +742,7 @@ class Domotica(ModuloBase):
 
         return resultado
 
+<<<<<<< HEAD
     def encendidos(self):
         """Lo que está encendido ahora en la casa (luces, enchufes, ventiladores, tele, clima...)."""
 
@@ -721,6 +791,8 @@ class Domotica(ModuloBase):
             "todo_bien": not sin_conexion and not bateria_baja,
         }
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def estado_de(self, texto):
         try:
             aparatos, _ = self.buscar(texto, None, incluir_lectura=True)
@@ -731,6 +803,10 @@ class Domotica(ModuloBase):
             return {"error": f"No encuentro ningún aparato que encaje con '{texto}'."}
 
         return {"aparatos": [self._resumir(a) for a in aparatos[:10]]}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 
     # ------------------------------------------------------------------
@@ -858,3 +934,8 @@ class Domotica(ModuloBase):
         self.olvidar_catalogo()
 
         return {"entidad": aparato["entidad"], "lanzada": True}
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80

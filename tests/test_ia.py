@@ -24,7 +24,15 @@ class TestIA(CasoBrain):
         peticion = self.ollama.peticiones[0]
 
         self.assertGreater(len(peticion["tools"]), 5)
+<<<<<<< HEAD
         self.assertEqual(peticion["options"]["num_ctx"], 16384)
+=======
+<<<<<<< HEAD
+        self.assertEqual(peticion["options"]["num_ctx"], 16384)
+=======
+        self.assertEqual(peticion["options"]["num_ctx"], 8192)
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         self.assertFalse(peticion["stream"])
 
     def test_el_prompt_incluye_fecha_personalidad_y_memoria(self):
@@ -170,6 +178,7 @@ class TestIA(CasoBrain):
         self.assertIn("Ollama", str(contexto.exception))
 
 
+<<<<<<< HEAD
 class TestNoSeQuedaEnAnuncios(CasoBrain):
     """El modelo debe responder o actuar, no decir "voy a revisar tu despensa" y parar."""
 
@@ -242,5 +251,7 @@ class TestNoSeQuedaEnAnuncios(CasoBrain):
         self.assertNotIn("DESPENSA DEL USUARIO", self.ollama.peticiones[0]["messages"][0]["content"])
 
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 if __name__ == "__main__":
     unittest.main()

@@ -21,8 +21,11 @@ exit /b 0
 
 :buscar_python
 set "PY="
+<<<<<<< HEAD
 rem Primero el Python portable de BRAIN (carpeta python), si el instalador tuvo que usarlo.
 call :probar_ruta "%~dp0python\python.exe"
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 call :probar "py -3"
 call :probar "python"
 for %%V in (314 313 312 311 310 39) do (

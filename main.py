@@ -1,9 +1,13 @@
 import argparse
+<<<<<<< HEAD
 import os
 import subprocess
 import sys
 import traceback
 from pathlib import Path
+=======
+import sys
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 from brain.utils.consola import preparar_consola
 
@@ -23,6 +27,7 @@ def leer_argumentos(argumentos=None):
     )
 
     modo.add_argument(
+<<<<<<< HEAD
         "--escritorio",
         action="store_true",
         help="abre BRAIN como programa con ventana propia e icono junto al reloj",
@@ -35,18 +40,23 @@ def leer_argumentos(argumentos=None):
     )
 
     modo.add_argument(
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         "--consola",
         action="store_true",
         help="chatea con BRAIN en esta ventana, sin navegador",
     )
 
     modo.add_argument(
+<<<<<<< HEAD
         "--cerrar",
         action="store_true",
         help="cierra BRAIN del todo (ventana, icono junto al reloj y programa) y sale",
     )
 
     modo.add_argument(
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         "--diagnostico",
         action="store_true",
         help="muestra el estado del sistema y sale",
@@ -71,6 +81,7 @@ def leer_argumentos(argumentos=None):
     )
 
     parser.add_argument(
+<<<<<<< HEAD
         "--segundo-plano",
         action="store_true",
         help="con --escritorio: arrancar solo con el icono junto al reloj, sin abrir la ventana",
@@ -83,6 +94,8 @@ def leer_argumentos(argumentos=None):
     )
 
     parser.add_argument(
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         "--auto",
         action="store_true",
         help="con --mejorar-ia: no hacer preguntas",
@@ -104,6 +117,7 @@ def leer_argumentos(argumentos=None):
     return parser.parse_args(argumentos)
 
 
+<<<<<<< HEAD
 def _asegurar_flujos():
     """
     pythonw.exe (sin ventana negra) no tiene salida de texto: sys.stdout y
@@ -192,16 +206,27 @@ def main(argumentos=None):
         if codigo is not None:
             return codigo
 
+=======
+def main(argumentos=None):
+    preparar_consola()
+
+    opciones = leer_argumentos(argumentos)
+
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     from brain.cli import chat_consola, configurar_domotica, configurar_energia, diagnostico, mejorar_ia, preparar_ia
     from brain.core import Brain
     from brain.core.config import Config
 
     silencioso = (
+<<<<<<< HEAD
         opciones.diagnostico
         or opciones.mejorar_ia
         or opciones.configurar_domotica
         or opciones.configurar_energia
         or opciones.configurar_acceso
+=======
+        opciones.diagnostico or opciones.mejorar_ia or opciones.configurar_domotica or opciones.configurar_energia
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     )
 
     brain = Brain(silencioso=silencioso)
@@ -215,26 +240,38 @@ def main(argumentos=None):
     if opciones.configurar_energia:
         return configurar_energia(brain)
 
+<<<<<<< HEAD
     if opciones.configurar_acceso:
         from brain.escritorio.acceso_remoto import configurar_acceso
 
         return configurar_acceso(Config.PUERTO_WEB)
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     if opciones.diagnostico:
         diagnostico(brain)
         return 0
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     # Tareas en segundo plano (copias de seguridad, sondeo de Home Assistant):
     # corren en su propio hilo y no bloquean ni la consola ni la web.
     from brain.core.scheduler import iniciar_planificador
 
     iniciar_planificador()
 
+<<<<<<< HEAD
     if opciones.escritorio:
         from brain.escritorio.aplicacion import ejecutar
 
         return ejecutar(brain, puerto=opciones.puerto or Config.PUERTO_WEB, segundo_plano=opciones.segundo_plano)
 
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     if opciones.consola:
         listo, mensaje = preparar_ia(brain, interactivo=True)
 
@@ -263,6 +300,7 @@ def main(argumentos=None):
     return 0
 
 
+<<<<<<< HEAD
 def _avisar_del_error(texto):
     """Sin ventana negra no hay donde leer el error: se muestra un cuadro de Windows."""
 
@@ -302,3 +340,7 @@ def _arrancar():
 
 if __name__ == "__main__":
     sys.exit(_arrancar())
+=======
+if __name__ == "__main__":
+    sys.exit(main())
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80

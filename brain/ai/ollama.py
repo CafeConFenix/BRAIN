@@ -8,7 +8,10 @@ import time
 from urllib import error, request
 
 from brain.core.config import Config
+<<<<<<< HEAD
 from brain.utils.procesos import ejecutar
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 from brain.core.hardware import leer_modelo_guardado
 
 # Orden de preferencia cuando no se indica un modelo concreto.
@@ -252,7 +255,11 @@ class Ollama:
             return ""
 
         try:
+<<<<<<< HEAD
             salida = ejecutar([ejecutable, "list"], capture_output=True, timeout=20)
+=======
+            salida = subprocess.run([ejecutable, "list"], capture_output=True, timeout=20)
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         except (OSError, subprocess.SubprocessError):
             return ""
 
@@ -387,6 +394,10 @@ class Ollama:
 
         return mensaje
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def capacidades(self, modelo):
         """Capacidades que declara Ollama para un modelo ("completion", "vision", "tools"...)."""
 
@@ -423,6 +434,11 @@ class Ollama:
 
         return self._enviar([mensaje], modelo=modelo)["content"]
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def chat(self, mensajes, modelo=None):
         """
         Envía una lista de mensajes ({"role": ..., "content": ...}) y

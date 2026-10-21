@@ -118,6 +118,7 @@ class Avisos(ModuloBase):
 
         return {"tipo": tipo, "sonido": nombre}
 
+<<<<<<< HEAD
     MAX_SONIDO = 3 * 1024 * 1024
 
     def guardar_sonido(self, nombre, contenido: bytes) -> str:
@@ -150,6 +151,8 @@ class Avisos(ModuloBase):
         config["sonidos"] = {t: n for t, n in config["sonidos"].items() if n != ruta.name}
         self._guardar_config(config)
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def ruta_sonido(self, nombre) -> Optional[Path]:
         """Ruta segura de un sonido de la carpeta (o None)."""
 

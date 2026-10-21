@@ -40,6 +40,10 @@ datos/conversaciones/
 *.corrupto
 
 datos/domotica/home_assistant.json
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 # Modelos de voz descargados (cientos de MB)
 datos/voz/
@@ -47,6 +51,7 @@ datos/voz/
 # Base de datos y copias locales
 datos/brain.db
 datos/backups/
+<<<<<<< HEAD
 
 # 1.0: ventana propia, acceso remoto e instalador generado
 datos/acceso.json
@@ -54,3 +59,7 @@ datos/ventana/
 datos/brain.instancia
 datos/sonidos/
 Setup.exe
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80

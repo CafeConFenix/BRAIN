@@ -70,6 +70,10 @@ def marcar_comprado(producto: str):
     """Marca un producto como comprado."""
 
     return {"comprado": compras.comprado(producto)}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 
 @tool(
@@ -94,3 +98,8 @@ def vaciar_lista_compra():
     """Vacía la lista de la compra."""
 
     return {"borrados": compras.vaciar()}
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80

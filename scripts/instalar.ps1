@@ -5,15 +5,23 @@
 #   1. Comprueba Python (si falta, lo instala).
 #   2. Comprueba Ollama (si falta, lo instala).
 #   3. Arranca Ollama y descarga un modelo de IA si no hay ninguno.
+<<<<<<< HEAD
 #   4. Prueba que BRAIN arranca, crea los accesos directos (escritorio y menu
 #      Inicio) con su icono y lo deja arrancando con Windows.
+=======
+#   4. Prueba que BRAIN arranca y crea un acceso directo en el escritorio.
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 #
 # Nota: este archivo esta escrito sin tildes a proposito, para que
 # Windows PowerShell lo lea bien en cualquier equipo.
 
 param(
+<<<<<<< HEAD
     [string]$Modelo = "",
     [switch]$NoPreguntar
+=======
+    [string]$Modelo = ""
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 )
 
 $ErrorActionPreference = "Continue"
@@ -78,6 +86,7 @@ function Encontrar-Python {
         }
     }
 
+<<<<<<< HEAD
     $rutas = @()
 
     # Python propio de BRAIN (version portable, sin instalador): carpeta "python" del proyecto.
@@ -106,12 +115,25 @@ function Encontrar-Python {
     foreach ($ruta in $rutas) {
         if ((Test-Path $ruta) -and (Probar-Python $ruta @())) {
             return @{ Exe = $ruta; Prefijo = @() }
+=======
+    foreach ($v in @("314", "313", "312", "311", "310", "39")) {
+        $rutas = @(
+            "$env:LOCALAPPDATA\Programs\Python\Python$v\python.exe",
+            "$env:ProgramFiles\Python$v\python.exe"
+        )
+
+        foreach ($ruta in $rutas) {
+            if ((Test-Path $ruta) -and (Probar-Python $ruta @())) {
+                return @{ Exe = $ruta; Prefijo = @() }
+            }
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         }
     }
 
     return $null
 }
 
+<<<<<<< HEAD
 function Instalar-Python-Portable {
     # Python "embebido" de python.org: un zip que se descomprime en la carpeta de BRAIN.
     # No usa Windows Installer (por eso no sufre el error 1603) y BRAIN solo necesita
@@ -169,6 +191,12 @@ function Instalar-Python {
     if (Hay-Winget) {
         Write-Host "Pruebo con winget..."
         winget install -e --id Python.Python.3.12 --scope user --silent --accept-package-agreements --accept-source-agreements
+=======
+function Instalar-Python {
+    if (Hay-Winget) {
+        Write-Host "Instalando Python con winget (puede tardar un par de minutos)..."
+        winget install -e --id Python.Python.3.12 --silent --accept-package-agreements --accept-source-agreements
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         Actualizar-Path
     }
 
@@ -176,12 +204,21 @@ function Instalar-Python {
         return
     }
 
+<<<<<<< HEAD
     Write-Host ""
     $codigo = if ($proceso) { $proceso.ExitCode } else { "sin instalador" }
     Aviso "El instalador de Windows no ha podido instalar Python (codigo $codigo)."
     Write-Host "No pasa nada: uso una copia portable de Python, que no necesita instalador."
     Instalar-Python-Portable
     return
+=======
+    Write-Host "Descargando Python desde python.org..."
+    $instalador = Join-Path $env:TEMP "python-3.12.8-amd64.exe"
+    Invoke-WebRequest -Uri "https://www.python.org/ftp/python/3.12.8/python-3.12.8-amd64.exe" -OutFile $instalador -UseBasicParsing
+    Write-Host "Instalando Python..."
+    Start-Process -FilePath $instalador -ArgumentList "/quiet", "InstallAllUsers=0", "PrependPath=1", "Include_launcher=1" -Wait
+    Actualizar-Path
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 }
 
 # ---------------------------------------------------------------------
@@ -381,6 +418,7 @@ try {
         exit 1
     }
 
+<<<<<<< HEAD
     $lanzador = $null
     try {
         # pythonw.exe abre BRAIN sin ventana negra de consola.
@@ -411,11 +449,26 @@ try {
         Bien "He creado el icono BRAIN en el escritorio y en el menu Inicio, y BRAIN arrancara con Windows."
     } catch {
         Aviso "No he podido crear los accesos directos. Puedes abrir BRAIN con INICIAR.bat."
+=======
+    try {
+        $escritorio = [Environment]::GetFolderPath("Desktop")
+        $shell = New-Object -ComObject WScript.Shell
+        $acceso = $shell.CreateShortcut((Join-Path $escritorio "BRAIN.lnk"))
+        $acceso.TargetPath = Join-Path $proyecto "INICIAR.bat"
+        $acceso.WorkingDirectory = $proyecto
+        $acceso.IconLocation = "shell32.dll,13"
+        $acceso.Description = "Abrir BRAIN"
+        $acceso.Save()
+        Bien "He creado el acceso directo BRAIN en tu escritorio."
+    } catch {
+        Aviso "No he podido crear el acceso directo. Puedes abrir BRAIN con INICIAR.bat."
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     }
 
     Write-Host ""
     Write-Host "=====================================================" -ForegroundColor Green
     Write-Host "  BRAIN esta instalado. Para usarlo, haz doble clic en" -ForegroundColor Green
+<<<<<<< HEAD
     Write-Host "  el icono BRAIN del escritorio." -ForegroundColor Green
     Write-Host "=====================================================" -ForegroundColor Green
     Write-Host ""
@@ -432,6 +485,16 @@ try {
         } else {
             Start-Process -FilePath (Join-Path $proyecto "INICIAR.bat") -WorkingDirectory $proyecto
         }
+=======
+    Write-Host "  el icono BRAIN del escritorio (o en INICIAR.bat)." -ForegroundColor Green
+    Write-Host "=====================================================" -ForegroundColor Green
+    Write-Host ""
+
+    $abrir = Read-Host "Quieres abrir BRAIN ahora? (s/n)"
+
+    if ($abrir -match "^[sSyY]") {
+        Start-Process -FilePath (Join-Path $proyecto "INICIAR.bat") -WorkingDirectory $proyecto
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     }
 
     exit 0

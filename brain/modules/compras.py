@@ -79,6 +79,10 @@ class Compras(ModuloBase):
 
         raise ValueError(f"'{producto}' no está en la lista de la compra.")
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def quitar(self, producto):
         """Elimina un producto de la lista de la compra sin apuntarlo como comprado."""
 
@@ -107,5 +111,10 @@ class Compras(ModuloBase):
 
         return total
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def historial(self, limite=20):
         return self.obtener_seccion("historial")[-int(limite) :]

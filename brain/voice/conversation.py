@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 # Un mensaje largo (una lista de 40 productos pegada, por ejemplo) se guarda
 # recortado en el historial: ya está hecho y repetirlo en cada pregunta solo
 # gasta la memoria de trabajo de la IA.
@@ -11,6 +15,11 @@ def recortar(texto, limite=MAX_CARACTERES_HISTORIAL):
     return texto[: limite - 120].rstrip() + f"\n[... recortado: el mensaje original tenía {len(texto)} caracteres ...]"
 
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 class Conversation:
     """
     Gestiona una conversación con BRAIN.
@@ -21,6 +30,10 @@ class Conversation:
     """
 
     CATEGORIA = "conversaciones"
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     ARCHIVO = "historial"  # el de la conversación principal ("general")
 
     def __init__(self, brain, max_messages=20, persistente=True, id="general", instrucciones=None):
@@ -34,6 +47,19 @@ class Conversation:
         if id != "general":
             self.ARCHIVO = f"c_{id}"
 
+<<<<<<< HEAD
+=======
+=======
+    ARCHIVO = "historial"
+
+    def __init__(self, brain, max_messages=20, persistente=True):
+        self.brain = brain
+        self.max_messages = max_messages
+        self.persistente = persistente
+        self.historial = []
+
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         self._cargar()
 
     # ------------------------------------------------------------------
@@ -99,6 +125,10 @@ class Conversation:
         error se propaga para que quien llame lo muestre.
         """
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
         respuesta = self._lista_pegada(mensaje)
 
         if respuesta is None:
@@ -116,12 +146,28 @@ class Conversation:
 
         self.historial.append({"role": "user", "content": recortar(mensaje)})
         self.historial.append({"role": "assistant", "content": recortar(respuesta)})
+<<<<<<< HEAD
+=======
+=======
+        respuesta = self.brain.ai.preguntar(
+            mensaje,
+            historial=list(self.historial),
+        )
+
+        self.historial.append({"role": "user", "content": mensaje})
+        self.historial.append({"role": "assistant", "content": respuesta})
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
         self._limitar_historial()
         self._guardar()
 
         return respuesta
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def registrar_intercambio(self, mensaje, respuesta):
         """Guarda en el historial algo que ha pasado sin la IA (por ejemplo, una captura leída)."""
 
@@ -171,6 +217,11 @@ class Conversation:
 
         return texto
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def _limitar_historial(self):
         """Limita el tamaño del historial."""
 
@@ -182,6 +233,10 @@ class Conversation:
         # El historial siempre debe empezar por un mensaje del usuario.
         while self.historial and self.historial[0]["role"] != "user":
             del self.historial[0]
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 
 class GestorConversaciones:
@@ -379,3 +434,8 @@ class GestorConversaciones:
             self._guardar_indice(lista)
 
         return respuesta
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80

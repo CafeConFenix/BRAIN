@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from datetime import datetime
 
 from brain.base.modulo import ModuloBase
@@ -21,10 +22,29 @@ def _hora_texto(valor) -> str:
 class Energia(ModuloBase):
     nombre = "energia"
 
+=======
+from brain.base.modulo import ModuloBase
+<<<<<<< HEAD
+from brain.core.database import Database
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+from brain.utils.fechas import validar_fecha
+
+
+class Energia(ModuloBase):
+    nombre = "energia"
+
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def __init__(self):
         super().__init__()
         self.db = Database()
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def registrar_produccion(self, kwh, fecha=None):
         """Guarda la producción solar de un día (actualiza si ya existía)."""
 
@@ -35,14 +55,39 @@ class Energia(ModuloBase):
 
         fecha = validar_fecha(fecha)
 
+<<<<<<< HEAD
         self.db.guardar_produccion(fecha, kwh)
+=======
+<<<<<<< HEAD
+        self.db.guardar_produccion(fecha, kwh)
+=======
+        registros = [r for r in self.obtener_seccion("placas_solares") if r.get("fecha") != fecha]
+
+        registros.append({"produccion": kwh, "fecha": fecha})
+
+        registros.sort(key=lambda r: r.get("fecha", ""))
+
+        self.guardar_seccion("placas_solares", registros)
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
         return {"produccion": kwh, "fecha": fecha}
 
     def produccion(self, limite=7):
         """Últimos registros de producción solar y su total y media."""
 
+<<<<<<< HEAD
         registros = self.db.produccion(limite)
+=======
+<<<<<<< HEAD
+        registros = self.db.produccion(limite)
+=======
+        registros = sorted(
+            self.obtener_seccion("placas_solares"),
+            key=lambda r: r.get("fecha", ""),
+        )[-int(limite) :]
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
         total = round(sum(r.get("produccion", 0) for r in registros), 2)
 
@@ -54,6 +99,7 @@ class Energia(ModuloBase):
             "media_kwh": media,
         }
 
+<<<<<<< HEAD
     def configurar_horas_baratas(self, desde=None, hasta=None, precio=None):
         """Franja barata (valle): por ejemplo de 00:00 a 08:00 a 0,08 €/kWh. Con desde/hasta vacíos se quita."""
 
@@ -236,6 +282,9 @@ class Energia(ModuloBase):
 
         return resultado
 
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def registrar_lectura(self, lectura):
         """
         Guarda en SQLite una lectura de EnergiaTiempoReal.leer() para tener
@@ -378,6 +427,11 @@ class Energia(ModuloBase):
 
         return "Las placas cubren poco más que el consumo actual; si puedes, espera a que sobre más sol."
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 # ----------------------------------------------------------------------
 # Energía en tiempo real (inversor solar y contador, vía Home Assistant)
@@ -385,7 +439,15 @@ class Energia(ModuloBase):
 
 import json
 import time
+<<<<<<< HEAD
 from datetime import datetime, timedelta
+=======
+<<<<<<< HEAD
+from datetime import datetime, timedelta
+=======
+from datetime import datetime
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 from brain.core.config import Config
 from brain.integrations.home_assistant import HomeAssistant, HomeAssistantError, leer_configuracion

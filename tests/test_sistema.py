@@ -142,7 +142,11 @@ class TestPlanificador(unittest.TestCase):
     def test_tareas_por_defecto(self):
         plan = registrar_tareas_por_defecto(Planificador())
 
+<<<<<<< HEAD
         self.assertEqual({t["nombre"] for t in plan.estado()}, {"copia_diaria", "sondeo_home_assistant", "recordatorios", "aviso_eventos", "automatizaciones", "resumen_diario", "mantenimiento", "caducidades", "habitos", "tareas_hogar"})
+=======
+        self.assertEqual({t["nombre"] for t in plan.estado()}, {"copia_diaria", "sondeo_home_assistant", "recordatorios", "aviso_eventos", "automatizaciones", "resumen_diario", "mantenimiento"})
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 
 class TestSondeoHomeAssistant(CasoBrain):

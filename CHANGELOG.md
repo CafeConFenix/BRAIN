@@ -4,6 +4,7 @@ Todos los cambios relevantes de BRAIN se documentan en este archivo.
 
 ---
 
+<<<<<<< HEAD
 ## [1.0.6] - 2026-10-19
 
 ### Añadido
@@ -139,6 +140,9 @@ La bandeja (PowerShell `NotifyIcon`), la ventana de Edge en modo aplicación, el
 
 ---
 
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 ## [0.10.0] - 2026-10-11
 
 ### Añadido
@@ -198,6 +202,11 @@ La bandeja (PowerShell `NotifyIcon`), la ventana de Edge en modo aplicación, el
 
 ---
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 ## [0.7.0] - 2026-10-07
 
 ### Corregido

@@ -1,5 +1,13 @@
 from brain.modules.compras import Compras
+<<<<<<< HEAD
 from brain.modules.inventario import Inventario, mismo_producto, parsear_lista
+=======
+<<<<<<< HEAD
+from brain.modules.inventario import Inventario, mismo_producto, parsear_lista
+=======
+from brain.modules.inventario import Inventario, parsear_lista
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 from brain.tools.decorators import tool
 
 inventario = Inventario()
@@ -13,6 +21,7 @@ compras = Compras()
         "nombre": "Nombre del producto, por ejemplo 'leche'",
         "cantidad": "Número de unidades. Por defecto 1.",
         "ubicacion": "frigorifico, congelador, despensa, herramientas o consumibles. Por defecto despensa.",
+<<<<<<< HEAD
         "caduca": "Fecha de caducidad AAAA-MM-DD (opcional).",
     },
 )
@@ -20,6 +29,14 @@ def anadir_inventario(nombre: str, cantidad: float = 1, ubicacion: str = "despen
     """Añade un producto al inventario."""
 
     return {"guardado": inventario.añadir(nombre, cantidad, ubicacion, caduca)}
+=======
+    },
+)
+def anadir_inventario(nombre: str, cantidad: float = 1, ubicacion: str = "despensa"):
+    """Añade un producto al inventario."""
+
+    return {"guardado": inventario.añadir(nombre, cantidad, ubicacion)}
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 
 @tool(
@@ -152,6 +169,10 @@ def buscar_inventario(texto: str):
         return {"mensaje": f"No hay nada parecido a '{texto}' en el inventario."}
 
     return {"encontrados": encontrados}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
 
 
 @tool(
@@ -301,6 +322,7 @@ def anadir_faltantes_receta_a_compra(ingredientes: str, receta: str = None):
         "agotados": comparacion["agotados"],
         "resumen": " ".join(partes),
     }
+<<<<<<< HEAD
 
 
 @tool(
@@ -328,3 +350,7 @@ def ver_caducidades(dias: int = 5):
         return {"mensaje": f"No hay nada caducado ni que caduque en {dias} días (entre los productos con fecha anotada)."}
 
     return {"productos": lista}
+=======
+=======
+>>>>>>> 2a7957f389dbe664434828a988e1d6677bc447b6
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80

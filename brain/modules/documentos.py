@@ -172,6 +172,7 @@ class Documentos(ModuloBase):
             p for p in carpeta.rglob("*") if p.is_file() and p.suffix.lower() in EXTENSIONES and not p.name.startswith(".")
         )
 
+<<<<<<< HEAD
     def guardar_archivo(self, nombre, contenido: bytes) -> dict:
         """Guarda un archivo subido desde la web. Los PDF se convierten a texto para poder buscar en ellos."""
 
@@ -212,6 +213,8 @@ class Documentos(ModuloBase):
 
         return {"nombre": ruta.name}
 
+=======
+>>>>>>> 84cb45a321c908149c3d3b8d4d77c1e0d48efb80
     def listar(self):
         """Documentos disponibles: nombre (ruta relativa) y tamaño."""
 
