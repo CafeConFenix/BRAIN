@@ -1,0 +1,13 @@
+{
+  "The file has no name.": "El archivo no tiene nombre.",
+  "The file is too large (25 MB maximum).": "El archivo es demasiado grande (máximo 25 MB).",
+  "I could not read text from that PDF (it looks scanned, images only). Try a PDF with text or a .txt file.": "No he podido leer texto de ese PDF (parece escaneado, solo imágenes). Prueba con un PDF con texto o un .txt.",
+  "Only PDF, .txt, .md or .json files can be uploaded.": "Solo se pueden subir archivos PDF, .txt, .md o .json.",
+  "The document name is missing.": "Falta el nombre del documento.",
+  "There are no documents. Save .txt, .md or .json files in {0}.": "No hay documentos. Guarda archivos .txt, .md o .json en {0}.",
+  "'{0}' matches several documents: {1}. Give the full name.": "'{0}' coincide con varios documentos: {1}. Indica el nombre completo.",
+  "I can't find the document '{0}'. Available: {1}.": "No encuentro el documento '{0}'. Disponibles: {1}.",
+  "Type some words to search (not just articles or symbols).": "Escribe palabras para buscar (no solo artículos o signos).",
+  "I found nothing about '{0}'.": "No he encontrado nada sobre '{0}'.",
+  "That file does not look like a PDF.": "Ese archivo no parece un PDF."
+}

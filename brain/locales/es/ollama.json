@@ -1,0 +1,12 @@
+{
+  "Ollama could not download '{0}': {1}": "Ollama no pudo descargar '{0}': {1}",
+  "Ollama could not download '{0}' ({1}): {2}": "Ollama no pudo descargar '{0}' ({1}): {2}",
+  "The download of '{0}' was interrupted: {1}": "Se cortó la descarga de '{0}': {1}",
+  "none": "ninguno",
+  "Model '{0}' is not installed in Ollama (installed: {1}). Install it with: ollama pull {0}": "El modelo '{0}' no está instalado en Ollama (instalados: {1}). Instálalo con: ollama pull {0}",
+  "Ollama has no model installed. Run INSTALL.bat or type: ollama pull qwen3:4b": "Ollama no tiene ningún modelo instalado. Ejecuta INSTALAR.bat o escribe: ollama pull qwen3:4b",
+  "Ollama error ({0}): {1}": "Error de Ollama ({0}): {1}",
+  "Cannot connect to Ollama at {0}: {1}. Is Ollama running?": "No se puede conectar con Ollama en {0}: {1}. ¿Está abierto Ollama?",
+  "Ollama took too long to respond. The model may be too large for this computer; try qwen3:4b.": "Ollama tardó demasiado en responder. Puede que el modelo sea demasiado grande para este equipo; prueba con qwen3:4b.",
+  "Lost connection to Ollama: {0}": "Se perdió la conexión con Ollama: {0}"
+}

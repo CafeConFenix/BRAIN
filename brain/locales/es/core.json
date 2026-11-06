@@ -1,0 +1,5 @@
+{
+  "BRAIN {0} started correctly": "BRAIN {0} iniciado correctamente",
+  "[BRAIN] The file {0} was damaged. A copy was saved as {1}.": "[BRAIN] El archivo {0} estaba dañado. Se ha guardado una copia como {1}.",
+  "[BRAIN] Could not migrate the old data to SQLite: {0}": "[BRAIN] No se pudieron migrar los datos antiguos a SQLite: {0}"
+}

@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+
+# Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Conversation history and corrupted file copies
+data/conversations/
+*.corrupt
+
+data/smart_home/home_assistant.json
+
+# Downloaded voice models (hundreds of MB)
+data/voice/
+
+# Database and local backups
+data/brain.db
+data/backups/
+
+# Own window, remote access and generated installer
+data/access.json
+data/window/
+data/brain.instance
+data/sounds/
+Setup.exe
+instalbrain (*).exe
+
+# Legacy (pre-2.0.0) data layout, in case it's still present
+datos/

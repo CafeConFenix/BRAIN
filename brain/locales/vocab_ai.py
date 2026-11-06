@@ -1,0 +1,118 @@
+"""Words used to understand what the AI (or a small model) sends back as a tool argument."""
+
+VOCAB = {
+    "en": {
+        "number_words": {
+            "a": 1, "an": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
+            "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "half": 0.5, "average": 0.5,
+        },
+        "true_words": ("true", "1", "yes"),
+        "topic_words": {
+            "health": ("weight", "kg", "scale", "fat", "bmi", "lose weight", "gain weight", "muscle mass", "measurement"),
+            "inventory": (
+                "expir", "pantry", "fridge", "freezer", "inventory", "have", "remaining", "run out", "stock",
+                "product", "ingredient", "save", "delete", "empty",
+            ),
+            "shopping": ("shopping", "list", "supermarket", "buy", "missing", "add", "cart"),
+            "recipes": ("recipe", "cook", "dinner", "lunch", "breakfast", "dish", "ingredient", "staple", "prepare", "make"),
+            "calendar": ("agenda", "event", "appointment", "task", "meeting", "calendar", "pending", "week", "what's on today", "what do i have tomorrow"),
+            "menu": ("menu", "what are we having", "dinner plan", "meal plan", "plan the week", "next week", "weekly meals"),
+            "energy": (
+                "electricity cost", "cost of electricity", "cheap hours", "tariff", "how much energy", "energy",
+                "solar", "panel", "consumption", "consum", "inverter", "kwh", "produc", "grid", "battery", "bill",
+                "watt", "energy spend", "savings",
+            ),
+            "memory": ("remember", "forget", "you know", "memory", "you told me", "i like", "i prefer"),
+            "sensors": ("sensor", "temperature", "humidity", "presence", "light level"),
+            "smart_home": (
+                "leave the house", "going to sleep", "good night", "check the house", "turn on", "turn off",
+                "light", "lights", "blind", "climate", "scene", "lamp", "plug", "device", "thermostat", "fan",
+                "air", "heating", "leave everything off",
+            ),
+            "notices": ("notify", "remind", "reminder", "alarm", "notification", "sound", "disturb", "silence", "alert", "bell"),
+            "automations": (
+                "automation", "rule", "every time", "every day", "every night", "every morning", "if i arrive",
+                "if there is", "if it happens", "program", "routine",
+            ),
+            "appliances": (
+                "appliance", "washer", "dishwasher", "oven", "warranty", "model", "breakdown", "fails",
+                "not working", "boiler", "dryer", "microwave", "gadget", "brand", "error", "broke",
+                "won't start", "won't turn on",
+            ),
+            "system": ("backup", "restore", "security"),
+            "documents": ("manual", "document", "note", "instructions", "wifi", "key", "password", "guide", "how do i"),
+            "expenses": ("spend", "spent", "how much do i have left", "paid", "pay", "budget", "how much does it cost", "receipt", "i bought"),
+            "habits": ("habit", "streak", "glass of water", "glasses of water", "drunk", "pill", "medicine", "walk", "i walked", "daily goal"),
+            "chores": ("person", "people", "profile", "it's turn", "whose turn", "trash", "wash dishes", "clean the", "household chores", "sweep", "who does", "family"),
+            "expiry": ("expires", "expired", "use by date", "goes bad", "use it up"),
+            "search": ("search", "find", "where did i put", "where is"),
+            "summary": ("summary", "what do i have today", "good morning", "my day", "news"),
+        },
+        "recipe_question_words": (
+            "recipe", "cook", "cooking", "for dinner", "for lunch", "what should i eat", "what can i cook",
+            "what should i cook", "what should i make", "what do i make for", "menu", "dish", "meal idea",
+        ),
+        "announcement_words": (
+            "i'm going to", "im going to", "i am going to", "we're going to", "we are going to", "let me check",
+            "let me look", "let me verify", "let me confirm", "first i need to", "first let me", "one moment",
+            "just a moment", "give me a second", "give me a moment", "hold on", "i'll check", "i will check",
+            "i'll look", "i will look", "i'll verify", "i'll confirm", "i'll calculate", "i'll add that",
+            "i'll save that", "i'll note that", "checking the pantry", "checking your pantry", "checking the fridge",
+            "checking your inventory", "right now i'll", "i'm about to", "im about to",
+        ),
+    },
+    "es": {
+        "number_words": {
+            "un": 1, "uno": 1, "una": 1, "dos": 2, "tres": 3, "cuatro": 4, "cinco": 5, "seis": 6, "siete": 7,
+            "ocho": 8, "nueve": 9, "diez": 10, "once": 11, "doce": 12, "medio": 0.5, "media": 0.5,
+        },
+        "true_words": ("si", "sí", "verdadero"),
+        "topic_words": {
+            "health": ("pesa", "kilo", "bascula", "grasa", "adelgaz", "engord", "masa muscular", "medida"),
+            "inventory": (
+                "caduc", "despensa", "nevera", "frigor", "congelador", "tengo", "quedan", "acab", "agot",
+                "alimento", "guardar", "borrar", "vaciar",
+            ),
+            "shopping": ("lista", "super", "comprar", "falta", "apunta", "mercadona", "carrito"),
+            "recipes": ("cocin", "cenar", "cena", "comer", "comida", "almuerzo", "desayun", "basico", "preparar", "hacer de"),
+            "calendar": ("evento", "cita", "reunion", "pendiente", "tengo hoy", "manana"),
+            "menu": ("menú", "que cenamos", "que comemos", "semana de comidas", "planifica la semana", "menus", "semana que viene", "planifica", "comidas de la semana"),
+            "energy": (
+                "cuesta la luz", "coste de la luz", "horas baratas", "valle", "cuanto llevo de luz", "inversor",
+                "red electrica", "factura", "vatio", "gasto de luz", "ahorro",
+            ),
+            "memory": ("recuerd", "acuerd", "olvid", "sabes que", "te dije", "me gusta", "prefiero"),
+            "sensors": ("humedad", "presencia", "luminosidad"),
+            "smart_home": (
+                "salgo de casa", "me voy a dormir", "buenas noches", "revisa la casa", "enciend", "apag",
+                "luz", "luces", "persiana", "clima", "lampara", "enchufe", "termostato", "ventilador", "aire",
+                "calefa", "me voy", "me acuesto", "dejar todo apagado",
+            ),
+            "notices": ("avisa", "recuerdame", "recordatorio", "alarma", "notific", "molestar", "silenci", "avisame", "campana"),
+            "automations": ("automatiz", "cada vez", "todos los dias", "todas las noches", "todas las mananas", "si llego", "si hay", "si pasa", "programa", "rutina"),
+            "appliances": ("electrodomestic", "lavadora", "lavavajillas", "horno", "averia", "falla", "no funciona", "caldera", "secadora", "microondas", "se ha roto", "no arranca", "no enciende"),
+            "system": ("respaldo", "restaur", "seguridad"),
+            "documents": ("apunte", "instruccion", "contrasena", "guia", "como se"),
+            "expenses": ("gast", "voy de dinero", "cuanto me queda", "pague", "pagado", "pagar", "euros", "cuanto cuesta", "ticket", "he comprado por"),
+            "habits": ("racha", "vaso de agua", "vasos de agua", "bebido", "pastilla", "medicina", "pasear", "he caminado", "objetivo diario"),
+            "chores": ("le toca", "te toca", "me toca", "basura", "fregar", "limpiar el", "tareas de casa", "tareas del hogar", "barrer", "quien hace", "tarea del hogar", "familia", "perfil"),
+            "expiry": ("caduc", "caducado", "fecha de consumo", "se estropea", "aprovechar"),
+            "search": ("busca", "encuentra", "donde puse", "donde esta"),
+            "summary": ("que tengo hoy", "buenos dias", "mi dia", "novedades"),
+        },
+        "recipe_question_words": (
+            "receta", "cocinar", "cocino", "cocin", "para cenar", "para comer", "de cenar", "de comer",
+            "que ceno", "que como", "que preparo", "que hago de", "menu", "plato",
+        ),
+        "announcement_words": (
+            "voy a", "vamos a", "ire a", "primero voy", "primero debo", "primero necesito", "primero tengo",
+            "primero hay que", "dejame", "permiteme", "deja que", "dame un momento", "dame un segundo",
+            "dame un segundito", "un momento", "un segundito", "ahora mismo voy", "ahora mismo te",
+            "ahora mismo reviso", "ahora mismo compruebo", "revisare", "comprobare", "consultare", "mirare",
+            "buscare", "verificare", "preparare", "calculare", "apuntare", "anadire", "guardare",
+            "revisar primero", "revisar antes", "revisar la despensa", "revisar tu despensa",
+            "comprobar primero", "comprobar antes", "comprobar que", "comprobar lo que",
+            "consultar primero", "consultar antes", "consultar el inventario",
+        ),
+    },
+}

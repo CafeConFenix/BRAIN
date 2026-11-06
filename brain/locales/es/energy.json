@@ -1,0 +1,21 @@
+{
+  "The production of {0} kWh does not look right.": "La producción de {0} kWh no parece correcta.",
+  "Give the price per kWh during those hours (for example 0.08).": "Indica el precio del kWh en esas horas (por ejemplo 0.08).",
+  "First tell me how much you pay per kWh (for example 0.15 EUR) with set_electricity_tariff.": "Primero dime cuánto pagas por kWh (por ejemplo 0,15 €) con set_electricity_tariff.",
+  "The {0} price must be greater than 0 and in euros per kWh (for example 0.15).": "El precio de {0} debe ser mayor que 0 y estar en euros por kWh (por ejemplo 0.15).",
+  "Give at least the price you pay for electricity (euros per kWh).": "Indica al menos el precio al que compras la electricidad (euros por kWh).",
+  "solar production (what the panels generate now)": "producción solar (lo que generan las placas ahora)",
+  "home consumption": "consumo de la casa",
+  "exchange with the electricity grid": "intercambio con la red eléctrica",
+  "battery charge (%)": "carga de la batería (%)",
+  "Connect Home Assistant first (CONFIGURE_SMART_HOME.bat) to see the inverter live.": "Conecta primero Home Assistant (CONFIGURE_SMART_HOME.bat) para ver el inversor en tiempo real.",
+  "I could not find the inverter in Home Assistant. Run CONFIGURE_ENERGY.bat to choose the sensors (the inverter has to show up in Home Assistant first).": "No he encontrado el inversor en Home Assistant. Ejecuta CONFIGURE_ENERGY.bat para elegir los sensores (primero tiene que aparecer el inversor en Home Assistant).",
+  "no data": "sin dato",
+  "There is no inverter data.": "No hay datos del inversor.",
+  "The panels produce {0}": "Las placas producen {0}",
+  "the home uses {0}": "la casa consume {0}",
+  "{0} is bought from the grid": "se compran {0} a la red",
+  "{0} is fed into the grid": "se vierten {0} a la red",
+  "there is no exchange with the grid": "no hay intercambio con la red",
+  "battery at {0} %": "batería al {0} %"
+}

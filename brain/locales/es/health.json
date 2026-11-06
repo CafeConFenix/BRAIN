@@ -1,0 +1,5 @@
+{
+  "The weight {0} does not look right (it should be between 20 and 500).": "El peso {0} no parece correcto (debe estar entre 20 y 500).",
+  "There is no weight recorded on that date or earlier.": "No hay ningún peso registrado en esa fecha ni antes.",
+  "There are no body measurements saved. The user can send a photo of their scale in the chat.": "No hay medidas corporales guardadas. El usuario puede enviar una captura de su báscula en el chat."
+}

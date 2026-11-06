@@ -1,0 +1,19 @@
+{
+  "I could not read the screenshot. Try a clearer image showing the weight.": "No he podido leer la captura. Prueba con una imagen más nítida donde se vea el peso.",
+  "I don't see any weight in the image. Is it the scale's screen with the result?": "No veo ningún peso en la imagen. ¿Es la pantalla de la báscula con el resultado?",
+  "I read {0:g} kg, which does not look right, so I am not saving it. Tell me the weight by hand or try another screenshot.": "He leído {0:g} kg, que no parece correcto, y no lo guardo. Dime el peso a mano o prueba con otra captura.",
+  "The image is not valid or is too large (8 MB maximum).": "La imagen no es válida o es demasiado grande (máximo 8 MB).",
+  "Unsupported image format. Use a JPG, PNG or WebP screenshot.": "Formato de imagen no admitido. Usa una captura en JPG, PNG o WebP.",
+  "None of your AI models can read images. Install one with vision (for example 'ollama pull gemma3:4b') and send the screenshot again.": "Ninguno de tus modelos de IA sabe leer imágenes. Instala uno con visión (por ejemplo 'ollama pull gemma3:4b') y vuelve a enviar la captura.",
+  "I could not analyze the image: {0}": "No he podido analizar la imagen: {0}",
+  "I read from the screenshot: {0} kg ({1})": "He leído en la captura: {0} kg ({1})",
+  "I have saved it. If anything is wrong, tell me and I'll fix it.": "Lo he guardado. Si algún dato no es correcto, dímelo y lo corrijo.",
+  "body fat": "grasa corporal",
+  "BMI": "IMC",
+  "water": "agua",
+  "muscle mass": "masa muscular",
+  "bone mass": "masa ósea",
+  "visceral fat": "grasa visceral",
+  "basal metabolism": "metabolismo basal",
+  "body age": "edad corporal"
+}

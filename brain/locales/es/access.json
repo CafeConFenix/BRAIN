@@ -1,0 +1,4 @@
+{
+  "The password must be at least {0} characters long.": "La contraseña debe tener al menos {0} caracteres.",
+  "No password is configured.": "No hay contraseña configurada."
+}

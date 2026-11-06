@@ -1,0 +1,10 @@
+{
+  "'{0}' matches several: {1}. Tell me which one.": "'{0}' encaja con varios: {1}. Dime cuál.",
+  "none": "ninguno",
+  "I have no appliance '{0}' registered. Registered: {1}.": "No tengo registrado ningún electrodoméstico '{0}'. Registrados: {1}.",
+  "The name of the appliance is missing (washing machine, fridge, oven...).": "Falta el nombre del electrodoméstico (lavadora, nevera, horno...).",
+  "The warranty months do not look right.": "Los meses de garantía no parecen correctos.",
+  "expired on {0}": "caducó el {0}",
+  "expires in {0} days ({1})": "caduca en {0} días ({1})",
+  "under warranty until {0}": "en garantía hasta el {0}"
+}

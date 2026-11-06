@@ -1,0 +1,16 @@
+{
+  "Drive {0}: (USB or disk)": "Unidad {0}: (USB o disco)",
+  "I can't save to that folder ({0}). Choose another one or check that the disk is connected.": "No puedo guardar en esa carpeta ({0}). Elige otra o comprueba que el disco está conectado.",
+  "I could not copy to {0}. Is the disk connected?": "No he podido copiar a {0}. ¿Está conectado el disco?",
+  "That backup is not in the second destination.": "Esa copia no está en el segundo destino.",
+  "There are no backups. Create one first.": "No hay copias de seguridad. Crea una primero.",
+  "The backup '{0}' does not exist. Available: {1}.": "No existe la copia '{0}'. Disponibles: {1}.",
+  "{0} is not a valid ZIP.": "{0} no es un ZIP válido.",
+  "{0} is damaged ({1} fails).": "{0} está dañado (falla {1}).",
+  "{0} has no manifest: it is not a BRAIN backup.": "{0} no tiene manifiesto: no es una copia de BRAIN.",
+  "{0} contains an unsafe path ({1}).": "{0} contiene una ruta insegura ({1}).",
+  "The manifest of {0} is damaged.": "El manifiesto de {0} está dañado.",
+  "The contents of {0} do not match its manifest.": "El contenido de {0} no coincide con su manifiesto.",
+  "Integrity check failed for {0} in {1}.": "Falla la verificación de integridad de {0} en {1}.",
+  "There are no backups yet.": "Todavía no hay copias de seguridad."
+}

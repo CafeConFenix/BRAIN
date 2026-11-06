@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "brain-home-ai"
+dynamic = ["version"]
+description = "BRAIN: local-first home AI (Ollama, Home Assistant, pantry, budget, solar energy)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = []
+
+[project.scripts]
+brain = "brain.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["brain*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "brain.core.config.Config.VERSION" }
+
+[tool.black]
+line-length = 120
+target-version = ["py39"]

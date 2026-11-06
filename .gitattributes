@@ -1,0 +1,10 @@
+# Windows scripts must have Windows line endings (CRLF).
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.iss text eol=crlf
+
+# The rest of the project uses LF.
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.html text eol=lf

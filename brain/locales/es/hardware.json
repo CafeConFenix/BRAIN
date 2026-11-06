@@ -1,0 +1,10 @@
+{
+  "of VRAM": "de VRAM",
+  "none compatible": "ninguna compatible",
+  "RAM: {0} GB · NVIDIA graphics card: {1} · Free disk: {2} GB": "RAM: {0} GB · Tarjeta gráfica NVIDIA: {1} · Disco libre: {2} GB",
+  "I could not measure the RAM; I chose a cautious model.": "No he podido medir la memoria RAM; he elegido un modelo prudente.",
+  "your graphics card ({0} GB of VRAM)": "tu tarjeta gráfica ({0} GB de VRAM)",
+  "your RAM ({0} GB, no NVIDIA card)": "tu memoria RAM ({0} GB, sin tarjeta NVIDIA)",
+  "Chosen based on {0}.": "Elegido según {0}.",
+  "There are better models, but they don't fit in the free disk space.": "Hay modelos mejores, pero no caben en el espacio libre del disco."
+}

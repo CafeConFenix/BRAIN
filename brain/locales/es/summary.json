@@ -1,0 +1,16 @@
+{
+  "and {0} more": "y {0} más",
+  "The summary time must be HH:MM, for example 08:30.": "La hora del resumen debe ser HH:MM, por ejemplo 08:30.",
+  "Today: {0}.": "Hoy: {0}.",
+  "Tomorrow: {0}.": "Mañana: {0}.",
+  "Pending tasks: {0}.": "Tareas pendientes: {0}.",
+  "You have nothing on the agenda for today or tomorrow.": "No tienes nada en la agenda para hoy ni mañana.",
+  "Today's reminders: {0}.": "Recordatorios de hoy: {0}.",
+  "Shopping list ({0}): {1}.": "Lista de la compra ({0}): {1}.",
+  "Yesterday the panels produced {0} kWh.": "Ayer las placas produjeron {0} kWh.",
+  "ATTENTION, sensors in alert: {0}.": "ATENCIÓN, sensores en alerta: {0}.",
+  "Warranties expiring soon: {0}.": "Garantías que caducan pronto: {0}.",
+  "Last weight: {0} kg ({1}).": "Último peso: {0} kg ({1}).",
+  "{0} kg compared with a week ago.": "{0} kg respecto a hace una semana.",
+  "Good morning: {0}": "Buenos días: {0}"
+}

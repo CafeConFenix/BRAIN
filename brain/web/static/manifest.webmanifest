@@ -1,0 +1,15 @@
+{
+  "name": "BRAIN",
+  "short_name": "BRAIN",
+  "description": "Your personal assistant with local artificial intelligence.",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#130B22",
+  "theme_color": "#130B22",
+  "icons": [
+    {"src": "/iconos/icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "/iconos/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "The kind of memory '{0}' does not exist. Options: {1}.": "El tipo de memoria '{0}' no existe. Opciones: {1}.",
+  "There is nothing to remember.": "No hay nada que recordar.",
+  "I cannot find any memory with '{0}'.": "No encuentro ningún recuerdo con '{0}'."
+}

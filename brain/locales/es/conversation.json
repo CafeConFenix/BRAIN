@@ -1,0 +1,12 @@
+{
+  "\n[... trimmed: the original message had {0} characters ...]": "\n[... recortado: el mensaje original tenía {0} caracteres ...]",
+  " If it was for the pantry, tell me and I'll change it.": " Si era para la despensa, dímelo y lo cambio.",
+  " You can see them in the panel on the right. If you wanted the shopping list, tell me and I'll change it.": " Los ves en el panel de la derecha. Si querías la lista de la compra, dímelo y lo cambio.",
+  "New conversation": "Nueva conversación",
+  "Conversation '{0}' does not exist.": "No existe la conversación '{0}'.",
+  "Main conversation": "Conversación principal",
+  "There are already {0} conversations. Delete one to create another.": "Ya hay {0} conversaciones. Borra alguna para crear otra.",
+  "The conversation topic is too long (maximum 500 characters).": "El tema de la conversación es demasiado largo (máximo 500 caracteres).",
+  "The title cannot be empty.": "El título no puede estar vacío.",
+  "The main conversation cannot be deleted (it can be cleared).": "La conversación principal no se puede borrar (sí vaciar)."
+}

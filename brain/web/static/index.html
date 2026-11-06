@@ -1,0 +1,2471 @@
+<!doctype html>
+<html lang="es" id="htmlRoot">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BRAIN</title>
+<link rel="icon" href="/iconos/icono-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/iconos/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#130B22">
+<style>
+  :root {
+    color-scheme: dark;
+    --fondo: #130B22;
+    --panel: #1C1231;
+    --panel-2: #251A3F;
+    --linea: #3A2A5C;
+    --texto: #EDE7FB;
+    --suave: #A99BC9;
+    --acento: #B794F6;
+    --acento-fondo: #6D28D9;
+    --acento-texto: #FFFFFF;
+    --luz: #F6BE55;
+    --luz-fondo: #3A2A1C;
+    --consumo: #8FB0FF;
+    --compra: #FF8FB1;
+    --venta: #6EE7B7;
+    --peligro: #FF8FB1;
+    --sombra: 0 10px 30px rgba(8, 2, 20, .5);
+    --cifras: "Bahnschrift", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+    --texto-fuente: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  :root[data-tema="claro"] {
+    color-scheme: light;
+    --fondo: #F4F0FB;
+    --panel: #FFFFFF;
+    --panel-2: #EFE9FA;
+    --linea: #DCD1F0;
+    --texto: #20123A;
+    --suave: #6B5A8C;
+    --acento: #7C3AED;
+    --acento-fondo: #6D28D9;
+    --luz: #C98A0C;
+    --luz-fondo: #FFF1CF;
+    --consumo: #3B6FD8;
+    --compra: #D64573;
+    --venta: #1E9A62;
+    --peligro: #C0364F;
+    --sombra: 0 10px 30px rgba(60, 20, 110, .12);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-tema="oscuro"]) {
+      color-scheme: light;
+      --fondo: #F4F0FB;
+      --panel: #FFFFFF;
+      --panel-2: #EFE9FA;
+      --linea: #DCD1F0;
+      --texto: #20123A;
+      --suave: #6B5A8C;
+      --acento: #7C3AED;
+      --acento-fondo: #6D28D9;
+      --luz: #C98A0C;
+      --luz-fondo: #FFF1CF;
+      --consumo: #3B6FD8;
+      --compra: #D64573;
+      --venta: #1E9A62;
+      --peligro: #C0364F;
+      --sombra: 0 10px 30px rgba(60, 20, 110, .12);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font: 15px/1.5 var(--texto-fuente);
+    background: var(--fondo);
+    color: var(--texto);
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+
+  /* ---------- Barra superior ---------- */
+  .barra {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 20px; border-bottom: 1px solid var(--linea); background: var(--panel);
+  }
+  .marca { display: flex; align-items: center; gap: 10px; font: 700 19px var(--cifras); letter-spacing: .06em; }
+  .marca svg { width: 28px; height: 28px; }
+  .barra .version { color: var(--suave); font-size: 12px; }
+  .estado { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--suave); }
+  .punto { width: 9px; height: 9px; border-radius: 50%; background: var(--suave); }
+  .punto.ok { background: var(--venta); box-shadow: 0 0 0 4px color-mix(in srgb, var(--venta) 22%, transparent); }
+  .punto.mal { background: var(--peligro); }
+  .icono {
+    display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 10px;
+    border: 1px solid var(--linea); background: transparent; color: var(--suave);
+  }
+  .icono:hover { color: var(--texto); background: var(--panel-2); }
+  .icono svg { width: 18px; height: 18px; }
+
+  .pestanas { display: none; border-bottom: 1px solid var(--linea); background: var(--panel); }
+  .pestanas button {
+    flex: 1; padding: 11px; border: 0; background: transparent; color: var(--suave);
+    border-bottom: 2px solid transparent; font-weight: 600;
+  }
+  .pestanas button[aria-selected="true"] { color: var(--texto); border-bottom-color: var(--acento); }
+
+  main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 410px; min-height: 0; }
+
+  /* ---------- Chat ---------- */
+  #chat { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--linea); }
+  #aviso {
+    display: none; margin: 14px 20px 0; padding: 11px 14px; border-radius: 12px;
+    background: var(--luz-fondo); color: var(--luz); border: 1px solid color-mix(in srgb, var(--luz) 35%, transparent);
+    font-size: 14px; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  #mensajes { flex: 1; overflow-y: auto; padding: 22px 20px 12px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+  .msg { max-width: min(740px, 86%); padding: 11px 15px; border-radius: 16px; word-wrap: break-word; overflow-wrap: anywhere; }
+  .msg.yo { align-self: flex-end; background: var(--acento-fondo); color: var(--acento-texto); border-bottom-right-radius: 5px; white-space: pre-wrap; }
+  .msg.ia { align-self: flex-start; background: var(--panel); border: 1px solid var(--linea); border-bottom-left-radius: 5px; }
+  .msg.error { align-self: flex-start; background: color-mix(in srgb, var(--peligro) 14%, var(--panel)); border: 1px solid color-mix(in srgb, var(--peligro) 45%, transparent); }
+  .msg p { margin: 0 0 8px; }
+  .msg p:last-child, .msg ul:last-child, .msg ol:last-child { margin-bottom: 0; }
+  .msg ul, .msg ol { margin: 0 0 8px; padding-left: 22px; }
+  .msg li { margin: 2px 0; }
+  .msg code { font-family: Consolas, "Cascadia Mono", monospace; font-size: .92em; background: var(--panel-2); padding: 1px 5px; border-radius: 5px; }
+  .msg .titulo { font-weight: 700; margin: 6px 0 4px; }
+  .msg small { display: block; margin-top: 8px; color: var(--suave); font-size: 12px; }
+  .pensando { display: inline-flex; gap: 5px; padding: 4px 2px; }
+  .pensando i { width: 7px; height: 7px; border-radius: 50%; background: var(--suave); animation: late 1.2s infinite ease-in-out; }
+  .pensando i:nth-child(2) { animation-delay: .15s; }
+  .pensando i:nth-child(3) { animation-delay: .3s; }
+  @keyframes late { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+
+  .sugerencias { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 20px 10px; }
+  .sugerencias button {
+    padding: 6px 13px; border-radius: 999px; border: 1px solid var(--linea); background: var(--panel);
+    color: var(--suave); font-size: 13px;
+  }
+  .sugerencias button:hover { color: var(--texto); border-color: var(--acento); }
+
+  #avisoVoz {
+    display: none; margin: 0 20px 10px; padding: 11px 14px; border-radius: 12px; background: var(--panel);
+    border: 1px solid var(--linea); font-size: 14px; gap: 10px; align-items: center; flex-wrap: wrap;
+  }
+  #avisoVoz.grabando { border-color: var(--peligro); }
+  .nivel { flex: 1; min-width: 80px; height: 6px; border-radius: 3px; background: var(--panel-2); overflow: hidden; }
+  .nivel i { display: block; height: 100%; width: 0; background: var(--peligro); transition: width .08s linear; }
+
+  #formulario { display: flex; align-items: flex-end; gap: 8px; padding: 6px 20px 8px; }
+  #entrada {
+    flex: 1; resize: none; min-height: 46px; max-height: 160px; padding: 12px 14px; line-height: 1.4;
+    border: 1px solid var(--linea); border-radius: 14px; background: var(--panel);
+  }
+  #entrada:focus { outline: none; border-color: var(--acento); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acento) 25%, transparent); }
+  #microfono, #imagen { width: 46px; height: 46px; border-radius: 14px; }
+  #microfono.activo { background: var(--peligro); color: #fff; border-color: transparent; animation: aro 1.4s infinite; }
+  @keyframes aro { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--peligro) 55%, transparent); } 100% { box-shadow: 0 0 0 14px transparent; } }
+  .primario {
+    height: 46px; padding: 0 20px; border: 0; border-radius: 14px; background: var(--acento-fondo);
+    color: var(--acento-texto); font-weight: 600;
+  }
+  .primario:hover { filter: brightness(1.12); }
+  button:disabled { opacity: .5; cursor: default; }
+  .suave {
+    border: 1px solid var(--linea); background: transparent; color: var(--suave); border-radius: 9px; padding: 3px 11px; font-size: 13px;
+  }
+  .suave:hover { color: var(--texto); border-color: var(--suave); }
+  .suave.peligro { color: var(--peligro); border-color: color-mix(in srgb, var(--peligro) 50%, transparent); }
+  .opciones { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; padding: 0 20px 14px; font-size: 13px; color: var(--suave); }
+  .opciones label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .opciones .suave { margin-left: auto; }
+  input[type="checkbox"] { accent-color: var(--acento-fondo); width: 15px; height: 15px; }
+
+  /* ---------- Panel derecho ---------- */
+  #panel { overflow-y: auto; display: flex; flex-direction: column; background: var(--fondo); }
+
+  .energia {
+    margin: 16px 16px 6px; padding: 16px 18px 15px; border-radius: 20px; box-shadow: var(--sombra);
+    background: linear-gradient(160deg, var(--panel-2), var(--panel)); border: 1px solid var(--linea);
+  }
+  .energia-cab { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  .energia-cab .vivo { width: 8px; height: 8px; border-radius: 50%; background: var(--venta); animation: pulso 2.2s infinite; }
+  @keyframes pulso { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
+  .energia-cab time { margin-left: auto; font-size: 12px; color: var(--suave); font-weight: 400; }
+  .cifras { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 14px 0 12px; }
+  .cifra { min-width: 0; }
+  .cifra .valor { font: 600 30px/1.05 var(--cifras); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .cifra .valor small { font-size: 14px; font-weight: 500; color: var(--suave); margin-left: 3px; letter-spacing: 0; }
+  .cifra .nombre { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--suave); margin-top: 3px; }
+  .cifra .nombre i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
+  .balance { display: flex; height: 9px; border-radius: 5px; overflow: hidden; background: var(--linea); gap: 2px; }
+  .balance i { display: block; height: 100%; transition: flex-grow .6s ease; }
+  .energia-pie { margin: 10px 0 0; font-size: 13px; color: var(--suave); }
+  .energia-pie b { color: var(--texto); font-weight: 600; }
+
+  .bloque { padding: 16px 20px 6px; border-bottom: 1px solid var(--linea); }
+  .bloque:last-of-type { border-bottom: 0; }
+  .bloque-cab { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; min-height: 28px; }
+  .bloque-cab h2 { font-size: 15px; margin: 0; font-weight: 650; }
+  .bloque-cab .cuenta { color: var(--suave); font-size: 13px; }
+  .bloque-cab .acciones { margin-left: auto; display: flex; gap: 6px; }
+  .vacio { color: var(--suave); font-size: 14px; margin: 2px 0 12px; }
+  .vacio b { color: var(--texto); font-weight: 600; }
+
+  .lista { list-style: none; margin: 0 0 12px; padding: 0; max-height: 280px; overflow-y: auto; }
+  .lista li, .fila-disp {
+    display: flex; align-items: center; gap: 10px; padding: 7px 4px; border-bottom: 1px solid color-mix(in srgb, var(--linea) 60%, transparent);
+    font-size: 14px;
+  }
+  .lista li:last-child { border-bottom: 0; }
+  .lista .nombre { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lista .cant { font: 600 13px var(--cifras); color: var(--suave); background: var(--panel-2); padding: 1px 8px; border-radius: 999px; }
+  .quitar {
+    width: 24px; height: 24px; border: 0; border-radius: 7px; background: transparent; color: var(--suave);
+    opacity: 0; display: grid; place-items: center; flex: none;
+  }
+  .lista li:hover .quitar, .quitar:focus-visible { opacity: 1; }
+  .quitar:hover { color: var(--peligro); background: var(--panel-2); }
+  @media (hover: none) { .quitar { opacity: .7; } }
+  .grupo { font-size: 12.5px; color: var(--suave); font-weight: 600; margin: 8px 0 2px; text-transform: none; }
+  .basicos { font-size: 12.5px; color: var(--suave); margin: 0 0 12px; }
+  .basicos summary { cursor: pointer; }
+
+  .habitacion { font-size: 12.5px; color: var(--suave); font-weight: 600; margin: 8px 0 1px; }
+  .fila-disp { justify-content: space-between; }
+  .fila-disp .nombre { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fila-disp .detalle { font-size: 12px; color: var(--suave); }
+  .interruptor {
+    position: relative; width: 44px; height: 26px; border-radius: 999px; border: 1px solid var(--linea);
+    background: var(--panel-2); padding: 0; flex: none; transition: background .2s, border-color .2s;
+  }
+  .interruptor::after {
+    content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--suave); transition: transform .2s, background .2s;
+  }
+  .interruptor[aria-checked="true"] { background: var(--luz-fondo); border-color: var(--luz); }
+  .interruptor[aria-checked="true"]::after { transform: translateX(18px); background: var(--luz); box-shadow: 0 0 12px var(--luz); }
+  .interruptor:disabled { opacity: .35; }
+  .escenas { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 12px; }
+  .escenas button {
+    padding: 5px 12px; border-radius: 999px; border: 1px solid var(--linea); background: var(--panel); font-size: 13px;
+  }
+  .escenas button:hover { border-color: var(--luz); color: var(--luz); }
+
+  .peso-valor { font: 600 30px/1.1 var(--cifras); font-variant-numeric: tabular-nums; }
+  .peso-valor small { font-size: 14px; color: var(--suave); margin-left: 4px; }
+  svg.linea { width: 100%; height: 56px; display: block; margin: 6px 0 12px; }
+  .pie-panel { padding: 12px 20px 20px; font-size: 13px; color: var(--suave); }
+
+  /* ---------- Conversaciones en paralelo ---------- */
+  .conv-barra { display: flex; gap: 6px; align-items: center; padding: 8px 20px 0; overflow-x: auto; scrollbar-width: thin; }
+  .conv-barra button {
+    flex: none; max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    height: 32px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--linea);
+    background: transparent; color: var(--suave); font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .conv-barra button:hover { color: var(--texto); border-color: var(--acento); }
+  .conv-barra button[aria-selected="true"] { color: var(--acento-texto); background: var(--acento-fondo); border-color: var(--acento-fondo); }
+  .conv-barra .mas { padding: 0 12px; font-size: 16px; line-height: 1; }
+  .conv-barra .accion { padding: 0 10px; }
+  .temas { display: flex; gap: 6px; flex-wrap: wrap; }
+  .temas button { height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--linea); background: transparent; color: var(--suave); font: inherit; font-size: 13px; cursor: pointer; }
+  .temas button:hover { color: var(--texto); border-color: var(--acento); }
+  .dlg input[type="text"], .dlg textarea.corto {
+    width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--linea);
+    background: var(--panel-2); color: var(--texto); font: inherit;
+  }
+  .dlg textarea.corto { min-height: 80px; resize: vertical; }
+
+  /* ---------- Diálogo de importar ---------- */
+  dialog {
+    width: min(600px, calc(100vw - 32px)); padding: 0; border: 1px solid var(--linea); border-radius: 20px;
+    background: var(--panel); color: var(--texto); box-shadow: var(--sombra);
+  }
+  dialog::backdrop { background: rgba(10, 4, 22, .65); backdrop-filter: blur(3px); }
+  .dlg { padding: 22px 24px 20px; display: flex; flex-direction: column; gap: 14px; }
+  .dlg h2 { margin: 0; font-size: 19px; }
+  .dlg p { margin: 0; color: var(--suave); font-size: 14px; }
+  .destinos { display: flex; gap: 6px; flex-wrap: wrap; }
+  .destinos label {
+    padding: 6px 13px; border-radius: 999px; border: 1px solid var(--linea); font-size: 13px; cursor: pointer; color: var(--suave);
+  }
+  .destinos input { position: absolute; opacity: 0; pointer-events: none; }
+  .destinos label:has(input:checked) { border-color: var(--acento); color: var(--texto); background: color-mix(in srgb, var(--acento) 16%, transparent); }
+  .destinos label:has(input:focus-visible) { outline: 2px solid var(--acento); outline-offset: 2px; }
+  #textoImportar {
+    min-height: 190px; resize: vertical; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--linea);
+    background: var(--fondo); font: 14px/1.5 Consolas, "Cascadia Mono", monospace;
+  }
+  #textoImportar:focus { outline: none; border-color: var(--acento); }
+  .vista-previa { font-size: 13.5px; min-height: 22px; color: var(--suave); }
+  .vista-previa b { color: var(--texto); }
+  .dlg-botones { display: flex; justify-content: flex-end; gap: 10px; }
+  .dlg-botones .secundario { height: 42px; padding: 0 18px; border-radius: 12px; border: 1px solid var(--linea); background: transparent; }
+
+
+  /* ---------- Novedades de casa ---------- */
+  .rutinas { display: flex; gap: 10px; margin-bottom: 8px; }
+  .rutinas button { flex: 1; height: 46px; border-radius: 14px; font-size: 15px; font-weight: 600; }
+  .secundario-grande { border: 1px solid var(--linea); background: var(--panel-2); color: var(--texto); }
+  .secundario-grande:hover { border-color: var(--acento); }
+  .mini-select { background: var(--fondo); color: var(--texto); border: 1px solid var(--linea); border-radius: 10px; padding: 4px 8px; font-size: 13px; }
+  .progreso { height: 8px; border-radius: 5px; background: var(--linea); overflow: hidden; margin: 4px 0 6px; }
+  .progreso i { display: block; height: 100%; background: var(--acento); border-radius: 5px; transition: width .5s ease; }
+  .progreso.aviso i { background: var(--luz); }
+  .progreso.superado i { background: var(--peligro); }
+  .presu-texto { font-size: 13px; color: var(--suave); margin: 0 0 8px; }
+  .presu-texto b { color: var(--texto); }
+  .etiqueta { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--panel-2); color: var(--suave); white-space: nowrap; }
+  .etiqueta.pronto { background: var(--luz-fondo); color: var(--luz); }
+  .etiqueta.caducado { background: color-mix(in srgb, var(--peligro) 18%, transparent); color: var(--peligro); }
+  .etiqueta.ok { background: color-mix(in srgb, var(--venta) 18%, transparent); color: var(--venta); }
+  .caducan { margin: 0 0 8px; padding: 8px 10px; border-radius: 12px; background: var(--luz-fondo); color: var(--luz); font-size: 13.5px; }
+  .lista li .detalle { color: var(--suave); font-size: 12.5px; }
+  .lista li button.mini { border: 1px solid var(--linea); background: transparent; color: var(--texto); border-radius: 9px; padding: 3px 10px; font-size: 13px; }
+  .lista li button.mini:hover { border-color: var(--acento); color: var(--acento); }
+  .subir-mini { cursor: pointer; }
+  .campo-gen { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--suave); }
+  .campo-gen input, .campo-gen textarea, .campo-gen select { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--linea); background: var(--fondo); color: var(--texto); font: inherit; }
+  .campo-gen textarea { min-height: 170px; resize: vertical; }
+  .lista-marcar label { display: flex; gap: 10px; align-items: center; padding: 6px 2px; font-size: 14px; }
+  .lista-marcar input { accent-color: var(--acento); width: 17px; height: 17px; }
+  .grupo-busca h3 { font-size: 13px; color: var(--suave); margin: 10px 0 2px; }
+  .grupo-busca p { margin: 2px 0; font-size: 14px; }
+  .grupo-busca p span { color: var(--suave); font-size: 12.5px; margin-left: 6px; }
+  .cifra-grande { font: 700 26px var(--cifras); }
+  .cifra-grande small { font-size: 14px; color: var(--suave); font-weight: 500; }
+
+  /* ---------- Ajustes ---------- */
+  .dlg h3 { margin: 6px 0 0; font-size: 15px; }
+  .ajuste-lista { display: flex; flex-direction: column; gap: 8px; }
+  .ajuste-fila { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 14px; }
+  .ajuste-fila select { background: var(--fondo); color: var(--texto); border: 1px solid var(--linea); border-radius: 10px; padding: 7px 10px; max-width: 55%; }
+  .subir { align-self: flex-start; padding: 8px 14px; border: 1px dashed var(--linea); border-radius: 12px; cursor: pointer; font-size: 14px; color: var(--suave); }
+  .subir input { display: none; }
+  .fila-acceso { display: flex; gap: 8px; }
+  .fila-acceso input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--linea); background: var(--fondo); color: var(--texto); }
+  .fila-acceso .primario { padding: 0 16px; border-radius: 12px; }
+  .pista { font-size: 12.5px !important; }
+  .dlg .secundario { height: 42px; padding: 0 18px; border-radius: 12px; border: 1px solid var(--linea); background: transparent; }
+
+  /* ---------- Campana de avisos ---------- */
+  .campana { position: relative; }
+  .campana .contador {
+    position: absolute; top: 1px; right: 1px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px;
+    background: var(--peligro); color: #fff; font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; display: none;
+  }
+  .campana.con-avisos .contador { display: block; }
+  #bandeja {
+    position: fixed; top: 54px; right: 12px; width: min(380px, calc(100vw - 24px)); max-height: 70vh; overflow: auto; z-index: 40;
+    background: var(--panel); border: 1px solid var(--linea); border-radius: 14px; box-shadow: var(--sombra); display: none;
+  }
+  #bandeja.abierta { display: block; }
+  #bandeja header { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--linea); font-weight: 600; }
+  #bandeja ul { list-style: none; margin: 0; padding: 0; }
+  #bandeja li { padding: 11px 14px; border-bottom: 1px solid var(--linea); font-size: 14px; }
+  #bandeja li.nuevo { background: color-mix(in srgb, var(--acento) 10%, transparent); }
+  #bandeja li.critico { border-left: 3px solid var(--peligro); }
+  #bandeja li small { display: block; color: var(--suave); margin-top: 3px; font-size: 12px; }
+  #bandeja .vacio { padding: 18px 14px; color: var(--suave); font-size: 14px; }
+  .toast.aviso-brain { border-color: var(--acento); }
+  .toast.aviso-brain.critico { border-color: var(--peligro); }
+  .toast strong { display: block; margin-bottom: 2px; }
+
+  /* ---------- Avisos flotantes ---------- */
+  #toasts { position: fixed; right: 18px; bottom: 18px; display: flex; flex-direction: column; gap: 8px; z-index: 50; }
+  .toast {
+    max-width: 340px; padding: 11px 15px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--linea);
+    box-shadow: var(--sombra); font-size: 14px;
+  }
+  .toast.error { border-color: var(--peligro); }
+
+  /* ---------- Móvil ---------- */
+  @media (max-width: 900px) {
+    main { grid-template-columns: minmax(0, 1fr); }
+    #chat, #panel { min-width: 0; }
+    .pestanas { display: flex; }
+    #chat, #panel { border-right: 0; }
+    body[data-vista="chat"] #panel, body[data-vista="casa"] #chat { display: none; }
+    .msg { max-width: 94%; }
+    .cifra .valor { font-size: 25px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+
+  /* ---------- Asistente y selector de dispositivos ---------- */
+  [hidden] { display: none !important; }
+  .asistente { max-height: min(86vh, 760px); overflow-y: auto; }
+  .pasos { display: flex; gap: 6px; }
+  .pasos i { flex: 1; height: 4px; border-radius: 2px; background: var(--linea); }
+  .pasos i.hecho { background: var(--acento); }
+  .campo { display: flex; flex-direction: column; gap: 5px; font-size: 13.5px; color: var(--suave); }
+  .campo input, .campo select, .campo-busca {
+    width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--linea);
+    background: var(--fondo); color: var(--texto); font: inherit;
+  }
+  .campo input:focus, .campo select:focus, .campo-busca:focus { outline: none; border-color: var(--acento); }
+  .campo-busca { margin: 0; }
+  .estado-paso { min-height: 22px; font-size: 13.5px; color: var(--suave); }
+  .estado-paso.ok { color: var(--venta); }
+  .estado-paso.mal { color: var(--peligro); }
+  .como { font-size: 13px; color: var(--suave); }
+  .como summary { cursor: pointer; color: var(--acento); }
+  .como ol { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 3px; }
+  .barra-sel { display: flex; gap: 8px; align-items: center; }
+  .barra-sel .campo-busca { flex: 1; min-width: 0; }
+  .lista-sel { max-height: 340px; overflow-y: auto; border: 1px solid var(--linea); border-radius: 14px; padding: 6px 10px; background: var(--fondo); }
+  .sel-hab { display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; font-size: 12.5px; font-weight: 650; color: var(--suave); cursor: pointer; }
+  .sel-fila { display: flex; align-items: center; gap: 9px; padding: 5px 2px; font-size: 14px; cursor: pointer; }
+  .sel-fila span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sel-fila small { color: var(--suave); font-size: 12px; }
+  .lista-sel input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--acento); flex: none; }
+  .resumen-sel { font-size: 13px; color: var(--suave); }
+  .opcion-red { display: flex; gap: 6px; flex-wrap: wrap; }
+  .opcion-red label { padding: 6px 13px; border-radius: 999px; border: 1px solid var(--linea); font-size: 13px; cursor: pointer; color: var(--suave); }
+  .opcion-red input { position: absolute; opacity: 0; pointer-events: none; }
+  .opcion-red label:has(input:checked) { border-color: var(--acento); color: var(--texto); background: color-mix(in srgb, var(--acento) 16%, transparent); }
+  .enlace { background: none; border: 0; color: var(--suave); text-decoration: underline; cursor: pointer; font: inherit; font-size: 13px; padding: 0 6px; }
+  .aviso-seccion { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+</style>
+</head>
+<body data-vista="chat">
+
+<header class="barra">
+  <div class="marca">
+    <img src="/iconos/icono-192.png" alt="" width="28" height="28" style="border-radius:8px">
+    BRAIN <span id="version" class="version"></span>
+  </div>
+  <div class="estado"><span id="punto" class="punto"></span><span id="estado" data-i18n="Conectando...">Conectando...</span></div>
+  <button class="icono" id="buscarGlobal" type="button" title="Buscar en todo (Ctrl+K)" aria-label="Buscar" data-i18n-title="Buscar en todo (Ctrl+K)" data-i18n-aria="Buscar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+  </button>
+  <button class="icono campana" id="campana" type="button" title="Avisos" aria-label="Avisos" aria-expanded="false" data-i18n-title="Avisos" data-i18n-aria="Avisos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 8-3 8h18s-3-1-3-8M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>
+    <span class="contador" id="contadorAvisos">0</span>
+  </button>
+  <button class="icono" id="ajustes" type="button" title="Ajustes: sonidos y acceso desde el móvil" aria-label="Ajustes" data-i18n-title="Ajustes: sonidos y acceso desde el móvil" data-i18n-aria="Ajustes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+  </button>
+  <button class="icono" id="tema" type="button" title="Cambiar entre tema claro y oscuro" aria-label="Cambiar tema" data-i18n-title="Cambiar entre tema claro y oscuro" data-i18n-aria="Cambiar tema">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+
+<nav class="pestanas" aria-label="Vista">
+  <button type="button" data-vista="chat" aria-selected="true">Chat</button>
+  <button type="button" data-vista="casa" aria-selected="false" data-i18n="Casa">Casa</button>
+</nav>
+
+<main>
+  <section id="chat" aria-label="Conversación con BRAIN">
+    <div id="aviso"><span id="avisoTexto"></span>
+      <button class="suave" id="reintentar" type="button" data-i18n="Reintentar">Reintentar</button>
+      <button class="primario" id="descargar" type="button" style="display:none;height:32px;padding:0 14px" data-i18n="Descargar IA">Descargar IA</button>
+    </div>
+    <div class="conv-barra" id="conversaciones" role="tablist" aria-label="Conversaciones"></div>
+    <div id="mensajes" aria-live="polite"></div>
+    <div class="sugerencias" id="sugerencias"></div>
+    <div id="avisoVoz" role="status"></div>
+    <form id="formulario">
+      <textarea id="entrada" rows="1" placeholder="Escríbeme o pulsa el micrófono" aria-label="Mensaje para BRAIN" autofocus data-i18n-ph="Escríbeme o pulsa el micrófono" data-i18n-aria="Mensaje para BRAIN"></textarea>
+      <button class="icono" id="microfono" type="button" title="Hablar con BRAIN" aria-label="Hablar con BRAIN" data-i18n-title="Hablar con BRAIN" data-i18n-aria="Hablar con BRAIN">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+      </button>
+      <button class="icono" id="imagen" type="button" title="Enviar una captura de la báscula" aria-label="Enviar una captura de la báscula" data-i18n-title="Enviar una captura de la báscula" data-i18n-aria="Enviar una captura de la báscula">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+      </button>
+      <input type="file" id="archivoImagen" accept="image/*" hidden>
+      <button class="primario" id="enviar" type="submit" data-i18n="Enviar">Enviar</button>
+    </form>
+    <div class="opciones">
+      <label><input type="checkbox" id="autoenviar" checked> <span data-i18n="Enviar al terminar de hablar">Enviar al terminar de hablar</span></label>
+      <label><input type="checkbox" id="hablar"> <span data-i18n="Leer las respuestas en voz alta">Leer las respuestas en voz alta</span></label>
+      <button class="suave" id="limpiar" type="button" data-i18n="Borrar conversación">Borrar conversación</button>
+    </div>
+  </section>
+
+  <aside id="panel" aria-label="Estado de la casa">
+    <section class="energy" id="energy" aria-label="Energía ahora">
+      <div class="energia-cab"><span class="vivo" aria-hidden="true"></span><span data-i18n="Energía ahora">Energía ahora</span><time id="energiaHora"></time></div>
+      <div id="energiaCuerpo"></div>
+    </section>
+
+    <section class="bloque" aria-label="Rutinas">
+      <div class="routines">
+        <button class="primario" id="btnSalgo" type="button" data-i18n="🚪 Salgo de casa">🚪 Salgo de casa</button>
+        <button class="secundario-grande" id="btnNoches" type="button" data-i18n="🌙 Buenas noches">🌙 Buenas noches</button>
+      </div>
+    </section>
+
+    <section class="bloque" aria-labelledby="tCasa">
+      <div class="bloque-cab"><h2 id="tCasa" data-i18n="Casa">Casa</h2><span class="cuenta" id="casaCuenta"></span>
+        <span class="acciones"><button class="suave" id="elegirDisp" type="button" title="Elegir qué dispositivos quieres ver" data-i18n-title="Elegir qué dispositivos quieres ver" data-i18n="Elegir dispositivos">Elegir dispositivos</button></span>
+      </div>
+      <div id="dispositivos"></div>
+      <div class="escenas" id="escenas"></div>
+    </section>
+
+    <section class="bloque" aria-labelledby="tCompra">
+      <div class="bloque-cab">
+        <h2 id="tCompra" data-i18n="Lista de la compra">Lista de la compra</h2><span class="cuenta" id="compraCuenta"></span>
+        <span class="acciones">
+          <button class="suave" id="copiarCompra" type="button" title="Copiar la lista para enviarla por mensaje" data-i18n-title="Copiar la lista para enviarla por mensaje" data-i18n="Copiar">Copiar</button>
+          <button class="suave" id="importarCompra" type="button" data-i18n="Importar">Importar</button>
+          <button class="suave" id="vaciarCompra" type="button" data-i18n="Vaciar">Vaciar</button>
+        </span>
+      </div>
+      <ul class="lista" id="compra"></ul>
+    </section>
+
+    <section class="bloque" aria-labelledby="tDespensa">
+      <div class="bloque-cab">
+        <h2 id="tDespensa" data-i18n="Despensa">Despensa</h2><span class="cuenta" id="despensaCuenta"></span>
+        <span class="acciones">
+          <button class="suave" id="importarDespensa" type="button" data-i18n="Importar lista">Importar lista</button>
+          <button class="suave" id="vaciarDespensa" type="button" data-i18n="Vaciar">Vaciar</button>
+        </span>
+      </div>
+      <div class="caducan" id="caducan" hidden></div>
+      <div class="lista" id="despensa" style="max-height:300px"></div>
+      <details class="basicos" id="basicos"><summary id="basicosResumen" data-i18n="Básicos de casa para las recetas">Básicos de casa para las recetas</summary><span id="basicosTexto"></span></details>
+    </section>
+
+    <section class="bloque" aria-labelledby="tGastos">
+      <div class="bloque-cab"><h2 id="tGastos" data-i18n="Gastos del mes">Gastos del mes</h2><span class="cuenta" id="gastosTotal"></span></div>
+      <div id="presupuesto"></div>
+      <form class="fila-acceso" id="formGasto" autocomplete="off">
+        <input type="text" id="gastoImporte" inputmode="decimal" placeholder="€" aria-label="Importe en euros" style="max-width:76px" data-i18n-aria="Importe en euros">
+        <input type="text" id="gastoConcepto" placeholder="¿En qué? (súper, gasolina, luz…)" aria-label="Concepto" maxlength="80" data-i18n-ph="¿En qué? (súper, gasolina, luz…)" data-i18n-aria="Concepto">
+        <button class="primario" type="submit" style="height:40px" data-i18n="Apuntar">Apuntar</button>
+      </form>
+      <ul class="lista" id="gastosLista"></ul>
+    </section>
+
+    <section class="bloque" aria-labelledby="tHabitos">
+      <div class="bloque-cab"><h2 id="tHabitos" data-i18n="Hábitos de hoy">Hábitos de hoy</h2><span class="cuenta" id="habitosCuenta"></span>
+        <span class="acciones"><select id="habitosPersona" class="mini-select" aria-label="Persona" hidden data-i18n-aria="Persona"></select><button class="suave" id="nuevoHabito" type="button" data-i18n="Nuevo">Nuevo</button></span>
+      </div>
+      <ul class="lista" id="habitosLista"></ul>
+    </section>
+
+    <section class="bloque" aria-labelledby="tHogar">
+      <div class="bloque-cab"><h2 id="tHogar" data-i18n="Tareas del hogar">Tareas del hogar</h2><span class="cuenta" id="hogarCuenta"></span>
+        <span class="acciones"><button class="suave" id="nuevaTareaHogar" type="button" data-i18n="Nueva">Nueva</button></span>
+      </div>
+      <ul class="lista" id="hogarLista"></ul>
+    </section>
+
+    <section class="bloque" aria-labelledby="tMenu">
+      <div class="bloque-cab"><h2 id="tMenu" data-i18n="Menú de la semana">Menú de la semana</h2>
+        <span class="acciones"><button class="suave" id="editarMenu" type="button" data-i18n="Editar">Editar</button><button class="suave" id="menuCompra" type="button" title="Apunta en la lista de la compra solo lo que no tienes" data-i18n-title="Apunta en la lista de la compra solo lo que no tienes" data-i18n="Comprar lo que falta">Comprar lo que falta</button></span>
+      </div>
+      <ul class="lista" id="menuLista"></ul>
+    </section>
+
+    <section class="bloque" aria-labelledby="tLuz">
+      <div class="bloque-cab"><h2 id="tLuz" data-i18n="Coste de la luz">Coste de la luz</h2>
+        <span class="acciones"><button class="suave" id="tarifaLuz" type="button" data-i18n="Tarifa">Tarifa</button></span>
+      </div>
+      <div id="luzCuerpo"></div>
+    </section>
+
+    <section class="bloque" aria-labelledby="tManuales">
+      <div class="bloque-cab"><h2 id="tManuales" data-i18n="Manuales y notas">Manuales y notas</h2><span class="cuenta" id="manualesCuenta"></span>
+        <span class="acciones"><label class="suave subir-mini" title="PDF, .txt, .md o .json" data-i18n-title="PDF, .txt, .md o .json"><span data-i18n="Subir">Subir</span><input type="file" id="subirManual" accept=".pdf,.txt,.md,.json" hidden></label></span>
+      </div>
+      <ul class="lista" id="manualesLista"></ul>
+      <p class="basicos" data-i18n="Sube manuales, facturas o notas en PDF o texto. Luego pregúntale a BRAIN o usa la lupa de arriba.">Sube manuales, facturas o notas en PDF o texto. Luego pregúntale a BRAIN o usa la lupa de arriba.</p>
+    </section>
+
+    <section class="bloque" aria-labelledby="tPeso">
+      <div class="bloque-cab"><h2 id="tPeso" data-i18n="Peso">Peso</h2></div>
+      <div id="peso"></div>
+    </section>
+
+    <section class="bloque" aria-labelledby="tCopias">
+      <div class="bloque-cab">
+        <h2 id="tCopias" data-i18n="Copias de seguridad">Copias de seguridad</h2><span class="cuenta" id="copiasCuenta"></span>
+        <span class="acciones"><button class="suave" id="crearCopia" type="button" data-i18n="Crear copia ahora">Crear copia ahora</button></span>
+      </div>
+      <div id="alertasCasa"></div>
+      <ul class="lista" id="copias"></ul>
+      <p class="basicos" id="copiasNota"></p>
+      <div id="copiaDestino" style="margin-bottom:10px"></div>
+    </section>
+
+    <section class="bloque" aria-labelledby="tAgenda">
+      <div class="bloque-cab"><h2 id="tAgenda" data-i18n="Agenda de los próximos 14 días">Agenda de los próximos 14 días</h2></div>
+      <ul class="lista" id="agenda"></ul>
+    </section>
+
+    <p class="pie-panel" id="memory"></p>
+  </aside>
+</main>
+
+<dialog id="dlgGen" aria-labelledby="genTitulo">
+  <form method="dialog" class="dlg" id="formGen">
+    <h2 id="genTitulo"></h2>
+    <div id="genCuerpo" style="display:flex;flex-direction:column;gap:12px"></div>
+    <p class="vacio" id="genError" style="color:var(--peligro)" hidden></p>
+    <div class="dlg-botones">
+      <button type="button" class="secundario" id="genCancelar" data-i18n="Cerrar">Cerrar</button>
+      <button type="submit" class="primario" id="genOk" data-i18n="Aceptar">Aceptar</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlgConversacion" aria-labelledby="dlgConvTitulo">
+  <form method="dialog" class="dlg" id="formConversacion">
+    <h2 id="dlgConvTitulo" data-i18n="Nueva conversación">Nueva conversación</h2>
+    <p data-i18n="Cada conversación tiene su propio hilo. Si le das un tema, BRAIN lo seguirá solo en esa conversación.">Cada conversación tiene su propio hilo. Si le das un tema, BRAIN lo seguirá solo en esa conversación.</p>
+    <input type="text" id="convTitulo" maxlength="60" placeholder="Título (por ejemplo: Recetas)" aria-label="Título" data-i18n-ph="Título (por ejemplo: Recetas)" data-i18n-aria="Título">
+    <div class="temas" id="convTemas" aria-label="Temas sugeridos"></div>
+    <textarea class="corto" id="convTema" maxlength="500" placeholder="Tema (opcional). Por ejemplo: Esta conversación es solo de cocina y recetas." aria-label="Tema" data-i18n-ph="Tema (opcional). Por ejemplo: Esta conversación es solo de cocina y recetas." data-i18n-aria="Tema"></textarea>
+    <div class="dlg-botones">
+      <button type="button" class="secundario" id="cancelarConv" data-i18n="Cancelar">Cancelar</button>
+      <button type="submit" class="primario" id="crearConv" data-i18n="Crear">Crear</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlgImportar" aria-labelledby="dlgTitulo">
+  <form method="dialog" class="dlg" id="formImportar">
+    <h2 id="dlgTitulo" data-i18n="Importar una lista de productos">Importar una lista de productos</h2>
+    <p>Pega la lista tal cual, un producto por línea. Vale cualquiera de estas formas: <code>Leche, 2 unidades</code>, <code>Pan: 3 unids</code>, <code>2 x huevos</code>, <code>Sal</code>.</p>
+    <div class="destinos" id="destinos" role="radiogroup" aria-label="Dónde guardarlo">
+      <label><input type="radio" name="destino" value="pantry" checked data-i18n="Despensa">Despensa</label>
+      <label><input type="radio" name="destino" value="fridge" data-i18n="Nevera">Nevera</label>
+      <label><input type="radio" name="destino" value="freezer" data-i18n="Congelador">Congelador</label>
+      <label><input type="radio" name="destino" value="shopping" data-i18n="Lista de la compra">Lista de la compra</label>
+    </div>
+    <textarea id="textoImportar" spellcheck="false" placeholder="- Leche entera 1 L: 6 unidades&#10;- Arroz redondo 1 kg: 2 unidades&#10;- Aceite de oliva 5 L: 1 unidad"></textarea>
+    <div class="vista-previa" id="vistaPrevia" aria-live="polite"></div>
+    <div class="dlg-botones">
+      <button type="button" class="secundario" id="cancelarImportar" data-i18n="Cancelar">Cancelar</button>
+      <button type="submit" class="primario" id="confirmarImportar" disabled>Añadir</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlgAjustes" aria-labelledby="dlgAjTitulo">
+  <div class="dlg">
+    <h2 id="dlgAjTitulo" data-i18n="Ajustes">Ajustes</h2>
+
+    <div class="ajuste-fila">
+      <span data-i18n="Idioma">Idioma</span>
+      <select id="selIdioma" class="mini-select" aria-label="Idioma" data-i18n-aria="Idioma">
+        <option value="es">Español</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+
+    <h3 data-i18n="Casa y energía">Casa y energía</h3>
+    <div class="aviso-seccion">
+      <button type="button" class="secundario" id="btnDispositivos" data-i18n="Elegir dispositivos de la casa">Elegir dispositivos de la casa</button>
+      <button type="button" class="secundario" id="btnAsistente" style="display:none" data-i18n="Asistente: Home Assistant y energía">Asistente: Home Assistant y energía</button>
+    </div>
+
+    <h3 data-i18n="Sonidos de los avisos">Sonidos de los avisos</h3>
+    <p data-i18n="Sube un sonido (.wav, .mp3 u .ogg, máximo 3 MB) y elige cuál suena para cada tipo de aviso.">Sube un sonido (.wav, .mp3 u .ogg, máximo 3 MB) y elige cuál suena para cada tipo de aviso.</p>
+    <div id="listaSonidos" class="ajuste-lista"></div>
+    <label class="subir"><span data-i18n="Añadir un sonido">Añadir un sonido</span><input type="file" id="archivoSonido" accept=".wav,.mp3,.ogg,audio/*"></label>
+
+    <h3 id="tituloAcceso" data-i18n="Acceso desde el móvil u otro PC">Acceso desde el móvil u otro PC</h3>
+    <div id="bloqueAcceso">
+      <p id="textoAcceso"></p>
+      <div class="fila-acceso">
+        <input type="password" id="claveAcceso" placeholder="Nueva contraseña (mínimo 8 caracteres)" autocomplete="new-password" aria-label="Contraseña de acceso" data-i18n-ph="Nueva contraseña (mínimo 8 caracteres)" data-i18n-aria="Contraseña de acceso">
+        <button type="button" class="primario" id="guardarClave" data-i18n="Guardar">Guardar</button>
+      </div>
+      <p class="pista" data-i18n="Para conectarte desde fuera de casa hace falta Tailscale. Cierra esta ventana y mira la gu&iacute;a &quot;REMOTE_ACCESS.md&quot;, o ejecuta CONFIGURAR_ACCESO.bat.">Para conectarte desde fuera de casa hace falta Tailscale. Cierra esta ventana y mira la guía "REMOTE_ACCESS.md", o ejecuta CONFIGURAR_ACCESO.bat.</p>
+    </div>
+    <button type="button" class="secundario" id="salirSesion" style="display:none" data-i18n="Cerrar sesión en este dispositivo">Cerrar sesión en este dispositivo</button>
+
+    <h3 id="tituloCerrar" style="display:none" data-i18n="Cerrar BRAIN">Cerrar BRAIN</h3>
+    <p id="textoCerrar" style="display:none" data-i18n="Al cerrar la ventana, BRAIN se cierra del todo. Si prefieres que siga en segundo plano (icono junto al reloj) para que suenen los avisos, actívalo aquí.">Al cerrar la ventana, BRAIN se cierra del todo. Si prefieres que siga en segundo plano (icono junto al reloj) para que suenen los avisos, actívalo aquí.</p>
+    <div class="fila-disp" id="filaFondo" style="display:none">
+      <span class="nombre" data-i18n="Seguir en segundo plano al cerrar la ventana">Seguir en segundo plano al cerrar la ventana</span>
+      <button type="button" class="interruptor" id="swFondo" role="switch" aria-checked="false" aria-label="Seguir en segundo plano al cerrar la ventana" data-i18n-aria="Seguir en segundo plano al cerrar la ventana"></button>
+    </div>
+    <div class="fila-disp" id="filaArranque" style="display:none">
+      <span class="nombre" data-i18n="Arrancar con Windows">Arrancar con Windows</span>
+      <button type="button" class="interruptor" id="swArranque" role="switch" aria-checked="false" aria-label="Arrancar con Windows" data-i18n-aria="Arrancar con Windows"></button>
+    </div>
+    <button type="button" class="secundario" id="cerrarBrain" style="display:none" data-i18n="Cerrar BRAIN del todo">Cerrar BRAIN del todo</button>
+
+    <div class="dlg-botones"><button type="button" class="secundario" id="cerrarAjustes" data-i18n="Cerrar">Cerrar</button></div>
+  </div>
+</dialog>
+
+
+<dialog id="dlgAsistente" aria-labelledby="asTitulo">
+  <div class="dlg asistente">
+    <div class="pasos" aria-hidden="true"><i id="barra1"></i><i id="barra2"></i><i id="barra3"></i></div>
+
+    <section id="paso1">
+      <h2 id="asTitulo" data-i18n="Conecta tu casa">Conecta tu casa</h2>
+      <p data-i18n="BRAIN controla las luces, enchufes y persianas a través de Home Assistant. Si todavía no lo tienes, puedes saltar este paso y conectarlo más tarde.">BRAIN controla las luces, enchufes y persianas a través de <b>Home Assistant</b>. Si todavía no lo tienes, puedes saltar este paso y conectarlo más tarde.</p>
+      <label class="campo" data-i18n="Dirección de Home Assistant">Dirección de Home Assistant
+        <input type="text" id="asUrl" placeholder="por ejemplo 192.168.1.50:8123" autocomplete="off" spellcheck="false">
+      </label>
+      <div><button type="button" class="suave" id="asBuscar" data-i18n="Buscar en mi red">Buscar en mi red</button></div>
+      <label class="campo" data-i18n="Llave de acceso (token)">Llave de acceso (token)
+        <input type="password" id="asToken" placeholder="pega aquí el token largo" autocomplete="off" spellcheck="false">
+      </label>
+      <details class="como"><summary data-i18n="¿Cómo consigo el token?">¿Cómo consigo el token?</summary>
+        <ol>
+          <li data-i18n="Abre Home Assistant y entra en tu perfil (tu nombre, abajo a la izquierda).">Abre Home Assistant y entra en tu perfil (tu nombre, abajo a la izquierda).</li>
+          <li data-i18n="Pestaña «Seguridad», al final: «Tokens de acceso de larga duración».">Pestaña «Seguridad», al final: «Tokens de acceso de larga duración».</li>
+          <li data-i18n="Pulsa «Crear token», ponle el nombre BRAIN, copia el texto y pégalo aquí.">Pulsa «Crear token», ponle el nombre BRAIN, copia el texto y pégalo aquí.</li>
+        </ol>
+      </details>
+      <div class="estado-paso" id="asEstado1" role="status" aria-live="polite"></div>
+      <div class="dlg-botones">
+        <button type="button" class="enlace" id="asOmitir" data-i18n="No quiero configurar nada ahora">No quiero configurar nada ahora</button>
+        <button type="button" class="secundario" id="asSaltar1" data-i18n="Saltar">Saltar</button>
+        <button type="button" class="primario" id="asProbar" data-i18n="Probar y guardar">Probar y guardar</button>
+      </div>
+    </section>
+
+    <section id="paso2" hidden>
+      <h2 data-i18n="Energía solar">Energía solar</h2>
+      <p data-i18n="Elige los sensores de tu inversor para ver la producción y el consumo en directo. Ya he marcado los que mejor encajan; deja «Ninguno» en lo que no tengas.">Elige los sensores de tu inversor para ver la producción y el consumo en directo. Ya he marcado los que mejor encajan; deja «Ninguno» en lo que no tengas.</p>
+      <div id="asEnergia" class="ajuste-lista"></div>
+      <div class="estado-paso" id="asEstado2" role="status" aria-live="polite"></div>
+      <div class="dlg-botones">
+        <button type="button" class="secundario" id="asSaltar2" data-i18n="Saltar">Saltar</button>
+        <button type="button" class="primario" id="asGuardarEnergia" data-i18n="Guardar y seguir">Guardar y seguir</button>
+      </div>
+    </section>
+
+    <section id="paso3" hidden>
+      <h2 data-i18n="¿Qué dispositivos quieres ver?">¿Qué dispositivos quieres ver?</h2>
+      <p data-i18n="Desmarca lo que no quieras en BRAIN (ni en el panel ni para la IA). Los dispositivos nuevos que añadas más adelante aparecerán solos.">Desmarca lo que no quieras en BRAIN (ni en el panel ni para la IA). Los dispositivos nuevos que añadas más adelante aparecerán solos.</p>
+      <div id="asDispositivos"></div>
+      <div class="estado-paso" id="asEstado3" role="status" aria-live="polite"></div>
+      <div class="dlg-botones">
+        <button type="button" class="primario" id="asTerminar" data-i18n="Terminar">Terminar</button>
+      </div>
+    </section>
+  </div>
+</dialog>
+
+<dialog id="dlgDispositivos" aria-labelledby="dispTitulo">
+  <div class="dlg">
+    <h2 id="dispTitulo" data-i18n="Dispositivos de la casa">Dispositivos de la casa</h2>
+    <p data-i18n="Marca los que quieres ver y controlar con BRAIN. Los desmarcados desaparecen del panel y la IA no los toca.">Marca los que quieres ver y controlar con BRAIN. Los desmarcados desaparecen del panel y la IA no los toca.</p>
+    <div id="dispCaja"></div>
+    <div class="estado-paso" id="dispEstado" role="status" aria-live="polite"></div>
+    <div class="dlg-botones">
+      <button type="button" class="secundario" id="dispCancelar" data-i18n="Cancelar">Cancelar</button>
+      <button type="button" class="primario" id="dispGuardar" data-i18n="Guardar">Guardar</button>
+    </div>
+  </div>
+</dialog>
+
+<div id="bandeja" role="dialog" aria-label="Avisos">
+  <header><span data-i18n="Avisos">Avisos</span><button class="suave" id="leerAvisos" type="button" data-i18n="Marcar leídos">Marcar leídos</button></header>
+  <ul id="listaAvisos"></ul>
+</div>
+
+<div id="toasts" aria-live="assertive"></div>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const mensajes = $("mensajes");
+let ocupado = false;
+
+/* ---------------------------------------------------------------- idioma */
+const I18N_EN = {" % (":" % ("," % abierta":" % open"," (calculado)":" (calculated)"," Dirección privada: ":" Private address: "," Error en la descarga: ":" Download error: "," Puedes cambiarla aquí.":" You can change it here."," Puedes saltar este paso.":" You can skip this step."," a ":" to "," apagado(s)":" turned off"," cosa recordada":" thing remembered"," cosas recordadas":" things remembered"," de ":" of "," del consumo lo cubre el sol":" of consumption is covered by the sun"," dispositivos visibles":" devices visible"," día":" day"," días":" days"," en ":" in "," en la memoria de BRAIN.":" in BRAIN's memory."," este mes (estimado)":" this month (estimated)"," menos 👍":" less 👍"," más":" more"," no se han podido turn_off":" could not be turned off"," producto":" product"," productos":" products"," · aviso a las ":" · reminder at "," · 🔥 racha de ":" · 🔥 streak of "," €/kWh). Aprovéchalas para lavadora y lavavajillas.":" €/kWh). Use it for the washer and dishwasher.","). No cierres esta ventana.":"). Do not close this window.",". Ahora pega el token.":". Now paste the token.",". Pulsa para cambiarlo":". Tap to change it",". Pídele a BRAIN una receta para aprovecharlo.":". Ask BRAIN for a recipe to use it up.","? Se sustituirán los datos actuales (antes se guarda una copia previa).":"? The current data will be replaced (a previous backup is saved first).","Acciones: ":"Actions: ","Activar la escena ":"Activate the scene ","Ahora mismo, con la red eléctrica, tu casa está…":"Right now, with the electricity grid, your home is…","Ahorro de tus placas":"Savings from your panels","Ana, Luis, Marta":"Ann, Luke, Mary","Anotar la fecha de caducidad":"Set the expiry date","Antes de dormir":"Before going to sleep","Antes de salir de casa":"Before leaving home","Apagar lo marcado":"Turn off what is checked","Apuntado: ":"Logged: ","Añadido a la compra: ":"Added to the shopping list: ","Añadir ":"Add ","Aún no hay copias. Se hace una al día automáticamente.":"No backups yet. One is made automatically every day.","BRAIN se ha cerrado.":"BRAIN has closed.","BRAIN te avisará al llegar al 80 % y al 100 %. Pon 0 para quitarlo.":"BRAIN will notify you at 80% and 100%. Set it to 0 to remove it.","Batería al ":"Battery at ","Beber agua":"Drink water","Borrado":"Deleted","Borrar hábito":"Delete habit","Borrar hábito ":"Delete habit ","Borrar tarea":"Delete chore","Borrar tarea ":"Delete chore ","Buscando Home Assistant en tu red…":"Searching for Home Assistant on your network…","Buscando los sensores de tu inversor…":"Searching for your inverter's sensors…","Buscar":"Search","Buscar dispositivo o habitación":"Search device or room","Buscar en todo":"Search everything","Cada copia diaria se guardará también aquí. Si el ordenador falla, no pierdes nada.":"Every daily backup will also be saved here. If the computer fails, you lose nothing.","Caduca el ":"Expires on ","Caducidad anotada":"Expiry date set","Caducidad de ":"Expiry date of ","Caducidad quitada":"Expiry date removed","Cambiar presupuesto":"Change budget","Cambiar segundo sitio":"Change second location","Cargando dispositivos…":"Loading devices…","Casa":"Home","Comprado a la red":"Bought from the grid","Comprando":"Buying","Conectar ahora":"Connect now","Configuración guardada":"Settings saved","Contraseña guardada":"Password saved","Copia automática diaria activa. Se guardan las 5 últimas.":"Automatic daily backup active. The last 5 are kept.","Copia creada: ":"Backup created: ","Copia restaurada":"Backup restored","Copia traída. Ya puedes restaurarla.":"Backup fetched. You can now restore it.","Crea tareas que se repiten (basura, fregar…) y repartid los turnos: BRAIN dice a quién le toca.":"Create recurring chores (trash, dishes…) and share the turns: BRAIN says whose turn it is.","Crea un hábito (beber agua, pasear, una pastilla…) y BRAIN te lo recuerda a su hora.":"Create a habit (drink water, walk, take a pill…) and BRAIN reminds you at its time.","Crear":"Create","Cuando alguien la marque como hecha, el turno pasa a la siguiente persona.":"When someone marks it done, the turn passes to the next person.","Cuando conectes Home Assistant verás aquí lo que producen las placas y lo que gasta la casa.":"Once you connect Home Assistant you will see here what the panels produce and what the home uses.","Descargando ":"Downloading ","Desde":"From","Despensa vaciada":"Pantry emptied","Dile a BRAIN «prepárame el menú de la semana con lo que tengo» o escríbelo tú con Editar.":"Tell BRAIN \"make me the week's menu with what I have\" or write it yourself with Edit.","Dime cuánto pagas por kWh (botón Tarifa) y calcularé lo que gastas y lo que ahorran tus placas.":"Tell me how much you pay per kWh (Rate button) and I will calculate what you spend and what your panels save.","Dispositivos guardados":"Devices saved","Elegir...":"Choose...","Elige un sitio…":"Choose a location…","Elige una copia. Se comprobará que está completa y se traerá aquí; después pulsa «Restaurar» en la lista de copias.":"Choose a backup. It will be checked and brought here; then press \"Restore\" in the backup list.","Es de… (opcional)":"Belongs to… (optional)","Escena «":"Scene \"","Escribe el importe.":"Write the amount.","Escribe una cantidad.":"Write an amount.","Ese archivo pesa más de 25 MB.":"That file is larger than 25 MB.","Esto está encendido. Marca lo que quieres turn_off:":"This is on. Check what you want to turn off:","Esto solo se configura desde el ordenador de casa.":"This can only be set up from the home computer.","Fecha de caducidad":"Expiry date","Fijar presupuesto mensual":"Set monthly budget","Guardado. Veo: ":"Saved. I see: ","Guardado. Ya puedes preguntarle por él.":"Saved. You can now ask about it.","Guardar":"Save","Guardar menú":"Save menu","Guardar también en USB / OneDrive":"Also save to USB / OneDrive","Has ocultado todos los dispositivos. Usa «Elegir dispositivos» para mostrar los que quieras.":"You have hidden all the devices. Use \"Choose devices\" to show the ones you want.","Hasta":"Until","He entendido ":"I understood ","He visto: ":"I saw: ","Hecha":"Done","Home Assistant no está conectado, así que no puedo ver qué hay encendido. Conéctalo en Ajustes para usar esta función completa.":"Home Assistant is not connected, so I cannot see what is on. Connect it in Settings to use this feature fully.","Home Assistant no tiene luces, enchufes ni persianas todavía.":"Home Assistant has no lights, plugs or blinds yet.","Home Assistant no tiene sensores de potencia (W o kW). Añade primero tu inversor allí, o salta este paso.":"Home Assistant has no power sensors (W or kW). Add your inverter there first, or skip this step.","Home Assistant todavía no tiene luces, enchufes ni persianas.":"Home Assistant does not have lights, plugs or blinds yet.","Horas baratas: de ":"Cheap hours: from ","Hábito creado":"Habit created","IA lista (":"AI ready (","IA no disponible":"AI not available","Instalando...":"Installing...","La contraseña está puesta.":"The password is set.","La lista está vacía.":"The list is empty.","Las tareas automáticas están desactivadas.":"Automatic tasks are disabled.","Le toca a ":"It's turn of ","Lista copiada":"List copied","Lista de la compra vaciada":"Shopping list emptied","Lista de la compra:\\n":"Shopping list:\\n","Lo he encontrado en ":"I found it at ","Mañana tienes:":"Tomorrow you have:","Menú de la semana":"Weekly menu","Menú guardado":"Menu saved","Ninguno":"None","No falta nada nuevo.":"Nothing new is missing.","No has marcado nada.":"You have not checked anything.","No hay avisos todavía.":"No notifications yet.","No he encontrado nada con «":"I found nothing matching \"","No he podido copiarla. Selecciónala y cópiala a mano.":"I could not copy it. Select it and copy it by hand.","No lo he encontrado solo. Escribe su dirección a mano (la ves en la barra del navegador cuando abres Home Assistant).":"I could not find it on my own. Type its address by hand (you see it in the browser bar when you open Home Assistant).","No lo sé":"I don't know","No se ha podido instalar la voz: ":"Could not install voice: ","No se pudo subir":"Could not upload","Nueva tarea del hogar":"New household chore","Nuevo hábito":"New habit","Nuevo título:":"New title:","O escribe una carpeta":"Or type a folder","Objetivo por día":"Daily goal","Otros sensores de potencia":"Other power sensors","Para dejar de usarla, borra la carpeta y guarda.":"To stop using it, clear the folder and save.","Para turn_on luces y ver tus dispositivos aquí, conecta Home Assistant. ":"To turn on lights and see your devices here, connect Home Assistant. ","Pasar":"Skip","Pasar el turno a la siguiente persona":"Pass the turn to the next person","Pendiente: ":"Pending: ","Placas":"Panels","Platos":"Dishes","Precio al que compras (€/kWh)":"Price you pay (€/kWh)","Precio al que te pagan los excedentes (€/kWh, opcional)":"Price you are paid for surplus (€/kWh, optional)","Precio en valle (€/kWh)":"Off-peak price (€/kWh)","Presupuesto guardado":"Budget saved","Presupuesto mensual":"Monthly budget","Primero conecta Home Assistant.":"First connect Home Assistant.","Probando la conexión…":"Testing the connection…","Productos, gastos, agenda, manuales, tareas…":"Products, expenses, calendar, manuals, chores…","Quitado de la compra":"Removed from the shopping list","Quitado de la despensa":"Removed from the pantry","Quitar un sonido subido":"Remove an uploaded sound","Quién se turna (separado por comas)":"Who takes turns (comma-separated)","Recordármelo a las (opcional)":"Remind me at (optional)","Recuperar desde ahí":"Restore from there","Recuperar una copia":"Restore a backup","Red":"Grid","Registrado el ":"Logged on ","Respecto al mes pasado: ":"Compared to last month: ","Sacar la basura":"Take out the trash","Se repite cada (días)":"Repeats every (days)","Segunda copia activada":"Second backup enabled","Segunda copia de seguridad":"Second backup","Segunda copia desactivada":"Second backup disabled","Segundo sitio: ":"Second location: ","Si lo compartís, el nombre":"If you share it, the name","Si tu tarifa tiene horas baratas (valle):":"If your rate has cheap hours (off-peak):","Sin conexión con BRAIN":"No connection with BRAIN","Sin datos del inversor.":"No data from the inverter.","Sitios habituales":"Common locations","Sonido a quitar":"Sound to remove","Sonido añadido":"Sound added","Sonido de Windows":"Windows sound","Sonido guardado":"Sound saved","Sonido para ":"Sound for ","Sonido quitado":"Sound removed","Subiendo ":"Uploading ","Tarea":"Chore","Tarea creada":"Chore created","Tarifa de la luz":"Electricity rate","Tarifa guardada":"Rate saved","Te falta: ":"You are missing: ","Te queda pendiente:":"You still have pending:","Toca":"Due","Todavía no hay contraseña: sin ella, nadie puede entrar a BRAIN desde fuera de este ordenador.":"There is no password yet: without one, nobody can access BRAIN from outside this computer.","Todavía no hay gastos este mes. Apunta el primero arriba o díselo a BRAIN.":"No expenses logged this month yet. Log the first one above or tell BRAIN.","Todavía no hay ninguno.":"There are none yet.","Todos":"All","Total al mes (€)":"Total per month (€)","Una línea por plato. Después de | van los ingredientes, así BRAIN sabe qué te falta.":"One line per dish. After | come the ingredients, so BRAIN knows what you are missing.","Unidad (opcional)":"Unit (optional)","Vaciar":"Empty","Vendido (excedentes)":"Sold (surplus)","Vendiendo":"Selling","Voz lista. Pulsa el micrófono y habla.":"Voice ready. Press the microphone and speak.","Ya está conectado. Puedes cambiar los datos o pulsar «Saltar».":"Already connected. You can change the details or press \"Skip\".","abierta":"open","activado":"triggered","cerrada":"closed","gastas ":"you spend ","hoy":"today","lavadora, leche, wifi…":"washer, milk, wifi…","te has pasado ":"you have gone over by ","te quedan ":"you have left ","vasos, minutos…":"glasses, minutes…","¡Buenas noches!":"Good night!","¡Conectado! ":"Connected! ","¡Que vaya bien!":"Have a good one!","» activada":"\" activated","» y su historial?":"\" and its history?","»?":"\"?","¿Borrar el hábito «":"Delete the habit \"","¿Borrar la tarea «":"Delete the chore \"","¿Borrar «":"Delete \"","¿Cerrar BRAIN del todo? Dejarán de sonar los avisos hasta que lo vuelvas a abrir.":"Close BRAIN completely? Notifications will stop sounding until you open it again.","¿Qué hábito?":"Which habit?","¿Restaurar la copia del ":"Restore the backup from ","Últimos: ":"Latest: ","— Ninguno —":"— None —","⏰ Caduca pronto: ":"⏰ Expiring soon: ","✅ No hay nada encendido.":"✅ Nothing is on.","✓ Hecho":"✓ Done","Abre Home Assistant y entra en tu perfil (tu nombre, abajo a la izquierda).":"Open Home Assistant and go to your profile (your name, bottom left).","Acceso desde el móvil u otro PC":"Access from phone or another PC","Aceptar":"Accept","Agenda de los próximos 14 días":"Next 14 days","Ajustes":"Settings","Ajustes: sonidos y acceso desde el móvil":"Settings: sounds and access from the phone","Al cerrar la ventana, BRAIN se cierra del todo. Si prefieres que siga en segundo plano (icono junto al reloj) para que suenen los avisos, actívalo aquí.":"Closing the window closes BRAIN completely. If you would rather it keep running in the background (icon next to the clock) so notifications still sound, turn it on here.","Apunta en la lista de la compra solo lo que no tienes":"Log in the shopping list only what you do not have","Apuntar":"Log","Arrancar con Windows":"Start with Windows","Asistente: Home Assistant y energía":"Wizard: Home Assistant and energy","Avisos":"Notifications","Añadir un sonido":"Add a sound","BRAIN controla las luces, enchufes y persianas a través de Home Assistant. Si todavía no lo tienes, puedes saltar este paso y conectarlo más tarde.":"BRAIN controls lights, plugs and blinds through Home Assistant. If you do not have it yet, you can skip this step and connect it later.","Borrar conversación":"Clear conversation","Buscar en mi red":"Search my network","Buscar en todo (Ctrl+K)":"Search everything (Ctrl+K)","Básicos de casa para las recetas":"Pantry staples for recipes","Cada conversación tiene su propio hilo. Si le das un tema, BRAIN lo seguirá solo en esa conversación.":"Each conversation has its own thread. If you give it a topic, BRAIN will stick to it only in that conversation.","Cambiar entre tema claro y oscuro":"Switch between light and dark theme","Cambiar tema":"Change theme","Cancelar":"Cancel","Casa y energía":"Home and energy","Cerrar":"Close","Cerrar BRAIN":"Close BRAIN","Cerrar BRAIN del todo":"Close BRAIN completely","Cerrar sesión en este dispositivo":"Log out on this device","Comprar lo que falta":"Buy what is missing","Concepto":"Description","Conecta tu casa":"Connect your home","Conectando...":"Connecting...","Congelador":"Freezer","Contraseña de acceso":"Access password","Copiar":"Copy","Copiar la lista para enviarla por mensaje":"Copy the list to send it as a message","Copias de seguridad":"Backups","Coste de la luz":"Electricity cost","Crear copia ahora":"Create backup now","Descargar IA":"Download AI","Desmarca lo que no quieras en BRAIN (ni en el panel ni para la IA). Los dispositivos nuevos que añadas más adelante aparecerán solos.":"Uncheck what you do not want in BRAIN (not in the panel nor for the AI). New devices you add later will appear automatically.","Despensa":"Pantry","Dirección de Home Assistant":"Home Assistant address","Dispositivos de la casa":"Home devices","Editar":"Edit","Elegir dispositivos":"Choose devices","Elegir dispositivos de la casa":"Choose home devices","Elegir qué dispositivos quieres ver":"Choose which devices you want to see","Elige los sensores de tu inversor para ver la producción y el consumo en directo. Ya he marcado los que mejor encajan; deja «Ninguno» en lo que no tengas.":"Choose your inverter's sensors to see live production and consumption. I have already checked the best matches; leave \"None\" where you have nothing.","Energía ahora":"Energy now","Energía solar":"Solar energy","Enviar":"Send","Enviar al terminar de hablar":"Send when done speaking","Enviar una captura de la báscula":"Send a scale photo","Escríbeme o pulsa el micrófono":"Type to me or press the microphone","Gastos del mes":"This month's expenses","Guardar y seguir":"Save and continue","Hablar con BRAIN":"Talk to BRAIN","Hábitos de hoy":"Today's habits","Idioma":"Language","Importar":"Import","Importar lista":"Import list","Importar una lista de productos":"Import a product list","Importe en euros":"Amount in euros","Leer las respuestas en voz alta":"Read replies out loud","Lista de la compra":"Shopping list","Llave de acceso (token)":"Access key (token)","Manuales y notas":"Manuals and notes","Marca los que quieres ver y controlar con BRAIN. Los desmarcados desaparecen del panel y la IA no los toca.":"Check the ones you want to see and control with BRAIN. Unchecked ones disappear from the panel and the AI will not touch them.","Marcar leídos":"Mark read","Mensaje para BRAIN":"Message for BRAIN","Nevera":"Fridge","No quiero configurar nada ahora":"I don't want to set anything up now","Nueva":"New","Nueva contraseña (mínimo 8 caracteres)":"New password (minimum 8 characters)","Nueva conversación":"New conversation","Nuevo":"New","PDF, .txt, .md o .json":"PDF, .txt, .md or .json","Persona":"Person","Peso":"Weight","Pestaña «Seguridad», al final: «Tokens de acceso de larga duración».":"Tab \"Security\", at the bottom: \"Long-lived access tokens\".","Probar y guardar":"Test and save","Pulsa «Crear token», ponle el nombre BRAIN, copia el texto y pégalo aquí.":"Press \"Create token\", name it BRAIN, copy the text and paste it here.","Reintentar":"Retry","Saltar":"Skip","Seguir en segundo plano al cerrar la ventana":"Keep running in the background when the window closes","Sonidos de los avisos":"Notification sounds","Sube manuales, facturas o notas en PDF o texto. Luego pregúntale a BRAIN o usa la lupa de arriba.":"Upload manuals, bills or notes as PDF or text. Then ask BRAIN or use the search icon above.","Sube un sonido (.wav, .mp3 u .ogg, máximo 3 MB) y elige cuál suena para cada tipo de aviso.":"Upload a sound (.wav, .mp3 or .ogg, 3 MB maximum) and choose which one plays for each notification type.","Subir":"Upload","Tareas del hogar":"Household chores","Tarifa":"Rate","Tema":"Topic","Tema (opcional). Por ejemplo: Esta conversación es solo de cocina y recetas.":"Topic (optional). For example: This conversation is only about cooking and recipes.","Terminar":"Finish","Título":"Title","Título (por ejemplo: Recetas)":"Title (for example: Recipes)","¿Cómo consigo el token?":"How do I get the token?","¿En qué? (súper, gasolina, luz…)":"For what? (groceries, gas, electricity…)","¿Qué dispositivos quieres ver?":"Which devices do you want to see?","🌙 Buenas noches":"🌙 Good night","🚪 Salgo de casa":"🚪 Leaving home","Para conectarte desde fuera de casa hace falta Tailscale. Cierra esta ventana y mira la guía \"REMOTE_ACCESS.md\", o ejecuta CONFIGURAR_ACCESO.bat.":"To connect from outside the home you need Tailscale. Close this window and check the \"REMOTE_ACCESS.md\" guide, or run CONFIGURAR_ACCESO.bat.","Herramientas":"Tools","Consumibles":"Supplies","luz":"light","enchufe":"plug","ventilador":"fan","persiana":"blind","clima":"thermostat","escena":"scene","script":"script","interruptor":"switch","reproductor":"player","humidificador":"humidifier","aspiradora":"vacuum","Alertas":"Alerts","Recordatorios":"Reminders","Resumen del día":"Day's summary","Automatizaciones":"Automations","Energía":"Energy","Información":"Information","Salida de casa":"Leaving home","Contexto":"Context"};
+let LANG = "es";
+try { LANG = localStorage.getItem("brain-idioma") || "es"; } catch (e) { /* sin almacenamiento */ }
+function T(s) { return LANG === "en" ? (I18N_EN[s] || s) : s; }
+function traducirEstatico() {
+  document.documentElement.lang = LANG;
+  document.querySelectorAll("[data-i18n]").forEach((e) => { e.textContent = T(e.getAttribute("data-i18n")); });
+  document.querySelectorAll("[data-i18n-ph]").forEach((e) => { e.placeholder = T(e.getAttribute("data-i18n-ph")); });
+  document.querySelectorAll("[data-i18n-title]").forEach((e) => { e.title = T(e.getAttribute("data-i18n-title")); });
+  document.querySelectorAll("[data-i18n-aria]").forEach((e) => { e.setAttribute("aria-label", T(e.getAttribute("data-i18n-aria"))); });
+  const sel = $("selIdioma"); if (sel) sel.value = LANG;
+}
+function refrescarTrasIdioma() {
+  refrescarPanel(); refrescarEnergia(); refrescarDispositivos(); refrescarEstado();
+  refrescarGastos(); refrescarPresupuesto(); refrescarCaducan(); refrescarHabitos();
+  refrescarHogar(); refrescarMenu(); refrescarLuz(); refrescarManuales(); refrescarDestinoCopia();
+  refrescarAvisos(); pintarConversaciones();
+}
+async function aplicarIdioma(code, guardarBackend) {
+  LANG = code === "en" ? "en" : "es";
+  try { localStorage.setItem("brain-idioma", LANG); } catch (e) { /* sin almacenamiento */ }
+  traducirEstatico();
+  refrescarTrasIdioma();
+  if (guardarBackend) { try { await enviarJSON("/api/language", { code: LANG }); } catch (e) { /* se reintenta al cargar */ } }
+}
+traducirEstatico();
+
+/* ---------------------------------------------------------------- utilidades */
+function guardar(clave, valor) { try { localStorage.setItem(clave, valor); } catch (e) { /* sin almacenamiento */ } }
+function leer(clave) { try { return localStorage.getItem(clave); } catch (e) { return null; } }
+
+async function api(ruta, opciones) {
+  const respuesta = await fetch(ruta, opciones);
+  const datos = await respuesta.json().catch(() => ({}));
+  if (respuesta.status === 401 && datos.login) { location.reload(); }
+  if (!respuesta.ok) throw new Error(datos.error || "Error " + respuesta.status);
+  return datos;
+}
+function enviarJSON(ruta, cuerpo) {
+  return api(ruta, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cuerpo || {}) });
+}
+
+function el(etiqueta, clase, texto) {
+  const e = document.createElement(etiqueta);
+  if (clase) e.className = clase;
+  if (texto !== undefined && texto !== null) e.textContent = texto;
+  return e;
+}
+function vaciar(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+
+function aviso(texto, error) {
+  const t = el("div", "toast" + (error ? " error" : ""), texto);
+  $("toasts").appendChild(t);
+  setTimeout(() => t.remove(), error ? 6500 : 3500);
+}
+
+const NOMBRES_SITIO = { fridge: "Nevera", freezer: "Congelador", pantry: "Despensa", tools: "Herramientas", supplies: "Consumibles" };
+const ICONO_X = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+/* Botón de dos pasos: el primer clic pide confirmación, el segundo lo hace. */
+function confirmar(boton, accion, textoInicial) {
+  let temporizador = null;
+  boton.addEventListener("click", () => {
+    if (boton.dataset.confirmar === "1") {
+      clearTimeout(temporizador);
+      boton.dataset.confirmar = "0";
+      boton.textContent = textoInicial;
+      boton.classList.remove("peligro");
+      accion();
+      return;
+    }
+    boton.dataset.confirmar = "1";
+    boton.textContent = "¿Seguro?";
+    boton.classList.add("peligro");
+    temporizador = setTimeout(() => {
+      boton.dataset.confirmar = "0";
+      boton.textContent = textoInicial;
+      boton.classList.remove("peligro");
+    }, 3500);
+  });
+}
+
+/* ------------------------------------------------- texto del chat con formato */
+function enLinea(padre, texto) {
+  const patron = /(\*\*[^*]+\*\*|`[^`]+`|\*[^*\s][^*]*\*)/g;
+  let ultimo = 0, m;
+  while ((m = patron.exec(texto)) !== null) {
+    if (m.index > ultimo) padre.appendChild(document.createTextNode(texto.slice(ultimo, m.index)));
+    const t = m[0];
+    let nodo;
+    if (t.startsWith("**")) { nodo = el("strong", "", t.slice(2, -2)); }
+    else if (t.startsWith("`")) { nodo = el("code", "", t.slice(1, -1)); }
+    else { nodo = el("em", "", t.slice(1, -1)); }
+    padre.appendChild(nodo);
+    ultimo = m.index + t.length;
+  }
+  if (ultimo < texto.length) padre.appendChild(document.createTextNode(texto.slice(ultimo)));
+}
+
+/* Formato mínimo y seguro (negritas, cursivas, listas, títulos) sin usar innerHTML. */
+function renderizar(contenedor, texto) {
+  const lineas = String(texto).replace(/\r/g, "").split("\n");
+  let lista = null, parrafo = null;
+  const cerrar = () => { lista = null; parrafo = null; };
+  lineas.forEach((linea) => {
+    const vineta = linea.match(/^\s*[-*•]\s+(.*)$/);
+    const numero = linea.match(/^\s*\d+[.)]\s+(.*)$/);
+    const titulo = linea.match(/^\s*#{1,4}\s+(.*)$/);
+    if (!linea.trim()) { cerrar(); return; }
+    if (vineta || numero) {
+      const tipo = vineta ? "UL" : "OL";
+      if (!lista || lista.tagName !== tipo) { lista = el(tipo.toLowerCase()); contenedor.appendChild(lista); parrafo = null; }
+      const li = el("li"); enLinea(li, (vineta || numero)[1]); lista.appendChild(li);
+      return;
+    }
+    if (titulo) { cerrar(); const t = el("div", "titulo"); enLinea(t, titulo[1]); contenedor.appendChild(t); return; }
+    lista = null;
+    if (!parrafo) { parrafo = el("p"); contenedor.appendChild(parrafo); } else { parrafo.appendChild(document.createElement("br")); }
+    enLinea(parrafo, linea);
+  });
+}
+
+function anadir(clase, texto, pie) {
+  const div = el("div", "msg " + clase);
+  if (clase === "ia") renderizar(div, texto); else div.textContent = texto;
+  if (pie) div.appendChild(el("small", "", pie));
+  mensajes.appendChild(div);
+  mensajes.scrollTop = mensajes.scrollHeight;
+  return div;
+}
+function pensando() {
+  const div = el("div", "msg ia");
+  const p = el("span", "pensando"); p.appendChild(el("i")); p.appendChild(el("i")); p.appendChild(el("i"));
+  div.appendChild(p);
+  mensajes.appendChild(div);
+  mensajes.scrollTop = mensajes.scrollHeight;
+  return div;
+}
+
+/* ---------------------------------------------------------------- gráficas */
+function lineaPeso(valores) {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("class", "linea");
+  svg.setAttribute("viewBox", "0 0 300 56");
+  svg.setAttribute("preserveAspectRatio", "none");
+  if (valores.length < 2) return svg;
+  const min = Math.min(...valores), max = Math.max(...valores), rango = (max - min) || 1;
+  const puntos = valores.map((v, i) => (i / (valores.length - 1) * 296 + 2).toFixed(1) + "," + (50 - (v - min) / rango * 44).toFixed(1)).join(" ");
+  const l = document.createElementNS(ns, "polyline");
+  l.setAttribute("points", puntos);
+  l.setAttribute("fill", "none");
+  l.setAttribute("stroke", "var(--acento)");
+  l.setAttribute("stroke-width", "2.5");
+  l.setAttribute("stroke-linecap", "round");
+  l.setAttribute("stroke-linejoin", "round");
+  l.setAttribute("vector-effect", "non-scaling-stroke");
+  svg.appendChild(l);
+  return svg;
+}
+
+/* ------------------------------------------------------- panel: compra, despensa */
+function fila(nombre, cantidad, alQuitar) {
+  const li = el("li");
+  li.appendChild(el("span", "nombre", nombre)).title = nombre;
+  if (cantidad !== null) li.appendChild(el("span", "cant", "×" + cantidad));
+  const b = el("button", "quitar"); b.type = "button"; b.innerHTML = ICONO_X;
+  b.setAttribute("aria-label", "Quitar " + nombre); b.title = "Quitar";
+  b.addEventListener("click", alQuitar);
+  li.appendChild(b);
+  return li;
+}
+
+async function quitar(ruta, cuerpo, ok) {
+  try { await enviarJSON(ruta, cuerpo); aviso(ok); refrescarPanel(); }
+  catch (e) { aviso(e.message, true); }
+}
+
+async function refrescarPanel() {
+  refrescarCopias();
+  try {
+    const r = await api("/api/summary");
+
+    /* compra */
+    const compra = $("compra"); vaciar(compra);
+    listaCompraActual = r.shopping;
+    $("compraCuenta").textContent = r.shopping.length ? "(" + r.shopping.length + ")" : "";
+    $("vaciarCompra").style.display = $("importarCompra").nextElementSibling.style.display = r.shopping.length ? "" : "none";
+    if (r.shopping.length) {
+      r.shopping.forEach((c) => compra.appendChild(fila(c.product, c.quantity, () => quitar("/api/shopping/remove", { product: c.product }, T("Quitado de la compra")))));
+    } else {
+      compra.appendChild(el("li", "vacio", "No falta nada. Dime «apunta leche» o importa una lista."));
+    }
+
+    /* despensa */
+    const desp = $("despensa"); vaciar(desp);
+    const articulos = r.pantry || [];
+    $("despensaCuenta").textContent = articulos.length ? "(" + articulos.length + ")" : "";
+    $("vaciarDespensa").style.display = articulos.length ? "" : "none";
+    if (articulos.length) {
+      let sitio = null, ul = null;
+      articulos.forEach((a) => {
+        if (a.location !== sitio) {
+          sitio = a.location;
+          desp.appendChild(el("div", "grupo", T(NOMBRES_SITIO[sitio]) || sitio));
+          ul = el("ul"); ul.style.cssText = "list-style:none;margin:0;padding:0";
+          desp.appendChild(ul);
+        }
+        const filaDesp = fila(a.name, a.quantity, () => quitar("/api/inventory/delete", { name: a.name, location: a.location }, T("Quitado de la despensa")));
+        const dias = a.expires ? Math.round((new Date(a.expires + "T12:00:00") - new Date(new Date().toDateString() + " 12:00")) / 86400000) : null;
+        const chip = el("button", "etiqueta" + (dias !== null ? (dias < 0 ? " caducado" : dias <= 3 ? " pronto" : " ok") : ""), dias !== null ? diasTexto(dias) : "＋ caducidad");
+        chip.type = "button"; chip.style.cssText = "border:0;cursor:pointer"; chip.title = a.expires ? T("Caduca el ") + a.expires + T(". Pulsa para cambiarlo") : T("Anotar la fecha de caducidad");
+        chip.addEventListener("click", () => pedirCaducidad(a));
+        filaDesp.insertBefore(chip, filaDesp.querySelector(".quitar"));
+        ul.appendChild(filaDesp);
+      });
+    } else {
+      desp.appendChild(el("p", "vacio", "Está vacía. Pulsa «Importar lista» y pega lo que tienes."));
+    }
+    const basicos = r.staples || [];
+    $("basicos").style.display = basicos.length ? "" : "none";
+    $("basicosTexto").textContent = " " + basicos.join(", ") + ". Cuenta con ellos aunque no estén en la despensa.";
+
+    /* peso */
+    const peso = $("peso"); vaciar(peso);
+    if (r.weight.length) {
+      const u = r.weight[r.weight.length - 1];
+      const v = el("div", "peso-valor", String(u.weight)); v.appendChild(el("small", "", "kg"));
+      peso.appendChild(v);
+      peso.appendChild(el("div", "vacio", T("Registrado el ") + u.date));
+      peso.appendChild(lineaPeso(r.weight.map((x) => x.weight)));
+    } else {
+      peso.appendChild(el("p", "vacio", "Aún no hay pesos. Dime «hoy peso 88,4»."));
+    }
+
+    /* agenda */
+    const ag = r.agenda || {};
+    const agenda = $("agenda"); vaciar(agenda);
+    const eventos = (ag.events || []).map((e) => e.date + (e.hour ? " " + e.hour : "") + " " + e.title);
+    const tareas = (ag.pending_tasks || []).map((t) => T("Pendiente: ") + t.title + (t.date ? " (" + t.date + ")" : ""));
+    const todo = eventos.concat(tareas);
+    if (todo.length) todo.forEach((t) => agenda.appendChild(el("li", "", t)));
+    else agenda.appendChild(el("li", "vacio", "Nada pendiente."));
+
+    $("memory").textContent = r.memories + (r.memories === 1 ? T(" cosa recordada") : T(" cosas recordadas")) + T(" en la memoria de BRAIN.");
+  } catch (e) { /* el panel no es crítico */ }
+}
+
+/* ------------------------------------------------------------------ energía */
+function potencia(w) {
+  if (w === null || w === undefined) return { n: "—", u: "" };
+  return Math.abs(w) >= 1000 ? { n: (Math.abs(w) / 1000).toFixed(2), u: "kW" } : { n: String(Math.round(Math.abs(w))), u: "W" };
+}
+function cifra(color, valor, nombre) {
+  const c = el("div", "cifra");
+  const v = el("div", "valor", valor.n);
+  if (valor.u) v.appendChild(el("small", "", valor.u));
+  const n = el("div", "nombre"); const punto = el("i"); punto.style.background = color;
+  n.appendChild(punto); n.appendChild(document.createTextNode(nombre));
+  c.appendChild(v); c.appendChild(n);
+  return c;
+}
+function tramo(color, w) { const i = el("i"); i.style.flexGrow = String(Math.max(w, 0)); i.style.flexBasis = "0"; i.style.background = color; return i; }
+
+async function refrescarCopias() {
+  try {
+    const r = await api("/api/system");
+    const lista = $("copias"); vaciar(lista);
+    $("copiasCuenta").textContent = r.backups.length ? "(" + r.backups.length + "/5)" : "";
+    r.backups.forEach((c) => {
+      const li = el("li");
+      li.appendChild(el("span", "nombre", c.date.replace("T", " ") + " · " + c.size_kb + " KB"));
+      const b = el("button", "suave", "Restaurar");
+      b.type = "button";
+      b.addEventListener("click", async () => {
+        if (!confirm(T("¿Restaurar la copia del ") + c.date.replace("T", " ") + T("? Se sustituirán los datos actuales (antes se guarda una copia previa)."))) return;
+        try { await enviarJSON("/api/backup/restore", { name: c.name }); aviso(T("Copia restaurada")); refrescarPanel(); }
+        catch (e) { aviso(e.message, true); }
+      });
+      li.appendChild(b);
+      lista.appendChild(li);
+    });
+    if (!r.backups.length) lista.appendChild(el("li", "vacio", T("Aún no hay copias. Se hace una al día automáticamente.")));
+    $("copiasNota").textContent = r.scheduler_active ? T("Copia automática diaria activa. Se guardan las 5 últimas.") : T("Las tareas automáticas están desactivadas.");
+    const alertas = $("alertasCasa"); vaciar(alertas);
+    (r.alerts || []).forEach((a) => alertas.appendChild(el("p", "vacio", "⚠ " + a.name + " (" + a.kind + ") " + T("activado"))));
+  } catch (e) { /* el panel sigue funcionando sin esta tarjeta */ }
+}
+
+$("crearCopia").addEventListener("click", async () => {
+  try { const r = await enviarJSON("/api/backup/create"); aviso(T("Copia creada: ") + r.backup.file); refrescarCopias(); }
+  catch (e) { aviso(e.message, true); }
+});
+
+async function refrescarEnergia() {
+  const caja = $("energiaCuerpo");
+  try {
+    const e = await api("/api/energy");
+    vaciar(caja);
+    if (e.error || !e.configured) {
+      const p = el("p", "vacio", e.error || e.message || T("Sin datos del inversor."));
+      p.style.marginTop = "10px";
+      caja.appendChild(p);
+      if (!e.error) caja.appendChild(el("p", "vacio", T("Cuando conectes Home Assistant verás aquí lo que producen las placas y lo que gasta la casa.")));
+      $("energiaHora").textContent = "";
+      return;
+    }
+    const compra = e.grid_state === "buying", venta = e.grid_state === "selling";
+    const cifras = el("div", "cifras");
+    cifras.appendChild(cifra("var(--luz)", potencia(e.production_w), T("Placas")));
+    cifras.appendChild(cifra("var(--consumo)", potencia(e.consumption_w), T("Casa") + (e.computed_consumption ? T(" (calculado)") : "")));
+    cifras.appendChild(cifra(compra ? "var(--compra)" : venta ? "var(--venta)" : "var(--suave)", potencia(e.grid_w), compra ? T("Comprando") : venta ? T("Vendiendo") : T("Red")));
+    caja.appendChild(cifras);
+
+    const prod = e.production_w || 0, cons = e.consumption_w || 0;
+    const barra = el("div", "balance");
+    barra.setAttribute("role", "img");
+    barra.appendChild(tramo("var(--luz)", Math.min(prod, cons)));
+    if (cons > prod) barra.appendChild(tramo("var(--compra)", cons - prod));
+    if (prod > cons) barra.appendChild(tramo("var(--venta)", prod - cons));
+    if (!prod && !cons) barra.appendChild(tramo("var(--linea)", 1));
+    caja.appendChild(barra);
+
+    const pie = el("p", "energia-pie");
+    const trozos = [];
+    if (e.solar_covered_pct !== undefined) { const b = el("b", "", e.solar_covered_pct + " %"); pie.appendChild(b); pie.appendChild(document.createTextNode(T(" del consumo lo cubre el sol"))); }
+    if (e.battery_pct !== null && e.battery_pct !== undefined) pie.appendChild(document.createTextNode((pie.firstChild ? ". " : "") + T("Batería al ") + e.battery_pct + " %"));
+    if (pie.firstChild) caja.appendChild(pie);
+    $("energiaHora").textContent = e.hour || "";
+  } catch (err) { /* el panel no es crítico */ }
+}
+
+/* ---------------------------------------------------------------- domótica */
+let dispositivosOcupados = 0;
+let listaCompraActual = [];
+
+function interruptor(d) {
+  const b = el("button", "interruptor"); b.type = "button";
+  b.setAttribute("role", "switch");
+  b.setAttribute("aria-checked", d.on ? "true" : "false");
+  b.setAttribute("aria-label", d.name);
+  b.disabled = d.on === null;
+  b.addEventListener("click", async () => {
+    const nuevo = b.getAttribute("aria-checked") !== "true";
+    b.setAttribute("aria-checked", nuevo ? "true" : "false");   // se ve al instante
+    dispositivosOcupados = Date.now();
+    try { await enviarJSON("/api/device", { entity: d.entity, on: nuevo }); setTimeout(refrescarDispositivos, 900); }
+    catch (e) { b.setAttribute("aria-checked", nuevo ? "false" : "true"); aviso(d.name + ": " + e.message, true); }
+  });
+  return b;
+}
+
+function textoDetalle(d) {
+  if (d.kind === "light" && d.on && d.brightness_pct !== undefined) return d.brightness_pct + " %";
+  if (d.kind === "cover") return d.position_pct !== undefined ? d.position_pct + T(" % abierta") : (d.on ? T("abierta") : T("cerrada"));
+  if (d.kind === "climate" && d.current_temperature !== undefined) return d.current_temperature + " °C";
+  return "";
+}
+
+async function refrescarDispositivos() {
+  if (Date.now() - dispositivosOcupados < 1500) return;   // no pisar un interruptor recién pulsado
+  const caja = $("dispositivos"), escenas = $("escenas");
+  try {
+    const r = await api("/api/devices");
+    vaciar(caja); vaciar(escenas);
+    if (!r.connected) {
+      const p = el("p", "vacio", T("Para turn_on luces y ver tus dispositivos aquí, conecta Home Assistant. "));
+      const b = el("button", "suave", T("Conectar ahora")); b.type = "button";
+      b.addEventListener("click", () => abrirAsistente(1));
+      p.appendChild(b);
+      caja.appendChild(p);
+      $("casaCuenta").textContent = "";
+      return;
+    }
+    if (r.error) { caja.appendChild(el("p", "vacio", r.error)); return; }
+    $("casaCuenta").textContent = r.total ? "(" + r.total + ")" : "";
+    if (!r.total) caja.appendChild(el("p", "vacio", r.hidden ? T("Has ocultado todos los dispositivos. Usa «Elegir dispositivos» para mostrar los que quieras.") : T("Home Assistant no tiene luces, enchufes ni persianas todavía.")));
+    r.groups.forEach((g) => {
+      caja.appendChild(el("div", "habitacion", g.room));
+      g.devices.forEach((d) => {
+        const f = el("div", "fila-disp");
+        const n = el("span", "nombre", d.name); n.title = d.name;
+        f.appendChild(n);
+        const det = textoDetalle(d);
+        if (det) f.appendChild(el("span", "detalle", det));
+        f.appendChild(interruptor(d));
+        caja.appendChild(f);
+      });
+    });
+    r.scenes.forEach((s) => {
+      const b = el("button", "", s.name); b.type = "button"; b.title = T("Activar la escena ") + s.name;
+      b.addEventListener("click", async () => {
+        try { await enviarJSON("/api/scene", { entity: s.entity }); aviso(T("Escena «") + s.name + T("» activada")); setTimeout(refrescarDispositivos, 900); }
+        catch (e) { aviso(e.message, true); }
+      });
+      escenas.appendChild(b);
+    });
+  } catch (e) { /* el panel no es crítico */ }
+}
+
+/* ------------------------------------------------------- estado de la IA */
+let temporizadorEstado = null;
+function programarEstado(ms) { clearTimeout(temporizadorEstado); temporizadorEstado = setTimeout(refrescarEstado, ms); }
+
+async function refrescarEstado() {
+  try {
+    const e = await api("/api/state");
+    if (e.language && e.language !== LANG) { LANG = e.language; try { localStorage.setItem("brain-idioma", LANG); } catch (err) {} traducirEstatico(); }
+    $("version").textContent = "v" + e.version;
+    $("punto").className = "punto " + (e.ai_ready ? "ok" : "mal");
+    $("estado").textContent = e.ai_ready ? T("IA lista (") + e.model + ")" : T("IA no disponible");
+    let texto = e.message;
+    const d = e.download_state || {};
+    if (d.active) texto = T("Descargando ") + d.model + ": " + d.percent + T(" % (") + d.state + T("). No cierres esta ventana.");
+    else if (d.error && !e.ai_ready) texto += T(" Error en la descarga: ") + d.error;
+    $("aviso").style.display = e.ai_ready ? "none" : "flex";
+    $("avisoTexto").textContent = texto;
+    $("descargar").style.display = (e.without_models && !d.active) ? "inline-block" : "none";
+    programarEstado(e.ai_ready ? 15000 : (d.active ? 1500 : 3000));
+  } catch (err) {
+    $("punto").className = "punto mal";
+    $("estado").textContent = T("Sin conexión con BRAIN");
+    programarEstado(5000);
+  }
+}
+
+/* ------------------------------------------------------------------- chat */
+function leerEnVozAlta(texto) {
+  if (!$("hablar").checked || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const voz = new SpeechSynthesisUtterance(texto.replace(/[*`#]/g, ""));
+  voz.lang = "es-ES";
+  window.speechSynthesis.speak(voz);
+}
+
+let conversacionActual = "general";
+
+async function enviar(texto) {
+  if (ocupado || !texto.trim()) return;
+  ocupado = true;
+  $("enviar").disabled = true;
+  $("sugerencias").style.display = "none";
+  anadir("yo", texto);
+  const espera = pensando();
+  try {
+    const r = await enviarJSON("/api/chat", { message: texto, conversation: conversacionActual });
+    espera.remove();
+    anadir("ia", r.response, r.tools.length ? T("Acciones: ") + r.tools.join(", ") : "");
+    leerEnVozAlta(r.response);
+    refrescarPanel(); refrescarDispositivos(); refrescarEnergia(); cargarConversaciones();
+  } catch (e) {
+    espera.remove();
+    anadir("error", e.message);
+  } finally {
+    ocupado = false;
+    $("enviar").disabled = false;
+    $("entrada").focus();
+  }
+}
+
+function ajustarEntrada() {
+  const t = $("entrada");
+  t.style.height = "auto";
+  t.style.height = Math.min(t.scrollHeight, 160) + "px";
+}
+$("entrada").addEventListener("input", ajustarEntrada);
+$("entrada").addEventListener("keydown", (ev) => {
+  if (ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); $("formulario").requestSubmit(); }
+});
+$("formulario").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const texto = $("entrada").value;
+  $("entrada").value = "";
+  ajustarEntrada();
+  enviar(texto);
+});
+$("limpiar").addEventListener("click", async () => {
+  try { await enviarJSON("/api/clear", { conversation: conversacionActual }); } catch (e) { /* nada */ }
+  vaciar(mensajes);
+  saludo();
+  $("sugerencias").style.display = "";
+});
+$("reintentar").addEventListener("click", async () => {
+  $("avisoTexto").textContent = "Reintentando...";
+  try { await enviarJSON("/api/repair"); } catch (e) { /* se volverá a consultar */ }
+  programarEstado(500);
+});
+$("descargar").addEventListener("click", async () => {
+  try { await enviarJSON("/api/download"); } catch (e) { /* idem */ }
+  programarEstado(300);
+});
+
+const SUGERENCIAS = ["¿Qué puedo cocinar hoy?", "Enciende la luz del salón", "Se ha acabado la leche", "¿Cuánto estoy consumiendo?"];
+function saludo() {
+  anadir("ia", "Hola, soy BRAIN. Puedo turn_on tus luces, llevar la despensa y la compra, proponerte recetas con lo que tienes, apuntar tu peso y tu agenda, y decirte cuánto gasta la casa. ¿Qué hacemos?");
+}
+SUGERENCIAS.forEach((t) => {
+  const b = el("button", "", t); b.type = "button";
+  b.addEventListener("click", () => enviar(t));
+  $("sugerencias").appendChild(b);
+});
+
+/* --------------------------------------------------------- importar listas */
+const dlg = $("dlgImportar");
+let temporizadorVista = null, ultimaVista = 0;
+
+function destinoElegido() { return document.querySelector('input[name="destino"]:checked').value; }
+
+function abrirImportar(destino) {
+  document.querySelector('input[name="destino"][value="' + destino + '"]').checked = true;
+  $("textoImportar").value = "";
+  $("vistaPrevia").textContent = "";
+  $("confirmarImportar").disabled = true;
+  $("confirmarImportar").textContent = "Añadir";
+  dlg.showModal();
+  $("textoImportar").focus();
+}
+
+async function vistaPrevia() {
+  const texto = $("textoImportar").value;
+  const caja = $("vistaPrevia");
+  if (!texto.trim()) { caja.textContent = ""; $("confirmarImportar").disabled = true; return; }
+  const turno = ++ultimaVista;
+  try {
+    const r = await enviarJSON("/api/import", { text: texto, destination: destinoElegido(), preview_only: true });
+    if (turno !== ultimaVista) return;
+    vaciar(caja);
+    caja.appendChild(document.createTextNode(T("He entendido ")));
+    caja.appendChild(el("b", "", r.total + (r.total === 1 ? T(" producto") : T(" productos"))));
+    const ejemplos = r.products.slice(0, 4).map((p) => p.quantity + " × " + p.name).join(", ");
+    caja.appendChild(document.createTextNode(": " + ejemplos + (r.total > 4 ? "..." : "")));
+    $("confirmarImportar").disabled = false;
+    $("confirmarImportar").textContent = T("Añadir ") + r.total + (r.total === 1 ? T(" producto") : T(" productos"));
+  } catch (e) {
+    if (turno !== ultimaVista) return;
+    caja.textContent = e.message;
+    $("confirmarImportar").disabled = true;
+  }
+}
+function programarVista() { clearTimeout(temporizadorVista); temporizadorVista = setTimeout(vistaPrevia, 300); }
+
+$("textoImportar").addEventListener("input", programarVista);
+document.querySelectorAll('input[name="destino"]').forEach((r) => r.addEventListener("change", programarVista));
+$("cancelarImportar").addEventListener("click", () => dlg.close());
+$("formImportar").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  $("confirmarImportar").disabled = true;
+  try {
+    const r = await enviarJSON("/api/import", { text: $("textoImportar").value, destination: destinoElegido() });
+    dlg.close();
+    aviso(r.text);
+    refrescarPanel();
+  } catch (e) { aviso(e.message, true); $("confirmarImportar").disabled = false; }
+});
+$("importarDespensa").addEventListener("click", () => abrirImportar("despensa"));
+$("importarCompra").addEventListener("click", () => abrirImportar("compra"));
+confirmar($("vaciarCompra"), () => quitar("/api/shopping/clear", {}, T("Lista de la compra vaciada")), T("Vaciar"));
+confirmar($("vaciarDespensa"), () => quitar("/api/inventory/clear", {}, T("Despensa vaciada")), T("Vaciar"));
+
+/* ----------------------------------------------------------------- micrófono */
+const boton = $("microfono"), cajaVoz = $("avisoVoz");
+const ReconocimientoNavegador = window.SpeechRecognition || window.webkitSpeechRecognition;
+const esBrave = !!(navigator.brave && navigator.brave.isBrave);
+let grabacion = null;
+
+function mostrarVoz(texto, grabando) {
+  cajaVoz.style.display = texto ? "flex" : "none";
+  cajaVoz.classList.toggle("grabando", !!grabando);
+  vaciar(cajaVoz);
+  if (texto) cajaVoz.appendChild(el("span", "", texto));
+  return cajaVoz;
+}
+
+function resultadoVoz(texto) {
+  mostrarVoz("");
+  texto = (texto || "").trim();
+  if (!texto) { aviso("No he oído nada. Pulsa el micrófono y habla cerca.", true); return; }
+  if ($("autoenviar").checked) enviar(texto);
+  else { $("entrada").value = texto; ajustarEntrada(); $("entrada").focus(); }
+}
+
+function aWav(trozos, frecuenciaOrigen) {
+  const total = trozos.reduce((n, t) => n + t.length, 0);
+  const crudo = new Float32Array(total);
+  let pos = 0; trozos.forEach((t) => { crudo.set(t, pos); pos += t.length; });
+  const destino = 16000, razon = frecuenciaOrigen / destino;
+  const n = Math.floor(total / razon);
+  const pcm = new Int16Array(n);
+  // Filtro paso bajo (sinc con ventana de Blackman) antes de bajar a 16 kHz: así las
+  // frecuencias altas no se pliegan sobre la voz (aliasing), como pasaba al hacer medias.
+  const corte = razon > 1 ? 0.42 / razon : 0.5, mitad = razon > 1 ? Math.ceil(24 * razon) : 24;
+  const sinc = (x) => (x === 0 ? 1 : Math.sin(Math.PI * x) / (Math.PI * x));
+  const nucleo = new Float32Array(2 * mitad * 4 + 1);   // núcleo precalculado a 1/4 de muestra
+  for (let k = 0; k < nucleo.length; k++) {
+    const d = (k - 2 * mitad * 2) / 4;
+    const w = 0.42 + 0.5 * Math.cos(Math.PI * d / mitad) + 0.08 * Math.cos(2 * Math.PI * d / mitad);
+    nucleo[k] = Math.abs(d) <= mitad ? 2 * corte * sinc(2 * corte * d) * w : 0;
+  }
+  for (let i = 0; i < n; i++) {
+    const centro = i * razon, desde = Math.max(0, Math.ceil(centro - mitad)), hasta = Math.min(total - 1, Math.floor(centro + mitad));
+    let suma = 0, peso = 0;
+    for (let j = desde; j <= hasta; j++) {
+      const h = nucleo[Math.round((j - centro) * 4) + 4 * mitad];
+      suma += crudo[j] * h; peso += h;
+    }
+    const v = Math.max(-1, Math.min(1, peso ? suma / peso : 0));
+    pcm[i] = v < 0 ? v * 32768 : v * 32767;
+  }
+  const buffer = new ArrayBuffer(44 + pcm.length * 2), vista = new DataView(buffer);
+  const texto = (o, s) => { for (let i = 0; i < s.length; i++) vista.setUint8(o + i, s.charCodeAt(i)); };
+  texto(0, "RIFF"); vista.setUint32(4, 36 + pcm.length * 2, true); texto(8, "WAVE"); texto(12, "fmt ");
+  vista.setUint32(16, 16, true); vista.setUint16(20, 1, true); vista.setUint16(22, 1, true);
+  vista.setUint32(24, destino, true); vista.setUint32(28, destino * 2, true); vista.setUint16(32, 2, true); vista.setUint16(34, 16, true);
+  texto(36, "data"); vista.setUint32(40, pcm.length * 2, true);
+  new Int16Array(buffer, 44).set(pcm);
+  return new Blob([buffer], { type: "audio/wav" });
+}
+
+async function empezarGrabacion() {
+  let flujo;
+  try { flujo = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true } }); }
+  catch (e) {
+    aviso("No puedo usar el micrófono. Permítelo en el candado de la barra de direcciones y vuelve a intentarlo.", true);
+    return;
+  }
+  const contexto = new (window.AudioContext || window.webkitAudioContext)();
+  const fuente = contexto.createMediaStreamSource(flujo);
+  const proceso = contexto.createScriptProcessor(4096, 1, 1);
+  const trozos = [];
+  let oyoVoz = false, silencio = 0;
+  const inicio = Date.now();
+  const barra = el("span", "nivel"); const nivel = el("i"); barra.appendChild(nivel);
+
+  const parar = async (cancelar) => {
+    if (!grabacion) return;
+    grabacion = null;
+    proceso.disconnect(); fuente.disconnect(); flujo.getTracks().forEach((t) => t.stop());
+    const frecuencia = contexto.sampleRate; contexto.close();
+    boton.classList.remove("activo");
+    if (cancelar || !oyoVoz) { mostrarVoz(""); if (!cancelar) aviso("No he oído nada. Pulsa el micrófono y habla cerca.", true); return; }
+    mostrarVoz("Transcribiendo...");
+    try {
+      const r = await api("/api/voice", { method: "POST", headers: { "Content-Type": "audio/wav" }, body: aWav(trozos, frecuencia) });
+      resultadoVoz(r.text);
+    } catch (e) { mostrarVoz(""); aviso(e.message, true); }
+  };
+
+  proceso.onaudioprocess = (ev) => {
+    const datos = new Float32Array(ev.inputBuffer.getChannelData(0));
+    trozos.push(datos);
+    let suma = 0; for (let i = 0; i < datos.length; i++) suma += datos[i] * datos[i];
+    const rms = Math.sqrt(suma / datos.length);
+    nivel.style.width = Math.min(100, rms * 600) + "%";
+    if (rms > 0.02) { oyoVoz = true; silencio = 0; } else if (oyoVoz) { silencio += datos.length / contexto.sampleRate; }
+    if ((oyoVoz && silencio > 1.4) || Date.now() - inicio > 45000) parar(false);
+  };
+  fuente.connect(proceso); proceso.connect(contexto.destination);
+  grabacion = { parar };
+  boton.classList.add("activo");
+  const caja = mostrarVoz("Te escucho. Habla y haré una pausa cuando termines.", true);
+  caja.appendChild(barra);
+  const fin = el("button", "suave", "Terminar"); fin.type = "button"; fin.addEventListener("click", () => parar(false));
+  const cancelar = el("button", "suave", "Cancelar"); cancelar.type = "button"; cancelar.addEventListener("click", () => parar(true));
+  caja.appendChild(fin); caja.appendChild(cancelar);
+}
+
+function usarReconocimientoNavegador() {
+  const rec = new ReconocimientoNavegador();
+  rec.lang = "es-ES"; rec.interimResults = false;
+  rec.onresult = (ev) => resultadoVoz(ev.results[0][0].transcript);
+  rec.onerror = (ev) => {
+    boton.classList.remove("activo");
+    if (ev.error === "network" || ev.error === "service-not-allowed") ofrecerInstalarVoz("Este navegador no puede reconocer voz por sí solo.");
+    else if (ev.error !== "no-speech" && ev.error !== "aborted") aviso("Error del micrófono: " + ev.error, true);
+    else mostrarVoz("");
+  };
+  rec.onend = () => { boton.classList.remove("activo"); grabacion = null; };
+  grabacion = { parar: () => rec.stop() };
+  boton.classList.add("activo");
+  mostrarVoz("Te escucho...", true);
+  rec.start();
+}
+
+function ofrecerInstalarVoz(motivo) {
+  boton.classList.remove("activo");
+  const caja = mostrarVoz(motivo + " BRAIN puede reconocer tu voz en este ordenador, sin enviar nada a internet. Se instala una sola vez (unos 500 MB).");
+  const b = el("button", "primario", "Instalar voz"); b.type = "button"; b.style.cssText = "height:34px;padding:0 16px";
+  b.addEventListener("click", async () => {
+    b.disabled = true;
+    try { await enviarJSON("/api/voice/install"); seguirInstalacionVoz(); } catch (e) { aviso(e.message, true); b.disabled = false; }
+  });
+  caja.appendChild(b);
+}
+
+async function seguirInstalacionVoz() {
+  try {
+    const r = await api("/api/voice");
+    if (r.error) { mostrarVoz(T("No se ha podido instalar la voz: ") + r.error); return; }
+    if (r.available && !r.installing) { mostrarVoz(""); aviso(T("Voz lista. Pulsa el micrófono y habla.")); return; }
+    mostrarVoz(r.step || T("Instalando..."));
+    setTimeout(seguirInstalacionVoz, 2000);
+  } catch (e) { setTimeout(seguirInstalacionVoz, 3000); }
+}
+
+boton.addEventListener("click", async () => {
+  if (grabacion) { grabacion.parar(false); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    aviso("Este navegador no permite usar el micrófono aquí. Abre BRAIN en http://127.0.0.1:8765.", true);
+    return;
+  }
+  let voz = { available: false };
+  try { voz = await api("/api/voice"); } catch (e) { /* se usa el navegador */ }
+  if (voz.installing) { seguirInstalacionVoz(); return; }
+  if (voz.available) { empezarGrabacion(); return; }
+  if (ReconocimientoNavegador && !esBrave) { usarReconocimientoNavegador(); return; }
+  ofrecerInstalarVoz(esBrave ? "Brave no trae reconocimiento de voz." : "Este navegador no trae reconocimiento de voz.");
+});
+
+/* ------------------------------------------------------- tema y pestañas */
+function aplicarTema(t) { if (t) document.documentElement.setAttribute("data-tema", t); else document.documentElement.removeAttribute("data-tema"); }
+aplicarTema(leer("brain-tema"));
+$("tema").addEventListener("click", () => {
+  const claro = getComputedStyle(document.documentElement).colorScheme === "light";
+  const nuevo = claro ? "oscuro" : "claro";
+  aplicarTema(nuevo); guardar("brain-tema", nuevo);
+});
+document.querySelectorAll(".pestanas button").forEach((b) => b.addEventListener("click", () => {
+  document.body.dataset.vista = b.dataset.vista;
+  document.querySelectorAll(".pestanas button").forEach((x) => x.setAttribute("aria-selected", x === b ? "true" : "false"));
+}));
+
+/* ------------------------------------------------------------------ inicio */
+/* ---------------------------------------------------------------- avisos */
+let ultimoAviso = null;   // null = primera consulta (no suena lo antiguo)
+let sonidoActual = null;
+
+function tocarSonido(archivo) {
+  try {
+    if (sonidoActual) sonidoActual.pause();
+    sonidoActual = archivo ? new Audio("/api/sound/" + encodeURIComponent(archivo)) : null;
+    if (sonidoActual) sonidoActual.play().catch(() => {});
+    else pitido();
+  } catch (e) { /* el navegador puede bloquear el audio hasta que se pulse algo */ }
+}
+function pitido() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.frequency.value = 880; g.gain.value = 0.08;
+    o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + 0.25);
+  } catch (e) { /* sin audio */ }
+}
+
+function mostrarAviso(a) {
+  const t = el("div", "toast aviso-brain" + (a.level === "critical" ? " critico" : ""));
+  t.appendChild(el("strong", "", a.title));
+  if (a.message) t.appendChild(el("span", "", a.message));
+  $("toasts").appendChild(t);
+  setTimeout(() => t.remove(), a.level === "critical" ? 15000 : 8000);
+  if (a.play_in_web) tocarSonido(a.sound);
+  try {
+    if ("Notification" in window && Notification.permission === "granted" && document.hidden)
+      new Notification(a.title, { body: a.message || "" });
+  } catch (e) { /* notificaciones no disponibles */ }
+}
+
+let avisosActuales = [];
+let temporizadorVisto = null, claveVisto = "";
+
+/* Si el panel de avisos se queda abierto más de 2 segundos, lo que se ve cuenta como visto. */
+function programarVisto() {
+  const abierta = $("bandeja").classList.contains("abierta") && !document.hidden;
+  const ids = abierta ? avisosActuales.filter((a) => !a.read).map((a) => a.id) : [];
+  const clave = ids.join(",");
+  if (!ids.length) { clearTimeout(temporizadorVisto); temporizadorVisto = null; claveVisto = ""; return; }
+  if (temporizadorVisto && clave === claveVisto) return;   // ya hay un temporizador para estos mismos avisos
+  clearTimeout(temporizadorVisto);
+  claveVisto = clave;
+  temporizadorVisto = setTimeout(async () => {
+    temporizadorVisto = null; claveVisto = "";
+    if (!$("bandeja").classList.contains("abierta") || document.hidden) return;
+    try { await enviarJSON("/api/notices/read", { ids }); refrescarAvisos(); } catch (e) { /* se reintenta al refrescar */ }
+  }, 2000);
+}
+document.addEventListener("visibilitychange", programarVisto);
+
+function pintarBandeja(avisos) {
+  avisosActuales = avisos;
+  const lista = $("listaAvisos"); vaciar(lista);
+  if (!avisos.length) { lista.appendChild(el("li", "vacio", T("No hay avisos todavía."))); return; }
+  avisos.slice().reverse().forEach((a) => {
+    const li = el("li", (a.read ? "" : "nuevo ") + (a.level === "critical" ? "critico" : ""));
+    li.appendChild(el("strong", "", a.title));
+    if (a.message) li.appendChild(el("div", "", a.message));
+    li.appendChild(el("small", "", a.date.replace("T", " ").slice(0, 16) + " · " + T(ETIQUETAS_AVISO[a.kind] || a.kind)));
+    lista.appendChild(li);
+  });
+}
+
+async function refrescarAvisos() {
+  try {
+    const r = await api("/api/notices?after=0");
+    const mayor = r.notices.length ? r.notices[r.notices.length - 1].id : 0;
+    if (ultimoAviso === null) ultimoAviso = mayor;
+    else r.notices.filter((a) => a.id > ultimoAviso).forEach(mostrarAviso);
+    ultimoAviso = Math.max(ultimoAviso, mayor);
+    $("contadorAvisos").textContent = r.unread > 99 ? "99+" : r.unread;
+    $("campana").classList.toggle("con-avisos", r.unread > 0);
+    pintarBandeja(r.notices);
+    programarVisto();
+  } catch (e) { /* sin conexión: se reintenta */ }
+}
+
+$("campana").addEventListener("click", () => {
+  const abierta = $("bandeja").classList.toggle("abierta");
+  $("campana").setAttribute("aria-expanded", abierta ? "true" : "false");
+  programarVisto();
+  try { if ("Notification" in window && Notification.permission === "default") Notification.requestPermission(); } catch (e) { /* nada */ }
+});
+document.addEventListener("click", (ev) => {
+  if (!$("bandeja").contains(ev.target) && !$("campana").contains(ev.target)) { $("bandeja").classList.remove("abierta"); programarVisto(); }
+});
+$("leerAvisos").addEventListener("click", async () => { try { await enviarJSON("/api/notices/read"); refrescarAvisos(); } catch (e) { aviso(e.message, true); } });
+
+
+/* ------------------------------------------------- conversaciones paralelas */
+const TEMAS = [
+  ["Recetas", "Esta conversación es solo de cocina: recetas, menús y qué cocinar con lo que hay en casa."],
+  ["Casa", "Esta conversación es sobre la casa: domótica, energía y electrodomésticos."],
+  ["Salud", "Esta conversación es sobre mi peso, mis medidas y mis hábitos de salud."],
+];
+let listaConversaciones = [];
+
+function pintarConversaciones() {
+  const barra = $("conversaciones");
+  vaciar(barra);
+  listaConversaciones.forEach((c) => {
+    const b = el("button", "", c.title); b.type = "button";
+    b.setAttribute("role", "tab");
+    b.setAttribute("aria-selected", c.id === conversacionActual ? "true" : "false");
+    b.title = c.instructions || c.title;
+    b.addEventListener("click", () => abrirConversacion(c.id));
+    barra.appendChild(b);
+  });
+  const mas = el("button", "mas", "+"); mas.type = "button"; mas.title = "Nueva conversación"; mas.setAttribute("aria-label", "Nueva conversación");
+  mas.addEventListener("click", () => { $("convTitulo").value = ""; $("convTema").value = ""; $("dlgConversacion").showModal(); $("convTitulo").focus(); });
+  barra.appendChild(mas);
+  if (conversacionActual !== "general") {
+    const actual = listaConversaciones.find((c) => c.id === conversacionActual);
+    const ren = el("button", "accion", "Renombrar"); ren.type = "button";
+    ren.addEventListener("click", async () => {
+      const nuevo = prompt(T("Nuevo título:"), actual ? actual.title : "");
+      if (!nuevo) return;
+      try { await enviarJSON("/api/conversations/rename", { id: conversacionActual, title: nuevo }); cargarConversaciones(); } catch (e) { aviso(e.message, true); }
+    });
+    const bor = el("button", "accion", "Eliminar"); bor.type = "button";
+    bor.addEventListener("click", async () => {
+      if (!confirm("¿Eliminar esta conversación y todo su historial?")) return;
+      try { await enviarJSON("/api/conversations/delete", { id: conversacionActual }); abrirConversacion("general"); } catch (e) { aviso(e.message, true); }
+    });
+    barra.appendChild(ren); barra.appendChild(bor);
+  }
+}
+async function cargarConversaciones() {
+  try { listaConversaciones = (await api("/api/conversations")).conversations; pintarConversaciones(); } catch (e) { /* sin conexión */ }
+}
+async function abrirConversacion(id) {
+  try {
+    const h = await api("/api/history?conversation=" + encodeURIComponent(id));
+    conversacionActual = id;
+    try { localStorage.setItem("brain.conversacion", id); } catch (e) { /* sin almacenamiento */ }
+    vaciar(mensajes);
+    h.messages.forEach((m) => anadir(m.role === "user" ? "yo" : "ia", m.content));
+    if (!h.messages.length) saludo();
+    $("sugerencias").style.display = h.messages.length ? "none" : "";
+    await cargarConversaciones();
+  } catch (e) { aviso(e.message, true); conversacionActual = "general"; }
+}
+TEMAS.forEach(([titulo, tema]) => {
+  const b = el("button", "", titulo); b.type = "button";
+  b.addEventListener("click", () => { $("convTitulo").value = titulo; $("convTema").value = tema; });
+  $("convTemas").appendChild(b);
+});
+$("cancelarConv").addEventListener("click", () => $("dlgConversacion").close());
+$("formConversacion").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  try {
+    const r = await enviarJSON("/api/conversations/create", { title: $("convTitulo").value, instructions: $("convTema").value });
+    $("dlgConversacion").close();
+    await abrirConversacion(r.conversation.id);
+  } catch (e) { aviso(e.message, true); }
+});
+
+/* ------------------------------------------ captura de la báscula (imagen) */
+function reducirImagen(archivo, maximo) {
+  return new Promise((resolver, rechazar) => {
+    const url = URL.createObjectURL(archivo);
+    const img = new Image();
+    img.onload = () => {
+      const escala = Math.min(1, maximo / Math.max(img.width, img.height));
+      const lienzo = document.createElement("canvas");
+      lienzo.width = Math.round(img.width * escala); lienzo.height = Math.round(img.height * escala);
+      lienzo.getContext("2d").drawImage(img, 0, 0, lienzo.width, lienzo.height);
+      URL.revokeObjectURL(url);
+      lienzo.toBlob((b) => (b ? resolver(b) : rechazar(new Error("No he podido preparar la imagen."))), "image/jpeg", 0.88);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rechazar(new Error("No he podido abrir esa imagen.")); };
+    img.src = url;
+  });
+}
+$("imagen").addEventListener("click", () => $("archivoImagen").click());
+$("archivoImagen").addEventListener("change", async () => {
+  const archivo = $("archivoImagen").files[0];
+  $("archivoImagen").value = "";
+  if (!archivo || ocupado) return;
+  ocupado = true;
+  $("sugerencias").style.display = "none";
+  anadir("yo", "📷 Captura de la báscula");
+  const espera = pensando();
+  try {
+    const blob = await reducirImagen(archivo, 1400);
+    const respuesta = await fetch("/api/image?conversation=" + encodeURIComponent(conversacionActual), { method: "POST", headers: { "Content-Type": "image/jpeg" }, body: blob });
+    const datos = await respuesta.json().catch(() => ({}));
+    espera.remove();
+    if (!respuesta.ok) throw new Error(datos.error || "Error " + respuesta.status);
+    anadir("ia", datos.response);
+    refrescarPanel(); cargarConversaciones();
+  } catch (e) {
+    espera.remove();
+    anadir("error", e.message);
+  } finally {
+    ocupado = false;
+  }
+});
+
+(async function iniciar() {
+  try { const guardada = localStorage.getItem("brain.conversacion"); if (guardada) conversacionActual = guardada; } catch (e) { /* nada */ }
+  try {
+    let h;
+    try { h = await api("/api/history?conversation=" + encodeURIComponent(conversacionActual)); }
+    catch (e) { conversacionActual = "general"; h = await api("/api/history"); }
+    h.messages.forEach((m) => anadir(m.role === "user" ? "yo" : "ia", m.content));
+    if (h.messages.length) $("sugerencias").style.display = "none";
+  } catch (e) { /* sin historial */ }
+  if (!mensajes.children.length) saludo();
+  cargarConversaciones();
+  refrescarEstado();
+  refrescarPanel();
+  refrescarEnergia();
+  refrescarDispositivos();
+  refrescarAvisos();
+  setInterval(refrescarAvisos, 8000);
+  setInterval(refrescarEnergia, 5000);
+  setInterval(refrescarDispositivos, 6000);
+  setInterval(refrescarPanel, 20000);
+})();
+
+/* ---------------------------------------------------------------- gastos */
+function euros(n) { return Number(n).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €"; }
+async function refrescarGastos() {
+  try { refrescarPresupuesto();
+    const r = await api("/api/expenses");
+    $("gastosTotal").textContent = r.n ? euros(r.total) : "";
+    const lista = $("gastosLista"); vaciar(lista);
+    if (!r.n) { lista.appendChild(el("li", "vacio", T("Todavía no hay gastos este mes. Apunta el primero arriba o díselo a BRAIN."))); return; }
+    r.by_category.forEach((c) => {
+      const li = el("li");
+      li.appendChild(el("span", "nombre", c.category.charAt(0).toUpperCase() + c.category.slice(1)));
+      li.appendChild(el("span", "cant", euros(c.total)));
+      lista.appendChild(li);
+    });
+    const ult = el("li", "vacio", T("Últimos: ") + r.last.slice(0, 3).map((g) => (g.description || g.category) + " " + euros(g.amount)).join(" · "));
+    lista.appendChild(ult);
+  } catch (e) { /* el panel no es crítico */ }
+}
+$("formGasto").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const importe = $("gastoImporte").value.trim(), concepto = $("gastoConcepto").value.trim();
+  if (!importe) { aviso(T("Escribe el importe."), true); return; }
+  try {
+    const r = await enviarJSON("/api/expenses/add", { amount: importe, description: concepto });
+    $("gastoImporte").value = ""; $("gastoConcepto").value = "";
+    aviso(T("Apuntado: ") + euros(r.logged.amount) + T(" en ") + r.logged.category);
+    refrescarGastos();
+  } catch (e) { aviso(e.message, true); }
+});
+refrescarGastos();
+setInterval(refrescarGastos, 30000);
+
+
+/* ---------------------------------------------------------------- novedades de casa */
+function abrirDialogo(titulo, construir, textoOk, alOk) {
+  const dlg = $("dlgGen"), cuerpo = $("genCuerpo"), error = $("genError");
+  $("genTitulo").textContent = titulo;
+  vaciar(cuerpo); error.hidden = true;
+  construir(cuerpo);
+  $("genOk").textContent = textoOk || "Aceptar";
+  $("genOk").style.display = alOk ? "" : "none";
+  dlg._alOk = alOk || null;
+  if (!dlg.open) dlg.showModal();
+}
+$("genCancelar").addEventListener("click", () => $("dlgGen").close());
+$("formGen").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const dlg = $("dlgGen");
+  if (!dlg._alOk) { dlg.close(); return; }
+  $("genOk").disabled = true;
+  try { const cerrar = await dlg._alOk(); if (cerrar !== false) dlg.close(); }
+  catch (e) { $("genError").textContent = e.message; $("genError").hidden = false; }
+  finally { $("genOk").disabled = false; }
+});
+function campoGen(cuerpo, etiqueta, opciones) {
+  const o = opciones || {};
+  const caja = el("label", "campo-gen", etiqueta);
+  const entrada = el(o.area ? "textarea" : "input");
+  if (!o.area) entrada.type = o.tipo || "text";
+  if (o.placeholder) entrada.placeholder = o.placeholder;
+  if (o.valor !== undefined) entrada.value = o.valor;
+  if (o.max) entrada.maxLength = o.max;
+  caja.appendChild(entrada); cuerpo.appendChild(caja);
+  return entrada;
+}
+function nota(cuerpo, texto) { const p = el("p", "vacio", texto); cuerpo.appendChild(p); return p; }
+const FORMATO_DIA = (iso) => { const d = new Date(iso + "T12:00:00"); return d.toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short" }); };
+
+/* ---- rutinas: Salgo de casa / Buenas noches ---- */
+async function rutina(tipo) {
+  try {
+    const r = await api("/api/routine?kind=" + tipo);
+    const titulo = tipo === "leaving" ? T("Antes de salir de casa") : T("Antes de dormir");
+    let marcas = [];
+    abrirDialogo(titulo, (c) => {
+      if (!r.connected) nota(c, T("Home Assistant no está conectado, así que no puedo ver qué hay encendido. Conéctalo en Ajustes para usar esta función completa."));
+      else if (r.error) nota(c, r.error);
+      else if (!r.on.length) nota(c, T("✅ No hay nada encendido."));
+      else {
+        nota(c, T("Esto está encendido. Marca lo que quieres turn_off:"));
+        const lista = el("div", "lista-marcar");
+        r.on.forEach((d) => {
+          const l = el("label"); const i = el("input"); i.type = "checkbox"; i.checked = true; i.value = d.entity;
+          l.appendChild(i); l.appendChild(el("span", "", d.name + (d.room ? " · " + d.room : "")));
+          lista.appendChild(l); marcas.push(i);
+        });
+        c.appendChild(lista);
+      }
+      if (r.reminders.length) {
+        nota(c, tipo === "leaving" ? T("Te queda pendiente:") : T("Mañana tienes:"));
+        const ul = el("ul", "lista");
+        r.reminders.forEach((t) => ul.appendChild(el("li", "", t)));
+        c.appendChild(ul);
+      }
+      if (r.connected && !r.error && !r.on.length && !r.reminders.length) nota(c, tipo === "leaving" ? T("¡Que vaya bien!") : T("¡Buenas noches!"));
+    }, r.on.length ? T("Apagar lo marcado") : null, r.on.length ? async () => {
+      const seleccion = marcas.filter((m) => m.checked).map((m) => m.value);
+      if (!seleccion.length) throw new Error(T("No has marcado nada."));
+      const x = await enviarJSON("/api/routine/turn_off", { entities: seleccion });
+      aviso(x.turned_off.length + T(" apagado(s)") + (x.failures.length ? ", " + x.failures.length + T(" no se han podido turn_off") : ""), x.failures.length > 0);
+      refrescarDispositivos();
+    } : null);
+  } catch (e) { aviso(e.message, true); }
+}
+$("btnSalgo").addEventListener("click", () => rutina("leaving"));
+$("btnNoches").addEventListener("click", () => rutina("night"));
+
+/* ---- presupuesto ---- */
+async function refrescarPresupuesto() {
+  try {
+    const p = await api("/api/budget");
+    const caja = $("presupuesto"); vaciar(caja);
+    const fijar = el("button", "suave", p.configured ? T("Cambiar presupuesto") : T("Fijar presupuesto mensual"));
+    fijar.type = "button"; fijar.style.marginBottom = "8px";
+    fijar.addEventListener("click", () => abrirDialogo(T("Presupuesto mensual"), (c) => {
+      nota(c, T("BRAIN te avisará al llegar al 80 % y al 100 %. Pon 0 para quitarlo."));
+      const total = campoGen(c, T("Total al mes (€)"), { tipo: "text", placeholder: "900", valor: p.limit || "" });
+      total.inputMode = "decimal";
+      fijar._total = total;
+    }, T("Guardar"), async () => {
+      const v = fijar._total.value.trim();
+      if (!v) throw new Error(T("Escribe una cantidad."));
+      await enviarJSON("/api/budget/save", { total: v });
+      aviso(T("Presupuesto guardado")); refrescarPresupuesto();
+    }));
+    if (p.configured && p.limit) {
+      caja.appendChild(el("p", "presu-texto", ""));
+      const t = caja.lastChild;
+      t.appendChild(el("b", "", euros(p.spent))); t.appendChild(document.createTextNode(T(" de ") + euros(p.limit) + " · " + (p.remaining >= 0 ? T("te quedan ") + euros(p.remaining) : T("te has pasado ") + euros(-p.remaining))));
+      const barra = el("div", "progreso" + (p.level === "notice" ? " aviso" : p.level === "exceeded" ? " superado" : ""));
+      const i = el("i"); i.style.width = Math.min(100, p.percent) + "%"; barra.appendChild(i);
+      barra.setAttribute("role", "progressbar"); barra.setAttribute("aria-valuenow", String(p.percent));
+      caja.appendChild(barra);
+    }
+    caja.appendChild(fijar);
+  } catch (e) { /* no crítico */ }
+}
+
+/* ---- caducidades ---- */
+function diasTexto(d) { return d < 0 ? "caducado" : d === 0 ? "caduca hoy" : d === 1 ? "mañana" : "en " + d + " días"; }
+async function refrescarCaducan() {
+  try {
+    const r = await api("/api/expiries?days=5");
+    const caja = $("caducan"); vaciar(caja);
+    caja.hidden = !r.products.length;
+    if (r.products.length) caja.textContent = T("⏰ Caduca pronto: ") + r.products.slice(0, 6).map((p) => p.name + " (" + diasTexto(p.days) + ")").join(", ") + T(". Pídele a BRAIN una receta para aprovecharlo.");
+  } catch (e) { /* no crítico */ }
+}
+function pedirCaducidad(a) {
+  abrirDialogo(T("Caducidad de ") + a.name, (c) => {
+    const f = campoGen(c, T("Fecha de caducidad"), { tipo: "date", valor: a.expires || "" });
+    pedirCaducidad._campo = f;
+  }, T("Guardar"), async () => {
+    await enviarJSON("/api/inventory/expiry", { name: a.name, date: pedirCaducidad._campo.value });
+    aviso(pedirCaducidad._campo.value ? T("Caducidad anotada") : T("Caducidad quitada")); refrescarPanel(); refrescarCaducan();
+  });
+}
+
+/* ---- hábitos ---- */
+async function refrescarHabitos() {
+  try {
+    const persona = $("habitosPersona").value || "";
+    const r = await api("/api/habits" + (persona ? "?person=" + encodeURIComponent(persona) : ""));
+    const sel = $("habitosPersona");
+    if (r.people.length > 1 && sel.options.length !== r.people.length + 1) {
+      const actual = sel.value; vaciar(sel);
+      const todos = el("option", "", T("Todos")); todos.value = ""; sel.appendChild(todos);
+      r.people.forEach((n) => { const o = el("option", "", n); o.value = n; sel.appendChild(o); });
+      sel.value = actual;
+    }
+    sel.hidden = r.people.length < 2;
+    $("habitosCuenta").textContent = r.total ? r.met + "/" + r.total : "";
+    const lista = $("habitosLista"); vaciar(lista);
+    if (!r.total) { lista.appendChild(el("li", "vacio", T("Crea un hábito (beber agua, pasear, una pastilla…) y BRAIN te lo recuerda a su hora."))); return; }
+    r.habits.forEach((h) => {
+      const li = el("li");
+      const col = el("div"); col.style.flex = "1"; col.style.minWidth = "0";
+      col.appendChild(el("div", "nombre", h.habit + (h.person ? " · " + h.person : "")));
+      const barra = el("div", "progreso"); const i = el("i"); i.style.width = Math.min(100, h.today * 100 / h.goal) + "%"; barra.appendChild(i); col.appendChild(barra);
+      col.appendChild(el("div", "detalle", h.today + T(" de ") + h.goal + (h.unit ? " " + h.unit : "") + (h.streak_days ? T(" · 🔥 racha de ") + h.streak_days + (h.streak_days === 1 ? T(" día") : T(" días")) : "") + (h.hour ? T(" · aviso a las ") + h.hour : "")));
+      li.appendChild(col);
+      const mas = el("button", "mini", h.met ? T("✓ Hecho") : "+1"); mas.type = "button";
+      mas.addEventListener("click", async () => { try { await enviarJSON("/api/habits/log", { name: h.habit, quantity: 1 }); refrescarHabitos(); } catch (e) { aviso(e.message, true); } });
+      li.appendChild(mas);
+      const b = el("button", "quitar"); b.type = "button"; b.innerHTML = ICONO_X; b.title = T("Borrar hábito"); b.setAttribute("aria-label", T("Borrar hábito ") + h.habit);
+      b.addEventListener("click", async () => { if (!confirm(T("¿Borrar el hábito «") + h.habit + T("» y su historial?"))) return; try { await enviarJSON("/api/habits/delete", { name: h.habit }); refrescarHabitos(); } catch (e) { aviso(e.message, true); } });
+      li.appendChild(b);
+      lista.appendChild(li);
+    });
+  } catch (e) { /* no crítico */ }
+}
+$("habitosPersona").addEventListener("change", refrescarHabitos);
+$("nuevoHabito").addEventListener("click", () => {
+  let n, o, u, h, p;
+  abrirDialogo(T("Nuevo hábito"), (c) => {
+    n = campoGen(c, T("¿Qué hábito?"), { placeholder: T("Beber agua"), max: 40 });
+    o = campoGen(c, T("Objetivo por día"), { tipo: "number", valor: 1 }); o.min = 1;
+    u = campoGen(c, T("Unidad (opcional)"), { placeholder: T("vasos, minutos…"), max: 20 });
+    h = campoGen(c, T("Recordármelo a las (opcional)"), { tipo: "time" });
+    p = campoGen(c, T("Es de… (opcional)"), { placeholder: T("Si lo compartís, el nombre"), max: 30 });
+  }, T("Crear"), async () => {
+    await enviarJSON("/api/habits/create", { name: n.value, goal: o.value, unit: u.value, hour: h.value, person: p.value });
+    aviso(T("Hábito creado")); refrescarHabitos();
+  });
+});
+
+/* ---- tareas del hogar ---- */
+async function refrescarHogar() {
+  try {
+    const r = await api("/api/chores");
+    $("hogarCuenta").textContent = r.tasks.length ? "(" + r.tasks.length + ")" : "";
+    const lista = $("hogarLista"); vaciar(lista);
+    if (!r.tasks.length) { lista.appendChild(el("li", "vacio", T("Crea tareas que se repiten (basura, fregar…) y repartid los turnos: BRAIN dice a quién le toca."))); return; }
+    r.tasks.forEach((t) => {
+      const li = el("li");
+      const col = el("div"); col.style.flex = "1"; col.style.minWidth = "0";
+      col.appendChild(el("div", "nombre", t.name));
+      col.appendChild(el("div", "detalle", (t.turn_of ? T("Le toca a ") + t.turn_of + " · " : "") + (t.due_today ? T("hoy") : FORMATO_DIA(t.next_due))));
+      li.appendChild(col);
+      if (t.due_today) li.appendChild(el("span", "etiqueta pronto", T("Toca")));
+      const hecha = el("button", "mini", T("Hecha")); hecha.type = "button";
+      hecha.addEventListener("click", async () => { try { await enviarJSON("/api/chores/done", { name: t.name }); refrescarHogar(); } catch (e) { aviso(e.message, true); } });
+      li.appendChild(hecha);
+      if (t.people.length > 1) {
+        const pasar = el("button", "mini", T("Pasar")); pasar.type = "button"; pasar.title = T("Pasar el turno a la siguiente persona");
+        pasar.addEventListener("click", async () => { try { await enviarJSON("/api/chores/skip", { name: t.name }); refrescarHogar(); } catch (e) { aviso(e.message, true); } });
+        li.appendChild(pasar);
+      }
+      const b = el("button", "quitar"); b.type = "button"; b.innerHTML = ICONO_X; b.title = T("Borrar tarea"); b.setAttribute("aria-label", T("Borrar tarea ") + t.name);
+      b.addEventListener("click", async () => { if (!confirm(T("¿Borrar la tarea «") + t.name + T("»?"))) return; try { await enviarJSON("/api/chores/delete", { name: t.name }); refrescarHogar(); } catch (e) { aviso(e.message, true); } });
+      li.appendChild(b);
+      lista.appendChild(li);
+    });
+  } catch (e) { /* no crítico */ }
+}
+$("nuevaTareaHogar").addEventListener("click", async () => {
+  let personas = []; try { personas = (await api("/api/chores")).people; } catch (e) {}
+  let n, p, d;
+  abrirDialogo(T("Nueva tarea del hogar"), (c) => {
+    n = campoGen(c, T("Tarea"), { placeholder: T("Sacar la basura"), max: 50 });
+    p = campoGen(c, T("Quién se turna (separado por comas)"), { placeholder: T("Ana, Luis, Marta"), valor: personas.join(", "), max: 150 });
+    d = campoGen(c, T("Se repite cada (días)"), { tipo: "number", valor: 7 }); d.min = 1; d.max = 365;
+    nota(c, T("Cuando alguien la marque como hecha, el turno pasa a la siguiente persona."));
+  }, T("Crear"), async () => {
+    await enviarJSON("/api/chores/create", { name: n.value, people: p.value, every_days: d.value });
+    aviso(T("Tarea creada")); refrescarHogar(); refrescarHabitos();
+  });
+});
+
+/* ---- menú semanal ---- */
+async function refrescarMenu() {
+  try {
+    const r = await api("/api/menu");
+    const lista = $("menuLista"); vaciar(lista);
+    $("menuCompra").style.display = r.total_dishes ? "" : "none";
+    if (!r.total_dishes) { lista.appendChild(el("li", "vacio", T("Dile a BRAIN «prepárame el menú de la semana con lo que tengo» o escríbelo tú con Editar."))); return; }
+    r.days.forEach((d) => {
+      const li = el("li");
+      li.appendChild(el("span", "nombre", d.day.charAt(0).toUpperCase() + d.day.slice(1)));
+      li.lastChild.style.flex = "0 0 74px";
+      const t = el("span", "nombre", [d.lunch ? "☀ " + d.lunch : "", d.dinner ? "🌙 " + d.dinner : ""].filter(Boolean).join("   "));
+      t.style.whiteSpace = "normal"; li.appendChild(t);
+      lista.appendChild(li);
+    });
+    if (r.missing.length) lista.appendChild(el("li", "vacio", T("Te falta: ") + r.missing.map((f) => f.name).join(", ") + "."));
+  } catch (e) { /* no crítico */ }
+}
+$("menuCompra").addEventListener("click", async () => {
+  try { const r = await enviarJSON("/api/menu/shopping"); aviso(r.added.length ? T("Añadido a la compra: ") + r.added.join(", ") : T("No falta nada nuevo.")); refrescarPanel(); }
+  catch (e) { aviso(e.message, true); }
+});
+$("editarMenu").addEventListener("click", () => {
+  let t;
+  abrirDialogo(T("Menú de la semana"), (c) => {
+    nota(c, T("Una línea por plato. Después de | van los ingredientes, así BRAIN sabe qué te falta."));
+    t = campoGen(c, T("Platos"), { area: true, placeholder: "lunes comida: Lentejas | lentejas, chorizo, zanahoria\nlunes cena: Tortilla | huevos, patata\nmartes comida: Macarrones | pasta, tomate" });
+  }, T("Guardar menú"), async () => {
+    await enviarJSON("/api/menu/save", { text: t.value });
+    aviso(T("Menú guardado")); refrescarMenu();
+  });
+});
+
+/* ---- coste de la luz ---- */
+async function refrescarLuz() {
+  try {
+    const r = await api("/api/energy/cost");
+    const caja = $("luzCuerpo"); vaciar(caja);
+    if (r.month.error) { caja.appendChild(el("p", "vacio", T("Dime cuánto pagas por kWh (botón Tarifa) y calcularé lo que gastas y lo que ahorran tus placas."))); return; }
+    const m = r.month;
+    const g = el("div", "cifra-grande", euros(m.net_eur)); g.appendChild(el("small", "", T(" este mes (estimado)"))); caja.appendChild(g);
+    const l = el("ul", "lista");
+    [[T("Comprado a la red"), m.kwh_bought + " kWh · " + euros(m.cost_eur)], [T("Vendido (excedentes)"), m.kwh_sold + " kWh · " + euros(m.surplus_income_eur)], [T("Ahorro de tus placas"), euros(m.panel_savings_eur)]].forEach(([a, b]) => {
+      const li = el("li"); li.appendChild(el("span", "nombre", a)); li.appendChild(el("span", "cant", b)); l.appendChild(li);
+    });
+    caja.appendChild(l);
+    const c = r.comparison;
+    if (c && c.last_month && c.last_month.days_with_data) caja.appendChild(el("p", "presu-texto", T("Respecto al mes pasado: ") + (c.difference_eur <= 0 ? T("gastas ") + euros(-c.difference_eur) + T(" menos 👍") : T("gastas ") + euros(c.difference_eur) + T(" más"))));
+    if (r.cheap_hours && r.cheap_hours.since) caja.appendChild(el("p", "presu-texto", T("Horas baratas: de ") + r.cheap_hours.since + T(" a ") + r.cheap_hours.until + " (" + r.cheap_hours.offpeak_price + T(" €/kWh). Aprovéchalas para lavadora y lavavajillas.")));
+    caja.appendChild(el("p", "basicos", m.note));
+  } catch (e) { /* no crítico */ }
+}
+$("tarifaLuz").addEventListener("click", async () => {
+  let t = {}; try { t = (await api("/api/energy/cost")).tariff || {}; } catch (e) {}
+  let c, v, d, h, p;
+  abrirDialogo(T("Tarifa de la luz"), (cuerpo) => {
+    c = campoGen(cuerpo, T("Precio al que compras (€/kWh)"), { placeholder: "0,15", valor: t.buy || "" });
+    v = campoGen(cuerpo, T("Precio al que te pagan los excedentes (€/kWh, opcional)"), { placeholder: "0,06", valor: t.sell || "" });
+    nota(cuerpo, T("Si tu tarifa tiene horas baratas (valle):"));
+    d = campoGen(cuerpo, T("Desde"), { tipo: "time", valor: t.offpeak_from || "" });
+    h = campoGen(cuerpo, T("Hasta"), { tipo: "time", valor: t.offpeak_until || "" });
+    p = campoGen(cuerpo, T("Precio en valle (€/kWh)"), { placeholder: "0,08", valor: t.offpeak_price || "" });
+  }, T("Guardar"), async () => {
+    await enviarJSON("/api/energy/tariff", { buy: c.value, sell: v.value, offpeak_from: d.value, offpeak_until: h.value, offpeak_price: p.value });
+    aviso(T("Tarifa guardada")); refrescarLuz();
+  });
+});
+
+/* ---- manuales ---- */
+async function refrescarManuales() {
+  try {
+    const r = await api("/api/documents");
+    $("manualesCuenta").textContent = r.documents.length ? "(" + r.documents.length + ")" : "";
+    const lista = $("manualesLista"); vaciar(lista);
+    if (!r.documents.length) lista.appendChild(el("li", "vacio", T("Todavía no hay ninguno.")));
+    r.documents.forEach((d) => lista.appendChild(fila(d.name, null, async () => {
+      if (!confirm(T("¿Borrar «") + d.name + T("»?"))) return;
+      try { await enviarJSON("/api/documents/delete", { name: d.name }); aviso(T("Borrado")); refrescarManuales(); } catch (e) { aviso(e.message, true); }
+    })));
+  } catch (e) { /* no crítico */ }
+}
+$("subirManual").addEventListener("change", async (ev) => {
+  const archivo = ev.target.files[0]; ev.target.value = "";
+  if (!archivo) return;
+  if (archivo.size > 25 * 1024 * 1024) { aviso(T("Ese archivo pesa más de 25 MB."), true); return; }
+  try {
+    aviso(T("Subiendo ") + archivo.name + "…");
+    await api("/api/documents/upload", { method: "POST", headers: { "X-Name": encodeURIComponent(archivo.name), "Content-Type": "application/octet-stream" }, body: archivo });
+    aviso(T("Guardado. Ya puedes preguntarle por él.")); refrescarManuales();
+  } catch (e) { aviso(e.message, true); }
+});
+
+/* ---- búsqueda global ---- */
+function abrirBusqueda() {
+  let entrada, caja, espera = null;
+  abrirDialogo(T("Buscar en todo"), (c) => {
+    entrada = campoGen(c, T("Productos, gastos, agenda, manuales, tareas…"), { placeholder: T("lavadora, leche, wifi…") });
+    caja = el("div", "grupo-busca"); c.appendChild(caja);
+    entrada.addEventListener("input", () => {
+      clearTimeout(espera);
+      espera = setTimeout(async () => {
+        vaciar(caja);
+        const q = entrada.value.trim();
+        if (q.length < 2) return;
+        try {
+          const r = await api("/api/search?q=" + encodeURIComponent(q));
+          if (!r.total) { caja.appendChild(el("p", "vacio", T("No he encontrado nada con «") + q + "».")); return; }
+          r.groups.forEach((g) => {
+            caja.appendChild(el("h3", "", g.title));
+            g.results.forEach((x) => { const p = el("p", "", x.text); if (x.detail) p.appendChild(el("span", "", x.detail)); caja.appendChild(p); });
+          });
+        } catch (e) { caja.appendChild(el("p", "vacio", e.message)); }
+      }, 250);
+    });
+    setTimeout(() => entrada.focus(), 50);
+  }, null, null);
+}
+$("buscarGlobal").addEventListener("click", abrirBusqueda);
+document.addEventListener("keydown", (ev) => { if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === "k") { ev.preventDefault(); abrirBusqueda(); } });
+
+/* ---- copia en otro sitio (USB, OneDrive...) ---- */
+async function refrescarDestinoCopia() {
+  try {
+    const r = await api("/api/backup/state");
+    const caja = $("copiaDestino"); vaciar(caja);
+    const b = el("button", "suave", r.destination ? T("Cambiar segundo sitio") : T("Guardar también en USB / OneDrive")); b.type = "button";
+    b.addEventListener("click", () => {
+      let ruta;
+      abrirDialogo(T("Segunda copia de seguridad"), (c) => {
+        nota(c, T("Cada copia diaria se guardará también aquí. Si el ordenador falla, no pierdes nada."));
+        const sel = el("select"); const o0 = el("option", "", T("Elige un sitio…")); o0.value = ""; sel.appendChild(o0);
+        r.suggested.forEach((s) => { const o = el("option", "", s.name); o.value = s.path; sel.appendChild(o); });
+        const cs = el("label", "campo-gen", T("Sitios habituales")); cs.appendChild(sel); c.appendChild(cs);
+        ruta = campoGen(c, T("O escribe una carpeta"), { placeholder: "D:\\BRAIN-copias", valor: r.destination });
+        sel.addEventListener("change", () => { if (sel.value) ruta.value = sel.value; });
+        if (r.destination) nota(c, T("Para dejar de usarla, borra la carpeta y guarda."));
+      }, T("Guardar"), async () => {
+        await enviarJSON("/api/backup/destination", { path: ruta.value }); aviso(ruta.value.trim() ? T("Segunda copia activada") : T("Segunda copia desactivada")); refrescarDestinoCopia();
+      });
+    });
+    if (r.destination) caja.appendChild(el("p", "presu-texto", T("Segundo sitio: ") + r.destination));
+    caja.appendChild(b);
+    if (r.destination && r.destination_backups.length) {
+      const rb = el("button", "suave", T("Recuperar desde ahí")); rb.type = "button"; rb.style.marginLeft = "6px";
+      rb.addEventListener("click", () => abrirDialogo(T("Recuperar una copia"), (c) => {
+        nota(c, T("Elige una copia. Se comprobará que está completa y se traerá aquí; después pulsa «Restaurar» en la lista de copias."));
+        r.destination_backups.forEach((x) => {
+          const bt = el("button", "secundario-grande", x.date.replace("T", " ") + " · " + x.size_kb + " KB"); bt.type = "button"; bt.style.cssText = "padding:10px;border-radius:12px";
+          bt.addEventListener("click", async () => { try { await enviarJSON("/api/backup/fetch", { name: x.name }); aviso(T("Copia traída. Ya puedes restaurarla.")); $("dlgGen").close(); refrescarCopias(); refrescarDestinoCopia(); } catch (e) { aviso(e.message, true); } });
+          c.appendChild(bt);
+        });
+      }, null, null));
+      caja.appendChild(rb);
+    }
+  } catch (e) { /* no crítico */ }
+}
+
+function refrescarNovedades() {
+  refrescarPresupuesto(); refrescarCaducan(); refrescarHabitos(); refrescarHogar(); refrescarMenu(); refrescarLuz(); refrescarManuales(); refrescarDestinoCopia();
+}
+refrescarNovedades();
+setInterval(refrescarNovedades, 30000);
+
+/* ---- copiar la lista de la compra ---- */
+$("copiarCompra").addEventListener("click", async () => {
+  if (!listaCompraActual.length) { aviso(T("La lista está vacía."), true); return; }
+  const texto = listaCompraActual.map((c) => "- " + c.product + (c.quantity && c.quantity !== 1 ? " (" + c.quantity + ")" : "")).join("\n");
+  try { await navigator.clipboard.writeText(T("Lista de la compra:\n") + texto); aviso(T("Lista copiada")); }
+  catch (e) { aviso(T("No he podido copiarla. Selecciónala y cópiala a mano."), true); }
+});
+
+/* ------------------------------------------------- asistente y dispositivos */
+const NOMBRES_TIPO = { light: "luz", switch: "enchufe", fan: "ventilador", cover: "persiana", climate: "clima", scene: "escena", script: "script", input_boolean: "interruptor", media_player: "reproductor", humidifier: "humidificador", vacuum: "aspiradora" };
+
+function estadoPaso(id, texto, tipo) { const e = $(id); e.textContent = texto || ""; e.className = "estado-paso" + (tipo ? " " + tipo : ""); }
+
+/* Lista de dispositivos con casillas, por habitación. Devuelve funciones para leerla y filtrarla. */
+function selectorDispositivos(caja, r) {
+  vaciar(caja);
+  if (!r.connected) { caja.appendChild(el("p", "vacio", T("Primero conecta Home Assistant."))); return null; }
+  if (!r.total) { caja.appendChild(el("p", "vacio", T("Home Assistant todavía no tiene luces, enchufes ni persianas."))); return null; }
+
+  const barra = el("div", "barra-sel");
+  const busca = el("input", "campo-busca"); busca.type = "search"; busca.placeholder = T("Buscar dispositivo o habitación"); busca.setAttribute("aria-label", T("Buscar"));
+  const todos = el("button", "suave", T("Todos")); todos.type = "button";
+  const ninguno = el("button", "suave", T("Ninguno")); ninguno.type = "button";
+  barra.append(busca, todos, ninguno);
+  const lista = el("div", "lista-sel");
+  const resumen = el("div", "resumen-sel");
+  caja.append(barra, lista, resumen);
+
+  const filas = [], grupos = [];
+  r.groups.forEach((g) => {
+    const cab = el("label", "sel-hab");
+    const cbH = document.createElement("input"); cbH.type = "checkbox";
+    cab.append(cbH, el("span", "", g.room));
+    lista.appendChild(cab);
+    const grupo = { cab, cbH, filas: [] };
+    g.devices.forEach((d) => {
+      const f = el("label", "sel-fila");
+      const cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!d.visible;
+      const n = el("span", "", d.name); n.title = d.name;
+      f.append(cb, n, el("small", "", T(NOMBRES_TIPO[d.kind]) || d.kind));
+      lista.appendChild(f);
+      const item = { entidad: d.entity, cb, f, texto: (d.name + " " + g.room).toLowerCase() };
+      filas.push(item); grupo.filas.push(item);
+      cb.addEventListener("change", () => actualizar());
+    });
+    cbH.addEventListener("change", () => { grupo.filas.forEach((i) => { if (!i.f.hidden) i.cb.checked = cbH.checked; }); actualizar(); });
+    grupos.push(grupo);
+  });
+
+  function actualizar() {
+    grupos.forEach((g) => {
+      const n = g.filas.filter((i) => i.cb.checked).length;
+      g.cbH.checked = n === g.filas.length;
+      g.cbH.indeterminate = n > 0 && n < g.filas.length;
+    });
+    const marcados = filas.filter((i) => i.cb.checked).length;
+    resumen.textContent = marcados + T(" de ") + filas.length + T(" dispositivos visibles");
+  }
+  function poner(valor) { filas.forEach((i) => { if (!i.f.hidden) i.cb.checked = valor; }); actualizar(); }
+  todos.addEventListener("click", () => poner(true));
+  ninguno.addEventListener("click", () => poner(false));
+  busca.addEventListener("input", () => {
+    const q = busca.value.trim().toLowerCase();
+    filas.forEach((i) => { i.f.hidden = !!q && !i.texto.includes(q); });
+    grupos.forEach((g) => { g.cab.hidden = g.filas.every((i) => i.f.hidden); });
+  });
+  actualizar();
+  return { ocultos: () => filas.filter((i) => !i.cb.checked).map((i) => i.entidad) };
+}
+
+/* ---- selector suelto (botón «Elegir dispositivos») ---- */
+let selectorSuelto = null;
+async function abrirSelectorDispositivos() {
+  const dlg = $("dlgDispositivos");
+  estadoPaso("dispEstado", T("Cargando dispositivos…"));
+  selectorSuelto = null;
+  vaciar($("dispCaja"));
+  if (!dlg.open) dlg.showModal();
+  try {
+    selectorSuelto = selectorDispositivos($("dispCaja"), await api("/api/config/devices"));
+    estadoPaso("dispEstado", "");
+  } catch (e) { estadoPaso("dispEstado", e.message, "mal"); }
+  $("dispGuardar").disabled = !selectorSuelto;
+}
+$("elegirDisp").onclick = abrirSelectorDispositivos;
+$("btnDispositivos").onclick = () => { dlgAjustes.close(); abrirSelectorDispositivos(); };
+$("dispCancelar").onclick = () => $("dlgDispositivos").close();
+$("dispGuardar").onclick = async () => {
+  if (!selectorSuelto) return;
+  try {
+    await enviarJSON("/api/config/devices/save", { hidden: selectorSuelto.ocultos() });
+    $("dlgDispositivos").close(); aviso(T("Dispositivos guardados")); dispositivosOcupados = 0; refrescarDispositivos();
+  } catch (e) { estadoPaso("dispEstado", e.message, "mal"); }
+};
+
+/* ---- asistente ---- */
+let pasoActual = 1, selectorAsistente = null;
+
+function mostrarPaso(n) {
+  pasoActual = n;
+  [1, 2, 3].forEach((i) => { $("paso" + i).hidden = i !== n; $("barra" + i).classList.toggle("hecho", i <= n); });
+}
+
+async function abrirAsistente(paso) {
+  const dlg = $("dlgAsistente");
+  if (!dlg.open) dlg.showModal();
+  mostrarPaso(paso || 1);
+  try {
+    const e = await api("/api/config/state");
+    if (e.ha.url) $("asUrl").value = e.ha.url;
+    estadoPaso("asEstado1", e.ha.configured ? T("Ya está conectado. Puedes cambiar los datos o pulsar «Saltar».") : "", e.ha.configured ? "ok" : "");
+  } catch (err) { estadoPaso("asEstado1", T("Esto solo se configura desde el ordenador de casa."), "mal"); }
+  if (paso === 2) cargarPasoEnergia(); else if (paso === 3) cargarPasoDispositivos();
+}
+$("btnAsistente").onclick = () => { dlgAjustes.close(); abrirAsistente(1); };
+
+async function cerrarAsistente() {
+  $("dlgAsistente").close();
+  try { await enviarJSON("/api/config/skip"); } catch (e) { /* nada */ }
+  refrescarDispositivos(); refrescarEnergia();
+}
+$("asOmitir").onclick = cerrarAsistente;
+$("dlgAsistente").addEventListener("cancel", () => { enviarJSON("/api/config/skip").catch(() => {}); });
+
+$("asBuscar").onclick = async () => {
+  const b = $("asBuscar"); b.disabled = true; estadoPaso("asEstado1", T("Buscando Home Assistant en tu red…"));
+  try {
+    const r = await enviarJSON("/api/config/ha/search");
+    if (r.found) { $("asUrl").value = r.found; estadoPaso("asEstado1", T("Lo he encontrado en ") + r.found + T(". Ahora pega el token."), "ok"); $("asToken").focus(); }
+    else estadoPaso("asEstado1", T("No lo he encontrado solo. Escribe su dirección a mano (la ves en la barra del navegador cuando abres Home Assistant)."), "mal");
+  } catch (e) { estadoPaso("asEstado1", e.message, "mal"); }
+  b.disabled = false;
+};
+$("asProbar").onclick = async () => {
+  const b = $("asProbar"); b.disabled = true; estadoPaso("asEstado1", T("Probando la conexión…"));
+  try {
+    const r = await enviarJSON("/api/config/ha/save", { url: $("asUrl").value, token: $("asToken").value });
+    $("asToken").value = "";
+    const res = r.summary.map((x) => x.total + " " + T(x.kind)).join(", ");
+    estadoPaso("asEstado1", T("¡Conectado! ") + (res ? T("He visto: ") + res + "." : ""), "ok");
+    refrescarDispositivos();
+    setTimeout(() => { mostrarPaso(2); cargarPasoEnergia(); }, 1100);
+  } catch (e) { estadoPaso("asEstado1", e.message, "mal"); }
+  b.disabled = false;
+};
+$("asSaltar1").onclick = () => { mostrarPaso(2); cargarPasoEnergia(); };
+
+async function cargarPasoEnergia() {
+  const caja = $("asEnergia"); vaciar(caja); estadoPaso("asEstado2", T("Buscando los sensores de tu inversor…"));
+  $("asGuardarEnergia").disabled = true;
+  let r;
+  try { r = await api("/api/config/energy"); }
+  catch (e) { estadoPaso("asEstado2", e.message + T(" Puedes saltar este paso."), "mal"); return; }
+  estadoPaso("asEstado2", r.powers.length ? "" : T("Home Assistant no tiene sensores de potencia (W o kW). Añade primero tu inversor allí, o salta este paso."), r.powers.length ? "" : "mal");
+  const sinConfigurar = r.roles.every((x) => !x.chosen);
+  r.roles.forEach((x) => {
+    const campo = el("label", "campo", T(x.name).charAt(0).toUpperCase() + T(x.name).slice(1));
+    const sel = el("select"); sel.dataset.rol = x.role;
+    sel.appendChild(new Option(T("— Ninguno —"), ""));
+    const enCandidatos = new Set(x.candidates.map((c) => c.entity));
+    x.candidates.forEach((c) => sel.appendChild(new Option(c.name + (c.value_w !== null ? " (" + c.value_w + " W)" : ""), c.entity)));
+    if (x.role !== "battery_pct") {
+      const otros = r.powers.filter((p) => !enCandidatos.has(p.entity));
+      if (otros.length) {
+        const g = document.createElement("optgroup"); g.label = T("Otros sensores de potencia");
+        otros.forEach((p) => g.appendChild(new Option(p.name + " (" + p.value_w + " W)", p.entity)));
+        sel.appendChild(g);
+      }
+    }
+    sel.value = x.chosen || (sinConfigurar && x.candidates.length ? x.candidates[0].entity : "");
+    if (sel.value !== (x.chosen || (sinConfigurar && x.candidates.length ? x.candidates[0].entity : ""))) sel.value = "";
+    campo.appendChild(sel);
+    caja.appendChild(campo);
+  });
+  const red = el("div", "campo", T("Ahora mismo, con la red eléctrica, tu casa está…"));
+  const op = el("div", "opcion-red");
+  [["buying", T("Comprando")], ["selling", T("Vendiendo")], ["", T("No lo sé")]].forEach(([v, t], i) => {
+    const l = el("label"); const rd = document.createElement("input"); rd.type = "radio"; rd.name = "redAhora"; rd.value = v; rd.checked = i === 2;
+    l.append(rd, document.createTextNode(t)); op.appendChild(l);
+  });
+  red.appendChild(op); caja.appendChild(red);
+  caja.dataset.invertida = r.grid_inverted ? "1" : "";
+  $("asGuardarEnergia").disabled = false;
+}
+$("asGuardarEnergia").onclick = async () => {
+  const cuerpo = { grid_inverted: $("asEnergia").dataset.invertida === "1", grid_now: (document.querySelector('input[name="redAhora"]:checked') || {}).value || "" };
+  $("asEnergia").querySelectorAll("select").forEach((s) => { cuerpo[s.dataset.rol] = s.value; });
+  const b = $("asGuardarEnergia"); b.disabled = true;
+  try {
+    const r = await enviarJSON("/api/config/energy/save", cuerpo);
+    estadoPaso("asEstado2", T("Guardado. Veo: ") + r.reading, "ok"); refrescarEnergia();
+    setTimeout(() => { mostrarPaso(3); cargarPasoDispositivos(); }, 1300);
+  } catch (e) { estadoPaso("asEstado2", e.message, "mal"); }
+  b.disabled = false;
+};
+$("asSaltar2").onclick = () => { mostrarPaso(3); cargarPasoDispositivos(); };
+
+async function cargarPasoDispositivos() {
+  selectorAsistente = null; estadoPaso("asEstado3", T("Cargando dispositivos…")); vaciar($("asDispositivos"));
+  try { selectorAsistente = selectorDispositivos($("asDispositivos"), await api("/api/config/devices")); estadoPaso("asEstado3", ""); }
+  catch (e) { estadoPaso("asEstado3", e.message, "mal"); }
+}
+$("asTerminar").onclick = async () => {
+  try {
+    if (selectorAsistente) await enviarJSON("/api/config/devices/save", { hidden: selectorAsistente.ocultos() });
+  } catch (e) { estadoPaso("asEstado3", e.message, "mal"); return; }
+  aviso(T("Configuración guardada"));
+  cerrarAsistente();
+};
+
+/* La primera vez que se abre BRAIN (sin nada configurado) aparece el asistente. */
+(async () => {
+  try {
+    const e = await api("/api/config/state");
+    if (e.first_time) abrirAsistente(1);
+  } catch (err) { /* desde fuera de casa no se muestra */ }
+})();
+
+/* ---------------------------------------------------------------- ajustes */
+const dlgAjustes = $("dlgAjustes");
+const ETIQUETAS_AVISO = { alert: "Alertas", reminder: "Recordatorios", summary: "Resumen del día", automation: "Automatizaciones", energy: "Energía", info: "Información", leaving: "Salida de casa", context: "Contexto" };
+let sonidoPrueba = null;
+
+function probarSonido(archivo) {
+  try { if (sonidoPrueba) sonidoPrueba.pause(); sonidoPrueba = new Audio("/api/sound/" + encodeURIComponent(archivo)); sonidoPrueba.play().catch(() => {}); } catch (e) { /* sin audio */ }
+}
+
+function pintarSonidos(d) {
+  const caja = $("listaSonidos");
+  vaciar(caja);
+  (d.kinds || []).forEach((tipo) => {
+    const fila = el("div", "ajuste-fila");
+    fila.appendChild(el("span", "", T(ETIQUETAS_AVISO[tipo] || tipo)));
+    const sel = document.createElement("select");
+    sel.setAttribute("aria-label", T("Sonido para ") + T(ETIQUETAS_AVISO[tipo] || tipo));
+    const op0 = el("option", "", T("Sonido de Windows")); op0.value = ""; sel.appendChild(op0);
+    (d.files || []).forEach((a) => { const o = el("option", "", a); o.value = a; sel.appendChild(o); });
+    sel.value = (d.assigned || {})[tipo] || "";
+    sel.onchange = async () => {
+      try { await enviarJSON("/api/sounds/assign", { kind: tipo, file: sel.value }); if (sel.value) probarSonido(sel.value); aviso(T("Sonido guardado")); }
+      catch (e) { aviso(e.message, true); }
+    };
+    fila.appendChild(sel);
+    caja.appendChild(fila);
+  });
+  if ((d.files || []).length) {
+    const borrar = el("div", "ajuste-fila");
+    borrar.appendChild(el("span", "", T("Quitar un sonido subido")));
+    const sel = document.createElement("select");
+    sel.setAttribute("aria-label", T("Sonido a quitar"));
+    const o0 = el("option", "", T("Elegir...")); o0.value = ""; sel.appendChild(o0);
+    d.files.forEach((a) => { const o = el("option", "", a); o.value = a; sel.appendChild(o); });
+    sel.onchange = async () => {
+      if (!sel.value) return;
+      try { pintarSonidos(await enviarJSON("/api/sounds/delete", { file: sel.value })); aviso(T("Sonido quitado")); }
+      catch (e) { aviso(e.message, true); }
+    };
+    borrar.appendChild(sel);
+    caja.appendChild(borrar);
+  }
+}
+
+async function cargarAjustes() {
+  try { pintarSonidos(await api("/api/sounds")); } catch (e) { aviso(e.message, true); }
+  try {
+    const datos = await api("/api/desktop");
+    const esc = datos.available;
+    ["tituloCerrar", "textoCerrar"].forEach((i) => { $(i).style.display = esc ? "" : "none"; });
+    $("cerrarBrain").style.display = esc ? "" : "none";
+    $("filaFondo").style.display = esc ? "" : "none";
+    $("filaArranque").style.display = esc && datos.autostart_available ? "" : "none";
+    $("swFondo").setAttribute("aria-checked", String(!!datos.background));
+    $("swArranque").setAttribute("aria-checked", String(!!datos.autostart));
+  } catch (e) { /* sin modo escritorio */ }
+  let local = true, estado = null;
+  try { estado = await api("/api/access"); } catch (e) { local = false; }
+  $("bloqueAcceso").style.display = local ? "" : "none";
+  $("tituloAcceso").style.display = local ? "" : "none";
+  $("salirSesion").style.display = local ? "none" : "";
+  $("btnAsistente").style.display = local ? "" : "none";
+  if (estado) {
+    $("textoAcceso").textContent = estado.configured
+      ? T("La contraseña está puesta.") + (estado.address ? T(" Dirección privada: ") + estado.address : "") + T(" Puedes cambiarla aquí.")
+      : T("Todavía no hay contraseña: sin ella, nadie puede entrar a BRAIN desde fuera de este ordenador.");
+  }
+}
+
+$("selIdioma").addEventListener("change", () => aplicarIdioma($("selIdioma").value, true));
+$("ajustes").onclick = () => { dlgAjustes.showModal(); cargarAjustes(); };
+$("cerrarAjustes").onclick = () => dlgAjustes.close();
+$("archivoSonido").onchange = async (ev) => {
+  const f = ev.target.files[0];
+  ev.target.value = "";
+  if (!f) return;
+  try {
+    const r = await fetch("/api/sound/upload", { method: "POST", headers: { "Content-Type": f.type || "audio/wav", "X-Name": encodeURIComponent(f.name) }, body: f });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || T("No se pudo subir"));
+    pintarSonidos(d); aviso(T("Sonido añadido"));
+  } catch (e) { aviso(e.message, true); }
+};
+$("guardarClave").onclick = async () => {
+  try { await enviarJSON("/api/access/password", { key: $("claveAcceso").value }); $("claveAcceso").value = ""; aviso(T("Contraseña guardada")); cargarAjustes(); }
+  catch (e) { aviso(e.message, true); }
+};
+[["swFondo", "background"], ["swArranque", "autostart"]].forEach(([id, accion]) => {
+  $(id).onclick = async () => {
+    const boton = $(id);
+    boton.disabled = true;
+    try { await enviarJSON("/api/desktop/" + accion); await new Promise((r) => setTimeout(r, 250)); await cargarAjustes(); }
+    catch (e) { aviso(e.message, true); }
+    boton.disabled = false;
+  };
+});
+$("cerrarBrain").onclick = async () => {
+  if (!confirm(T("¿Cerrar BRAIN del todo? Dejarán de sonar los avisos hasta que lo vuelvas a abrir."))) return;
+  try { await enviarJSON("/api/desktop/quit"); } catch (e) { /* se está cerrando */ }
+  document.body.textContent = T("BRAIN se ha cerrado.");
+  setTimeout(() => window.close(), 600);
+};
+$("salirSesion").onclick = async () => { try { await enviarJSON("/api/access/logout"); } catch (e) { /* nada */ } location.reload(); };
+
+if ("serviceWorker" in navigator) { navigator.serviceWorker.register("/sw.js").catch(() => {}); }
+</script>
+</body>
+</html>

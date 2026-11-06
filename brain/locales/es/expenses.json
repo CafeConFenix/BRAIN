@@ -1,0 +1,19 @@
+{
+  "The amount of the expense is missing.": "Indica el importe del gasto.",
+  "I do not understand the amount '{0}'.": "No entiendo el importe '{0}'.",
+  "The amount must be greater than zero (and reasonable).": "El importe debe ser mayor que cero (y razonable).",
+  "I do not understand the budget '{0}'. Write an amount in euros, for example 900.": "No entiendo el presupuesto '{0}'. Escribe una cantidad en euros, por ejemplo 900.",
+  "The budget cannot be negative.": "El presupuesto no puede ser negativo.",
+  "Give the limit of that category in euros.": "Indica el límite de esa categoría en euros.",
+  "the budget of the month": "el presupuesto del mes",
+  "the {0} budget": "el presupuesto de {0}",
+  "Budget exceeded": "Presupuesto superado",
+  "You have spent {0} € and {1} was {2} €.": "Has gastado {0} € y {1} era de {2} €.",
+  "Budget at 80 %": "Presupuesto al 80 %",
+  "You are at {0} € of {1} € in {2}.": "Llevas {0} € de {1} € en {2}.",
+  "There are no recorded expenses.": "No hay gastos apuntados.",
+  "Give the number of the expense (or 'last').": "Indica el número del gasto (o 'last').",
+  "There is no expense number {0}.": "No existe el gasto número {0}.",
+  "There are no expenses recorded in {0}.": "No hay gastos apuntados en {0}.",
+  "There is no budget yet. Tell me the most you want to spend per month.": "Todavía no hay presupuesto. Dime cuánto quieres gastar como máximo al mes."
+}

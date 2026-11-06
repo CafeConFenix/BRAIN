@@ -1,0 +1,5 @@
+{
+  "The argument '{0}' must be of type {1}, but {2!r} was received.": "El argumento '{0}' debe ser de tipo {1}, pero se recibió {2!r}.",
+  "Tool '{0}' not found.": "Herramienta '{0}' no encontrada.",
+  "Missing required arguments for '{0}': {1}.": "Faltan argumentos obligatorios para '{0}': {1}."
+}

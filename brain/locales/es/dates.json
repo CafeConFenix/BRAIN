@@ -1,0 +1,5 @@
+{
+  "The time '{0}' is not valid. Use the format HH:MM, for example 18:30.": "La hora '{0}' no es válida. Usa el formato HH:MM, por ejemplo 18:30.",
+  "The time '{0}' is not valid.": "La hora '{0}' no es válida.",
+  "The date '{0}' is not valid. Use the format YYYY-MM-DD, for example 2026-08-10.": "La fecha '{0}' no es válida. Usa el formato AAAA-MM-DD, por ejemplo 2026-08-10."
+}

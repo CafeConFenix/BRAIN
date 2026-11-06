@@ -1,0 +1,21 @@
+{
+  "There are no sounds. Copy .wav, .mp3 or .ogg files into {0}.": "No hay sonidos. Copia archivos .wav, .mp3 u .ogg en {0}.",
+  "I can't find the sound '{0}'. Available: {1}.": "No encuentro el sonido '{0}'. Disponibles: {1}.",
+  "Only .wav, .mp3 or .ogg sounds are accepted.": "Solo se admiten sonidos .wav, .mp3 u .ogg.",
+  "The sound is empty or is over 3 MB.": "El sonido está vacío o pesa más de 3 MB.",
+  "That sound does not exist.": "Ese sonido no existe.",
+  "The 'do not disturb' times must be HH:MM, for example 23:00.": "Las horas de 'no molestar' deben ser HH:MM, por ejemplo 23:00.",
+  "The notice kind '{0}' does not exist. Options: {1}.": "El tipo de aviso '{0}' no existe. Opciones: {1}.",
+  "The reminder text is missing.": "Falta el texto del recordatorio.",
+  "The minutes must be more than zero.": "Los minutos deben ser más de cero.",
+  "Say when: in how many minutes, or the date and time.": "Indica cuándo: en cuántos minutos o la fecha y hora.",
+  "That date and time have already passed.": "Esa fecha y hora ya han pasado.",
+  "I don't understand '{0}'. Use YYYY-MM-DD HH:MM, for example 2026-10-12 18:30.": "No entiendo '{0}'. Usa AAAA-MM-DD HH:MM, por ejemplo 2026-10-12 18:30.",
+  "Reminder": "Recordatorio",
+  "For {0}: {1}": "Para {0}: {1}",
+  "There are no pending reminders.": "No hay recordatorios pendientes.",
+  "There is no pending reminder with the number {0}.": "No hay ningún recordatorio pendiente con el número {0}.",
+  "There are no new notices.": "No hay avisos nuevos.",
+  "Test notice": "Aviso de prueba",
+  "If you see and hear this, notices are working.": "Si ves y oyes esto, los avisos funcionan."
+}

@@ -1,0 +1,15 @@
+{
+  "The name of the chore is missing.": "Indica el nombre de la tarea.",
+  "Several chores match: {0}. Tell me which one.": "Hay varias tareas que encajan: {0}. Indica cuál.",
+  "I have no chore '{0}'.": "No tengo la tarea '{0}'.",
+  "The number of days between repeats must be a number.": "Cada cuántos días se repite debe ser un número.",
+  "The repeat interval must be between 1 and 365 days.": "La repetición debe estar entre 1 y 365 días.",
+  "That chore has no other people to pass the turn to.": "Esa tarea no tiene más personas para pasar el turno.",
+  "It is {0}'s turn.": "Le toca a {0}.",
+  "It is due today.": "Toca hacerla hoy.",
+  "Household chore: {0}": "Tarea del hogar: {0}",
+  "Give the name of the person.": "Indica el nombre de la persona.",
+  "There are already 12 people; delete one first.": "Ya hay 12 personas; borra alguna primero.",
+  "I don't know '{0}' among the people in the household.": "No conozco a '{0}' entre las personas de la casa.",
+  "There are no people yet. I can add them to split chores and habits.": "Todavía no hay personas. Puedo añadirlas para repartir tareas y hábitos."
+}

@@ -1,0 +1,13 @@
+{
+  "The time '{0}' is not valid. Use HH:MM, for example 21:30.": "La hora '{0}' no es válida. Usa HH:MM, por ejemplo 21:30.",
+  "The time '{0}' is not valid.": "La hora '{0}' no es válida.",
+  "The name of the habit is missing.": "Indica el nombre del hábito.",
+  "Several habits match: {0}. Tell me which one.": "Hay varios hábitos que encajan: {0}. Indica cuál.",
+  "I have no habit '{0}'. Create it first.": "No tengo el hábito '{0}'. Créalo primero.",
+  "The daily goal must be a number.": "El objetivo diario debe ser un número.",
+  "The daily goal must be between 1 and 1000.": "El objetivo diario debe estar entre 1 y 1000.",
+  "The quantity must be a number.": "La cantidad debe ser un número.",
+  "The quantity must be non-zero and reasonable.": "La cantidad debe ser distinta de cero y razonable.",
+  "Habit: {0}": "Hábito: {0}",
+  "Today you are at {0}.": "Hoy llevas {0}."
+}

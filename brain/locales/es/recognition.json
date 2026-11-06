@@ -1,0 +1,12 @@
+{
+  "The audio must be 16-bit.": "El audio debe ser de 16 bits.",
+  "The audio is too long (maximum {0} seconds).": "El audio es demasiado largo (máximo {0} segundos).",
+  "I did not understand the audio received ({0}).": "No he entendido el audio recibido ({0}).",
+  "Starting...": "Empezando...",
+  "Installing speech recognition (1-2 minutes)...": "Instalando el reconocimiento de voz (1-2 minutos)...",
+  "I could not install faster-whisper. Check your connection. Detail: {0}": "No he podido instalar faster-whisper. Comprueba tu conexión. Detalle: {0}",
+  "Downloading the voice model '{0}' (only the first time, it may take a while)...": "Descargando el modelo de voz «{0}» (solo la primera vez, puede tardar)...",
+  "Done": "Listo",
+  "The faster-whisper package is missing. Click \"Install voice\".": "Falta el paquete faster-whisper. Pulsa «Instalar voz».",
+  "Speech recognition is not installed. Click \"Install voice\".": "El reconocimiento de voz no está instalado. Pulsa «Instalar voz»."
+}

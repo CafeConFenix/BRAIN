@@ -1,0 +1,17 @@
+{
+  "lights": "luces",
+  "plugs and switches": "enchufes e interruptores",
+  "blinds and curtains": "persianas y cortinas",
+  "thermostats": "termostatos",
+  "scenes": "scenes",
+  "players": "reproductores",
+  "Type the Home Assistant address (for example 192.168.1.50:8123).": "Escribe la dirección de Home Assistant (por ejemplo 192.168.1.50:8123).",
+  "Paste the Home Assistant access key (token).": "Pega la llave de acceso (token) de Home Assistant.",
+  "First connect Home Assistant.": "Primero conecta Home Assistant.",
+  "Home Assistant does not have the sensor {0}.": "Home Assistant no tiene el sensor {0}.",
+  "{0} is not a power sensor (W or kW).": "{0} no es un sensor de potencia (W o kW).",
+  "Choose at least one sensor.": "Elige al menos un sensor.",
+  "Smart home is not available.": "La domótica no está disponible.",
+  "The list of hidden devices is missing.": "Falta la lista de dispositivos ocultos.",
+  "This can only be configured from the home computer.": "Esto solo se configura desde el ordenador de casa."
+}
