@@ -325,8 +325,13 @@ class TestDesktop(CaseBrain):
         self.assertIn("--desktop --background", order)
 
     def test_tray_no_windows(self):
+        # Build the Tray outside the mock: on a real Windows machine, pathlib
+        # can't construct a PosixPath, so __init__'s own Path(...) calls would
+        # crash if os.name were already faked while they run. Only start()
+        # needs to see the fake "not on Windows" value.
+        tray = Tray(ROOT / "brain" / "desktop" / "brain.ico", 8765)
         with mock.patch("brain.desktop.tray.os.name", "posix"):
-            self.assertFalse(Tray(ROOT / "brain" / "desktop" / "brain.ico", 8765).start())
+            self.assertFalse(tray.start())
 
     def test_script_of_the_tray(self):
         from brain.desktop.tray import SCRIPT
