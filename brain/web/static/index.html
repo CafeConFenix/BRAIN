@@ -656,6 +656,29 @@
       </select>
     </div>
 
+    <div class="ajuste-fila">
+      <span data-i18n="Moneda">Moneda</span>
+      <select id="selMoneda" class="mini-select" aria-label="Moneda" data-i18n-aria="Moneda">
+        <option value="EUR">Euro (€)</option>
+        <option value="USD">US Dollar ($)</option>
+        <option value="GBP">British Pound (£)</option>
+        <option value="MXN">Peso mexicano (MX$)</option>
+        <option value="ARS">Peso argentino (AR$)</option>
+        <option value="COP">Peso colombiano (COL$)</option>
+        <option value="CLP">Peso chileno (CLP$)</option>
+        <option value="PEN">Sol peruano (S/)</option>
+        <option value="BRL">Real brasileño (R$)</option>
+        <option value="JPY">Japanese Yen (¥)</option>
+        <option value="CHF">Swiss Franc (CHF)</option>
+        <option value="CAD">Canadian Dollar (CA$)</option>
+        <option value="AUD">Australian Dollar (A$)</option>
+      </select>
+    </div>
+
+    <h3 data-i18n="Modelo de IA">Modelo de IA</h3>
+    <p class="pista" data-i18n="Un modelo más grande responde mejor pero más despacio; uno más pequeño responde antes.">Un modelo más grande responde mejor pero más despacio; uno más pequeño responde antes.</p>
+    <div id="listaModelos" class="ajuste-lista"></div>
+
     <h3 data-i18n="Casa y energía">Casa y energía</h3>
     <div class="aviso-seccion">
       <button type="button" class="secundario" id="btnDispositivos" data-i18n="Elegir dispositivos de la casa">Elegir dispositivos de la casa</button>
@@ -674,7 +697,7 @@
         <input type="password" id="claveAcceso" placeholder="Nueva contraseña (mínimo 8 caracteres)" autocomplete="new-password" aria-label="Contraseña de acceso" data-i18n-ph="Nueva contraseña (mínimo 8 caracteres)" data-i18n-aria="Contraseña de acceso">
         <button type="button" class="primario" id="guardarClave" data-i18n="Guardar">Guardar</button>
       </div>
-      <p class="pista" data-i18n="Para conectarte desde fuera de casa hace falta Tailscale. Cierra esta ventana y mira la gu&iacute;a &quot;REMOTE_ACCESS.md&quot;, o ejecuta CONFIGURAR_ACCESO.bat.">Para conectarte desde fuera de casa hace falta Tailscale. Cierra esta ventana y mira la guía "REMOTE_ACCESS.md", o ejecuta CONFIGURAR_ACCESO.bat.</p>
+      <p class="pista" data-i18n="Para conectarte desde fuera de casa hace falta Tailscale. Consulta la gu&iacute;a &quot;REMOTE_ACCESS.md&quot; para configurarlo.">Para conectarte desde fuera de casa hace falta Tailscale. Consulta la guía "REMOTE_ACCESS.md" para configurarlo.</p>
     </div>
     <button type="button" class="secundario" id="salirSesion" style="display:none" data-i18n="Cerrar sesión en este dispositivo">Cerrar sesión en este dispositivo</button>
 
@@ -774,7 +797,7 @@ const mensajes = $("mensajes");
 let ocupado = false;
 
 /* ---------------------------------------------------------------- idioma */
-const I18N_EN = {" % (":" % ("," % abierta":" % open"," (calculado)":" (calculated)"," Dirección privada: ":" Private address: "," Error en la descarga: ":" Download error: "," Puedes cambiarla aquí.":" You can change it here."," Puedes saltar este paso.":" You can skip this step."," a ":" to "," apagado(s)":" turned off"," cosa recordada":" thing remembered"," cosas recordadas":" things remembered"," de ":" of "," del consumo lo cubre el sol":" of consumption is covered by the sun"," dispositivos visibles":" devices visible"," día":" day"," días":" days"," en ":" in "," en la memoria de BRAIN.":" in BRAIN's memory."," este mes (estimado)":" this month (estimated)"," menos 👍":" less 👍"," más":" more"," no se han podido turn_off":" could not be turned off"," producto":" product"," productos":" products"," · aviso a las ":" · reminder at "," · 🔥 racha de ":" · 🔥 streak of "," €/kWh). Aprovéchalas para lavadora y lavavajillas.":" €/kWh). Use it for the washer and dishwasher.","). No cierres esta ventana.":"). Do not close this window.",". Ahora pega el token.":". Now paste the token.",". Pulsa para cambiarlo":". Tap to change it",". Pídele a BRAIN una receta para aprovecharlo.":". Ask BRAIN for a recipe to use it up.","? Se sustituirán los datos actuales (antes se guarda una copia previa).":"? The current data will be replaced (a previous backup is saved first).","Acciones: ":"Actions: ","Activar la escena ":"Activate the scene ","Ahora mismo, con la red eléctrica, tu casa está…":"Right now, with the electricity grid, your home is…","Ahorro de tus placas":"Savings from your panels","Ana, Luis, Marta":"Ann, Luke, Mary","Anotar la fecha de caducidad":"Set the expiry date","Antes de dormir":"Before going to sleep","Antes de salir de casa":"Before leaving home","Apagar lo marcado":"Turn off what is checked","Apuntado: ":"Logged: ","Añadido a la compra: ":"Added to the shopping list: ","Añadir ":"Add ","Aún no hay copias. Se hace una al día automáticamente.":"No backups yet. One is made automatically every day.","BRAIN se ha cerrado.":"BRAIN has closed.","BRAIN te avisará al llegar al 80 % y al 100 %. Pon 0 para quitarlo.":"BRAIN will notify you at 80% and 100%. Set it to 0 to remove it.","Batería al ":"Battery at ","Beber agua":"Drink water","Borrado":"Deleted","Borrar hábito":"Delete habit","Borrar hábito ":"Delete habit ","Borrar tarea":"Delete chore","Borrar tarea ":"Delete chore ","Buscando Home Assistant en tu red…":"Searching for Home Assistant on your network…","Buscando los sensores de tu inversor…":"Searching for your inverter's sensors…","Buscar":"Search","Buscar dispositivo o habitación":"Search device or room","Buscar en todo":"Search everything","Cada copia diaria se guardará también aquí. Si el ordenador falla, no pierdes nada.":"Every daily backup will also be saved here. If the computer fails, you lose nothing.","Caduca el ":"Expires on ","Caducidad anotada":"Expiry date set","Caducidad de ":"Expiry date of ","Caducidad quitada":"Expiry date removed","Cambiar presupuesto":"Change budget","Cambiar segundo sitio":"Change second location","Cargando dispositivos…":"Loading devices…","Casa":"Home","Comprado a la red":"Bought from the grid","Comprando":"Buying","Conectar ahora":"Connect now","Configuración guardada":"Settings saved","Contraseña guardada":"Password saved","Copia automática diaria activa. Se guardan las 5 últimas.":"Automatic daily backup active. The last 5 are kept.","Copia creada: ":"Backup created: ","Copia restaurada":"Backup restored","Copia traída. Ya puedes restaurarla.":"Backup fetched. You can now restore it.","Crea tareas que se repiten (basura, fregar…) y repartid los turnos: BRAIN dice a quién le toca.":"Create recurring chores (trash, dishes…) and share the turns: BRAIN says whose turn it is.","Crea un hábito (beber agua, pasear, una pastilla…) y BRAIN te lo recuerda a su hora.":"Create a habit (drink water, walk, take a pill…) and BRAIN reminds you at its time.","Crear":"Create","Cuando alguien la marque como hecha, el turno pasa a la siguiente persona.":"When someone marks it done, the turn passes to the next person.","Cuando conectes Home Assistant verás aquí lo que producen las placas y lo que gasta la casa.":"Once you connect Home Assistant you will see here what the panels produce and what the home uses.","Descargando ":"Downloading ","Desde":"From","Despensa vaciada":"Pantry emptied","Dile a BRAIN «prepárame el menú de la semana con lo que tengo» o escríbelo tú con Editar.":"Tell BRAIN \"make me the week's menu with what I have\" or write it yourself with Edit.","Dime cuánto pagas por kWh (botón Tarifa) y calcularé lo que gastas y lo que ahorran tus placas.":"Tell me how much you pay per kWh (Rate button) and I will calculate what you spend and what your panels save.","Dispositivos guardados":"Devices saved","Elegir...":"Choose...","Elige un sitio…":"Choose a location…","Elige una copia. Se comprobará que está completa y se traerá aquí; después pulsa «Restaurar» en la lista de copias.":"Choose a backup. It will be checked and brought here; then press \"Restore\" in the backup list.","Es de… (opcional)":"Belongs to… (optional)","Escena «":"Scene \"","Escribe el importe.":"Write the amount.","Escribe una cantidad.":"Write an amount.","Ese archivo pesa más de 25 MB.":"That file is larger than 25 MB.","Esto está encendido. Marca lo que quieres turn_off:":"This is on. Check what you want to turn off:","Esto solo se configura desde el ordenador de casa.":"This can only be set up from the home computer.","Fecha de caducidad":"Expiry date","Fijar presupuesto mensual":"Set monthly budget","Guardado. Veo: ":"Saved. I see: ","Guardado. Ya puedes preguntarle por él.":"Saved. You can now ask about it.","Guardar":"Save","Guardar menú":"Save menu","Guardar también en USB / OneDrive":"Also save to USB / OneDrive","Has ocultado todos los dispositivos. Usa «Elegir dispositivos» para mostrar los que quieras.":"You have hidden all the devices. Use \"Choose devices\" to show the ones you want.","Hasta":"Until","He entendido ":"I understood ","He visto: ":"I saw: ","Hecha":"Done","Home Assistant no está conectado, así que no puedo ver qué hay encendido. Conéctalo en Ajustes para usar esta función completa.":"Home Assistant is not connected, so I cannot see what is on. Connect it in Settings to use this feature fully.","Home Assistant no tiene luces, enchufes ni persianas todavía.":"Home Assistant has no lights, plugs or blinds yet.","Home Assistant no tiene sensores de potencia (W o kW). Añade primero tu inversor allí, o salta este paso.":"Home Assistant has no power sensors (W or kW). Add your inverter there first, or skip this step.","Home Assistant todavía no tiene luces, enchufes ni persianas.":"Home Assistant does not have lights, plugs or blinds yet.","Horas baratas: de ":"Cheap hours: from ","Hábito creado":"Habit created","IA lista (":"AI ready (","IA no disponible":"AI not available","Instalando...":"Installing...","La contraseña está puesta.":"The password is set.","La lista está vacía.":"The list is empty.","Las tareas automáticas están desactivadas.":"Automatic tasks are disabled.","Le toca a ":"It's turn of ","Lista copiada":"List copied","Lista de la compra vaciada":"Shopping list emptied","Lista de la compra:\\n":"Shopping list:\\n","Lo he encontrado en ":"I found it at ","Mañana tienes:":"Tomorrow you have:","Menú de la semana":"Weekly menu","Menú guardado":"Menu saved","Ninguno":"None","No falta nada nuevo.":"Nothing new is missing.","No has marcado nada.":"You have not checked anything.","No hay avisos todavía.":"No notifications yet.","No he encontrado nada con «":"I found nothing matching \"","No he podido copiarla. Selecciónala y cópiala a mano.":"I could not copy it. Select it and copy it by hand.","No lo he encontrado solo. Escribe su dirección a mano (la ves en la barra del navegador cuando abres Home Assistant).":"I could not find it on my own. Type its address by hand (you see it in the browser bar when you open Home Assistant).","No lo sé":"I don't know","No se ha podido instalar la voz: ":"Could not install voice: ","No se pudo subir":"Could not upload","Nueva tarea del hogar":"New household chore","Nuevo hábito":"New habit","Nuevo título:":"New title:","O escribe una carpeta":"Or type a folder","Objetivo por día":"Daily goal","Otros sensores de potencia":"Other power sensors","Para dejar de usarla, borra la carpeta y guarda.":"To stop using it, clear the folder and save.","Para turn_on luces y ver tus dispositivos aquí, conecta Home Assistant. ":"To turn on lights and see your devices here, connect Home Assistant. ","Pasar":"Skip","Pasar el turno a la siguiente persona":"Pass the turn to the next person","Pendiente: ":"Pending: ","Placas":"Panels","Platos":"Dishes","Precio al que compras (€/kWh)":"Price you pay (€/kWh)","Precio al que te pagan los excedentes (€/kWh, opcional)":"Price you are paid for surplus (€/kWh, optional)","Precio en valle (€/kWh)":"Off-peak price (€/kWh)","Presupuesto guardado":"Budget saved","Presupuesto mensual":"Monthly budget","Primero conecta Home Assistant.":"First connect Home Assistant.","Probando la conexión…":"Testing the connection…","Productos, gastos, agenda, manuales, tareas…":"Products, expenses, calendar, manuals, chores…","Quitado de la compra":"Removed from the shopping list","Quitado de la despensa":"Removed from the pantry","Quitar un sonido subido":"Remove an uploaded sound","Quién se turna (separado por comas)":"Who takes turns (comma-separated)","Recordármelo a las (opcional)":"Remind me at (optional)","Recuperar desde ahí":"Restore from there","Recuperar una copia":"Restore a backup","Red":"Grid","Registrado el ":"Logged on ","Respecto al mes pasado: ":"Compared to last month: ","Sacar la basura":"Take out the trash","Se repite cada (días)":"Repeats every (days)","Segunda copia activada":"Second backup enabled","Segunda copia de seguridad":"Second backup","Segunda copia desactivada":"Second backup disabled","Segundo sitio: ":"Second location: ","Si lo compartís, el nombre":"If you share it, the name","Si tu tarifa tiene horas baratas (valle):":"If your rate has cheap hours (off-peak):","Sin conexión con BRAIN":"No connection with BRAIN","Sin datos del inversor.":"No data from the inverter.","Sitios habituales":"Common locations","Sonido a quitar":"Sound to remove","Sonido añadido":"Sound added","Sonido de Windows":"Windows sound","Sonido guardado":"Sound saved","Sonido para ":"Sound for ","Sonido quitado":"Sound removed","Subiendo ":"Uploading ","Tarea":"Chore","Tarea creada":"Chore created","Tarifa de la luz":"Electricity rate","Tarifa guardada":"Rate saved","Te falta: ":"You are missing: ","Te queda pendiente:":"You still have pending:","Toca":"Due","Todavía no hay contraseña: sin ella, nadie puede entrar a BRAIN desde fuera de este ordenador.":"There is no password yet: without one, nobody can access BRAIN from outside this computer.","Todavía no hay gastos este mes. Apunta el primero arriba o díselo a BRAIN.":"No expenses logged this month yet. Log the first one above or tell BRAIN.","Todavía no hay ninguno.":"There are none yet.","Todos":"All","Total al mes (€)":"Total per month (€)","Una línea por plato. Después de | van los ingredientes, así BRAIN sabe qué te falta.":"One line per dish. After | come the ingredients, so BRAIN knows what you are missing.","Unidad (opcional)":"Unit (optional)","Vaciar":"Empty","Vendido (excedentes)":"Sold (surplus)","Vendiendo":"Selling","Voz lista. Pulsa el micrófono y habla.":"Voice ready. Press the microphone and speak.","Ya está conectado. Puedes cambiar los datos o pulsar «Saltar».":"Already connected. You can change the details or press \"Skip\".","abierta":"open","activado":"triggered","cerrada":"closed","gastas ":"you spend ","hoy":"today","lavadora, leche, wifi…":"washer, milk, wifi…","te has pasado ":"you have gone over by ","te quedan ":"you have left ","vasos, minutos…":"glasses, minutes…","¡Buenas noches!":"Good night!","¡Conectado! ":"Connected! ","¡Que vaya bien!":"Have a good one!","» activada":"\" activated","» y su historial?":"\" and its history?","»?":"\"?","¿Borrar el hábito «":"Delete the habit \"","¿Borrar la tarea «":"Delete the chore \"","¿Borrar «":"Delete \"","¿Cerrar BRAIN del todo? Dejarán de sonar los avisos hasta que lo vuelvas a abrir.":"Close BRAIN completely? Notifications will stop sounding until you open it again.","¿Qué hábito?":"Which habit?","¿Restaurar la copia del ":"Restore the backup from ","Últimos: ":"Latest: ","— Ninguno —":"— None —","⏰ Caduca pronto: ":"⏰ Expiring soon: ","✅ No hay nada encendido.":"✅ Nothing is on.","✓ Hecho":"✓ Done","Abre Home Assistant y entra en tu perfil (tu nombre, abajo a la izquierda).":"Open Home Assistant and go to your profile (your name, bottom left).","Acceso desde el móvil u otro PC":"Access from phone or another PC","Aceptar":"Accept","Agenda de los próximos 14 días":"Next 14 days","Ajustes":"Settings","Ajustes: sonidos y acceso desde el móvil":"Settings: sounds and access from the phone","Al cerrar la ventana, BRAIN se cierra del todo. Si prefieres que siga en segundo plano (icono junto al reloj) para que suenen los avisos, actívalo aquí.":"Closing the window closes BRAIN completely. If you would rather it keep running in the background (icon next to the clock) so notifications still sound, turn it on here.","Apunta en la lista de la compra solo lo que no tienes":"Log in the shopping list only what you do not have","Apuntar":"Log","Arrancar con Windows":"Start with Windows","Asistente: Home Assistant y energía":"Wizard: Home Assistant and energy","Avisos":"Notifications","Añadir un sonido":"Add a sound","BRAIN controla las luces, enchufes y persianas a través de Home Assistant. Si todavía no lo tienes, puedes saltar este paso y conectarlo más tarde.":"BRAIN controls lights, plugs and blinds through Home Assistant. If you do not have it yet, you can skip this step and connect it later.","Borrar conversación":"Clear conversation","Buscar en mi red":"Search my network","Buscar en todo (Ctrl+K)":"Search everything (Ctrl+K)","Básicos de casa para las recetas":"Pantry staples for recipes","Cada conversación tiene su propio hilo. Si le das un tema, BRAIN lo seguirá solo en esa conversación.":"Each conversation has its own thread. If you give it a topic, BRAIN will stick to it only in that conversation.","Cambiar entre tema claro y oscuro":"Switch between light and dark theme","Cambiar tema":"Change theme","Cancelar":"Cancel","Casa y energía":"Home and energy","Cerrar":"Close","Cerrar BRAIN":"Close BRAIN","Cerrar BRAIN del todo":"Close BRAIN completely","Cerrar sesión en este dispositivo":"Log out on this device","Comprar lo que falta":"Buy what is missing","Concepto":"Description","Conecta tu casa":"Connect your home","Conectando...":"Connecting...","Congelador":"Freezer","Contraseña de acceso":"Access password","Copiar":"Copy","Copiar la lista para enviarla por mensaje":"Copy the list to send it as a message","Copias de seguridad":"Backups","Coste de la luz":"Electricity cost","Crear copia ahora":"Create backup now","Descargar IA":"Download AI","Desmarca lo que no quieras en BRAIN (ni en el panel ni para la IA). Los dispositivos nuevos que añadas más adelante aparecerán solos.":"Uncheck what you do not want in BRAIN (not in the panel nor for the AI). New devices you add later will appear automatically.","Despensa":"Pantry","Dirección de Home Assistant":"Home Assistant address","Dispositivos de la casa":"Home devices","Editar":"Edit","Elegir dispositivos":"Choose devices","Elegir dispositivos de la casa":"Choose home devices","Elegir qué dispositivos quieres ver":"Choose which devices you want to see","Elige los sensores de tu inversor para ver la producción y el consumo en directo. Ya he marcado los que mejor encajan; deja «Ninguno» en lo que no tengas.":"Choose your inverter's sensors to see live production and consumption. I have already checked the best matches; leave \"None\" where you have nothing.","Energía ahora":"Energy now","Energía solar":"Solar energy","Enviar":"Send","Enviar al terminar de hablar":"Send when done speaking","Enviar una captura de la báscula":"Send a scale photo","Escríbeme o pulsa el micrófono":"Type to me or press the microphone","Gastos del mes":"This month's expenses","Guardar y seguir":"Save and continue","Hablar con BRAIN":"Talk to BRAIN","Hábitos de hoy":"Today's habits","Idioma":"Language","Importar":"Import","Importar lista":"Import list","Importar una lista de productos":"Import a product list","Importe en euros":"Amount in euros","Leer las respuestas en voz alta":"Read replies out loud","Lista de la compra":"Shopping list","Llave de acceso (token)":"Access key (token)","Manuales y notas":"Manuals and notes","Marca los que quieres ver y controlar con BRAIN. Los desmarcados desaparecen del panel y la IA no los toca.":"Check the ones you want to see and control with BRAIN. Unchecked ones disappear from the panel and the AI will not touch them.","Marcar leídos":"Mark read","Mensaje para BRAIN":"Message for BRAIN","Nevera":"Fridge","No quiero configurar nada ahora":"I don't want to set anything up now","Nueva":"New","Nueva contraseña (mínimo 8 caracteres)":"New password (minimum 8 characters)","Nueva conversación":"New conversation","Nuevo":"New","PDF, .txt, .md o .json":"PDF, .txt, .md or .json","Persona":"Person","Peso":"Weight","Pestaña «Seguridad», al final: «Tokens de acceso de larga duración».":"Tab \"Security\", at the bottom: \"Long-lived access tokens\".","Probar y guardar":"Test and save","Pulsa «Crear token», ponle el nombre BRAIN, copia el texto y pégalo aquí.":"Press \"Create token\", name it BRAIN, copy the text and paste it here.","Reintentar":"Retry","Saltar":"Skip","Seguir en segundo plano al cerrar la ventana":"Keep running in the background when the window closes","Sonidos de los avisos":"Notification sounds","Sube manuales, facturas o notas en PDF o texto. Luego pregúntale a BRAIN o usa la lupa de arriba.":"Upload manuals, bills or notes as PDF or text. Then ask BRAIN or use the search icon above.","Sube un sonido (.wav, .mp3 u .ogg, máximo 3 MB) y elige cuál suena para cada tipo de aviso.":"Upload a sound (.wav, .mp3 or .ogg, 3 MB maximum) and choose which one plays for each notification type.","Subir":"Upload","Tareas del hogar":"Household chores","Tarifa":"Rate","Tema":"Topic","Tema (opcional). Por ejemplo: Esta conversación es solo de cocina y recetas.":"Topic (optional). For example: This conversation is only about cooking and recipes.","Terminar":"Finish","Título":"Title","Título (por ejemplo: Recetas)":"Title (for example: Recipes)","¿Cómo consigo el token?":"How do I get the token?","¿En qué? (súper, gasolina, luz…)":"For what? (groceries, gas, electricity…)","¿Qué dispositivos quieres ver?":"Which devices do you want to see?","🌙 Buenas noches":"🌙 Good night","🚪 Salgo de casa":"🚪 Leaving home","Para conectarte desde fuera de casa hace falta Tailscale. Cierra esta ventana y mira la guía \"REMOTE_ACCESS.md\", o ejecuta CONFIGURAR_ACCESO.bat.":"To connect from outside the home you need Tailscale. Close this window and check the \"REMOTE_ACCESS.md\" guide, or run CONFIGURAR_ACCESO.bat.","Herramientas":"Tools","Consumibles":"Supplies","luz":"light","enchufe":"plug","ventilador":"fan","persiana":"blind","clima":"thermostat","escena":"scene","script":"script","interruptor":"switch","reproductor":"player","humidificador":"humidifier","aspiradora":"vacuum","Alertas":"Alerts","Recordatorios":"Reminders","Resumen del día":"Day's summary","Automatizaciones":"Automations","Energía":"Energy","Información":"Information","Salida de casa":"Leaving home","Contexto":"Context"};
+const I18N_EN = {"¿Seguro?":"Sure?","No falta nada. Dime «apunta leche» o importa una lista.":"Nothing is missing. Tell me \"log milk\" or import a list.","Está vacía. Pulsa «Importar lista» y pega lo que tienes.":"It's empty. Press \"Import list\" and paste what you have.",". Cuenta con ellos aunque no estén en la despensa.":". They are counted on even if they are not in the pantry.","Aún no hay pesos. Dime «hoy peso 88,4».":"No weight logged yet. Tell me \"today I weigh 88.4\".","Nada pendiente.":"Nothing pending.","Añadir":"Add","No he oído nada. Pulsa el micrófono y habla cerca.":"I didn't hear anything. Press the microphone and speak close by.","No puedo usar el micrófono. Permítelo en el candado de la barra de direcciones y vuelve a intentarlo.":"I can't use the microphone. Allow it from the lock icon in the address bar and try again.","Te escucho. Habla y haré una pausa cuando termines.":"I'm listening. Speak, and I'll pause once you finish.","Este navegador no puede reconocer voz por sí solo.":"This browser cannot recognize speech on its own.","Error del micrófono: ":"Microphone error: ","Este navegador no permite usar el micrófono aquí. Abre BRAIN en http://127.0.0.1:8765.":"This browser does not allow using the microphone here. Open BRAIN at http://127.0.0.1:8765.","Recetas":"Recipes","Esta conversación es solo de cocina: recetas, menús y qué cocinar con lo que hay en casa.":"This conversation is only about cooking: recipes, menus and what to cook with what's at home.","Casa":"Home","Esta conversación es sobre la casa: domótica, energía y electrodomésticos.":"This conversation is about the home: home automation, energy and appliances.","Salud":"Health","Esta conversación es sobre mi peso, mis medidas y mis hábitos de salud.":"This conversation is about my weight, my measurements and my health habits.","¿Eliminar esta conversación y todo su historial?":"Delete this conversation and all its history?","📷 Captura de la báscula":"📷 Scale screenshot","caducado":"expired","caduca hoy":"expires today","mañana":"tomorrow","en {0} días":"in {0} days","＋ caducidad":"＋ expiry","¿Qué puedo cocinar hoy?":"What can I cook today?","Enciende la luz del salón":"Turn on the living-room light","Se ha acabado la leche":"We're out of milk","¿Cuánto estoy consumiendo?":"How much am I using right now?","Hola, soy BRAIN. Puedo encender tus luces, llevar la despensa y la compra, proponerte recetas con lo que tienes, apuntar tu peso y tu agenda, y decirte cuánto gasta la casa. ¿Qué hacemos?":"Hi, I'm BRAIN. I can turn on your lights, keep track of your pantry and shopping list, suggest recipes with what you have, log your weight and your calendar, and tell you how much the home is spending. What shall we do?"," % (":" % ("," % abierta":" % open"," (calculado)":" (calculated)"," Dirección privada: ":" Private address: "," Error en la descarga: ":" Download error: "," Puedes cambiarla aquí.":" You can change it here."," Puedes saltar este paso.":" You can skip this step."," a ":" to "," apagado(s)":" turned off"," cosa recordada":" thing remembered"," cosas recordadas":" things remembered"," de ":" of "," del consumo lo cubre el sol":" of consumption is covered by the sun"," dispositivos visibles":" devices visible"," día":" day"," días":" days"," en ":" in "," en la memoria de BRAIN.":" in BRAIN's memory."," este mes (estimado)":" this month (estimated)"," menos 👍":" less 👍"," más":" more"," no se han podido apagar":" could not be turned off"," producto":" product"," productos":" products"," · aviso a las ":" · reminder at "," · 🔥 racha de ":" · 🔥 streak of "," €/kWh). Aprovéchalas para lavadora y lavavajillas.":" €/kWh). Use it for the washer and dishwasher.","). No cierres esta ventana.":"). Do not close this window.",". Ahora pega el token.":". Now paste the token.",". Pulsa para cambiarlo":". Tap to change it",". Pídele a BRAIN una receta para aprovecharlo.":". Ask BRAIN for a recipe to use it up.","? Se sustituirán los datos actuales (antes se guarda una copia previa).":"? The current data will be replaced (a previous backup is saved first).","Acciones: ":"Actions: ","Activar la escena ":"Activate the scene ","Ahora mismo, con la red eléctrica, tu casa está…":"Right now, with the electricity grid, your home is…","Ahorro de tus placas":"Savings from your panels","Ana, Luis, Marta":"Ann, Luke, Mary","Anotar la fecha de caducidad":"Set the expiry date","Antes de dormir":"Before going to sleep","Antes de salir de casa":"Before leaving home","Apagar lo marcado":"Turn off what is checked","Apuntado: ":"Logged: ","Añadido a la compra: ":"Added to the shopping list: ","Añadir ":"Add ","Aún no hay copias. Se hace una al día automáticamente.":"No backups yet. One is made automatically every day.","BRAIN se ha cerrado.":"BRAIN has closed.","BRAIN te avisará al llegar al 80 % y al 100 %. Pon 0 para quitarlo.":"BRAIN will notify you at 80% and 100%. Set it to 0 to remove it.","Batería al ":"Battery at ","Beber agua":"Drink water","Borrado":"Deleted","Borrar hábito":"Delete habit","Borrar hábito ":"Delete habit ","Borrar tarea":"Delete chore","Borrar tarea ":"Delete chore ","Buscando Home Assistant en tu red…":"Searching for Home Assistant on your network…","Buscando los sensores de tu inversor…":"Searching for your inverter's sensors…","Buscar":"Search","Buscar dispositivo o habitación":"Search device or room","Buscar en todo":"Search everything","Cada copia diaria se guardará también aquí. Si el ordenador falla, no pierdes nada.":"Every daily backup will also be saved here. If the computer fails, you lose nothing.","Caduca el ":"Expires on ","Caducidad anotada":"Expiry date set","Caducidad de ":"Expiry date of ","Caducidad quitada":"Expiry date removed","Cambiar presupuesto":"Change budget","Cambiar segundo sitio":"Change second location","Cargando dispositivos…":"Loading devices…","Casa":"Home","Comprado a la red":"Bought from the grid","Comprando":"Buying","Conectar ahora":"Connect now","Configuración guardada":"Settings saved","Contraseña guardada":"Password saved","Copia automática diaria activa. Se guardan las 5 últimas.":"Automatic daily backup active. The last 5 are kept.","Copia creada: ":"Backup created: ","Copia restaurada":"Backup restored","Copia traída. Ya puedes restaurarla.":"Backup fetched. You can now restore it.","Crea tareas que se repiten (basura, fregar…) y repartid los turnos: BRAIN dice a quién le toca.":"Create recurring chores (trash, dishes…) and share the turns: BRAIN says whose turn it is.","Crea un hábito (beber agua, pasear, una pastilla…) y BRAIN te lo recuerda a su hora.":"Create a habit (drink water, walk, take a pill…) and BRAIN reminds you at its time.","Crear":"Create","Cuando alguien la marque como hecha, el turno pasa a la siguiente persona.":"When someone marks it done, the turn passes to the next person.","Cuando conectes Home Assistant verás aquí lo que producen las placas y lo que gasta la casa.":"Once you connect Home Assistant you will see here what the panels produce and what the home uses.","Descargando ":"Downloading ","Desde":"From","Despensa vaciada":"Pantry emptied","Dile a BRAIN «prepárame el menú de la semana con lo que tengo» o escríbelo tú con Editar.":"Tell BRAIN \"make me the week's menu with what I have\" or write it yourself with Edit.","Dime cuánto pagas por kWh (botón Tarifa) y calcularé lo que gastas y lo que ahorran tus placas.":"Tell me how much you pay per kWh (Rate button) and I will calculate what you spend and what your panels save.","Dispositivos guardados":"Devices saved","Elegir...":"Choose...","Elige un sitio…":"Choose a location…","Elige una copia. Se comprobará que está completa y se traerá aquí; después pulsa «Restaurar» en la lista de copias.":"Choose a backup. It will be checked and brought here; then press \"Restore\" in the backup list.","Es de… (opcional)":"Belongs to… (optional)","Escena «":"Scene \"","Escribe el importe.":"Write the amount.","Escribe una cantidad.":"Write an amount.","Ese archivo pesa más de 25 MB.":"That file is larger than 25 MB.","Esto está encendido. Marca lo que quieres apagar:":"This is on. Check what you want to turn off:","Esto solo se configura desde el ordenador de casa.":"This can only be set up from the home computer.","Fecha de caducidad":"Expiry date","Fijar presupuesto mensual":"Set monthly budget","Guardado. Veo: ":"Saved. I see: ","Guardado. Ya puedes preguntarle por él.":"Saved. You can now ask about it.","Guardar":"Save","Guardar menú":"Save menu","Guardar también en USB / OneDrive":"Also save to USB / OneDrive","Has ocultado todos los dispositivos. Usa «Elegir dispositivos» para mostrar los que quieras.":"You have hidden all the devices. Use \"Choose devices\" to show the ones you want.","Hasta":"Until","He entendido ":"I understood ","He visto: ":"I saw: ","Hecha":"Done","Home Assistant no está conectado, así que no puedo ver qué hay encendido. Conéctalo en Ajustes para usar esta función completa.":"Home Assistant is not connected, so I cannot see what is on. Connect it in Settings to use this feature fully.","Home Assistant no tiene luces, enchufes ni persianas todavía.":"Home Assistant has no lights, plugs or blinds yet.","Home Assistant no tiene sensores de potencia (W o kW). Añade primero tu inversor allí, o salta este paso.":"Home Assistant has no power sensors (W or kW). Add your inverter there first, or skip this step.","Home Assistant todavía no tiene luces, enchufes ni persianas.":"Home Assistant does not have lights, plugs or blinds yet.","Horas baratas: de ":"Cheap hours: from ","Hábito creado":"Habit created","IA lista (":"AI ready (","IA no disponible":"AI not available","Instalando...":"Installing...","La contraseña está puesta.":"The password is set.","La lista está vacía.":"The list is empty.","Las tareas automáticas están desactivadas.":"Automatic tasks are disabled.","Le toca a ":"It's turn of ","Lista copiada":"List copied","Lista de la compra vaciada":"Shopping list emptied","Lista de la compra:\\n":"Shopping list:\\n","Lo he encontrado en ":"I found it at ","Mañana tienes:":"Tomorrow you have:","Menú de la semana":"Weekly menu","Menú guardado":"Menu saved","Ninguno":"None","No falta nada nuevo.":"Nothing new is missing.","No has marcado nada.":"You have not checked anything.","No hay avisos todavía.":"No notifications yet.","No he encontrado nada con «":"I found nothing matching \"","No he podido copiarla. Selecciónala y cópiala a mano.":"I could not copy it. Select it and copy it by hand.","No lo he encontrado solo. Escribe su dirección a mano (la ves en la barra del navegador cuando abres Home Assistant).":"I could not find it on my own. Type its address by hand (you see it in the browser bar when you open Home Assistant).","No lo sé":"I don't know","No se ha podido instalar la voz: ":"Could not install voice: ","No se pudo subir":"Could not upload","Nueva tarea del hogar":"New household chore","Nuevo hábito":"New habit","Nuevo título:":"New title:","O escribe una carpeta":"Or type a folder","Objetivo por día":"Daily goal","Otros sensores de potencia":"Other power sensors","Para dejar de usarla, borra la carpeta y guarda.":"To stop using it, clear the folder and save.","Para encender luces y ver tus dispositivos aquí, conecta Home Assistant. ":"To turn on lights and see your devices here, connect Home Assistant. ","Pasar":"Skip","Pasar el turno a la siguiente persona":"Pass the turn to the next person","Pendiente: ":"Pending: ","Placas":"Panels","Platos":"Dishes","Precio al que compras (€/kWh)":"Price you pay (€/kWh)","Precio al que te pagan los excedentes (€/kWh, opcional)":"Price you are paid for surplus (€/kWh, optional)","Precio en valle (€/kWh)":"Off-peak price (€/kWh)","Presupuesto guardado":"Budget saved","Presupuesto mensual":"Monthly budget","Primero conecta Home Assistant.":"First connect Home Assistant.","Probando la conexión…":"Testing the connection…","Productos, gastos, agenda, manuales, tareas…":"Products, expenses, calendar, manuals, chores…","Quitado de la compra":"Removed from the shopping list","Quitado de la despensa":"Removed from the pantry","Quitar un sonido subido":"Remove an uploaded sound","Quién se turna (separado por comas)":"Who takes turns (comma-separated)","Recordármelo a las (opcional)":"Remind me at (optional)","Recuperar desde ahí":"Restore from there","Recuperar una copia":"Restore a backup","Red":"Grid","Registrado el ":"Logged on ","Respecto al mes pasado: ":"Compared to last month: ","Sacar la basura":"Take out the trash","Se repite cada (días)":"Repeats every (days)","Segunda copia activada":"Second backup enabled","Segunda copia de seguridad":"Second backup","Segunda copia desactivada":"Second backup disabled","Segundo sitio: ":"Second location: ","Si lo compartís, el nombre":"If you share it, the name","Si tu tarifa tiene horas baratas (valle):":"If your rate has cheap hours (off-peak):","Sin conexión con BRAIN":"No connection with BRAIN","Sin datos del inversor.":"No data from the inverter.","Sitios habituales":"Common locations","Sonido a quitar":"Sound to remove","Sonido añadido":"Sound added","Sonido de Windows":"Windows sound","Sonido guardado":"Sound saved","Sonido para ":"Sound for ","Sonido quitado":"Sound removed","Subiendo ":"Uploading ","Tarea":"Chore","Tarea creada":"Chore created","Tarifa de la luz":"Electricity rate","Tarifa guardada":"Rate saved","Te falta: ":"You are missing: ","Te queda pendiente:":"You still have pending:","Toca":"Due","Todavía no hay contraseña: sin ella, nadie puede entrar a BRAIN desde fuera de este ordenador.":"There is no password yet: without one, nobody can access BRAIN from outside this computer.","Todavía no hay gastos este mes. Apunta el primero arriba o díselo a BRAIN.":"No expenses logged this month yet. Log the first one above or tell BRAIN.","Todavía no hay ninguno.":"There are none yet.","Todos":"All","Total al mes (€)":"Total per month (€)","Una línea por plato. Después de | van los ingredientes, así BRAIN sabe qué te falta.":"One line per dish. After | come the ingredients, so BRAIN knows what you are missing.","Unidad (opcional)":"Unit (optional)","Vaciar":"Empty","Vendido (excedentes)":"Sold (surplus)","Vendiendo":"Selling","Voz lista. Pulsa el micrófono y habla.":"Voice ready. Press the microphone and speak.","Ya está conectado. Puedes cambiar los datos o pulsar «Saltar».":"Already connected. You can change the details or press \"Skip\".","abierta":"open","activado":"triggered","cerrada":"closed","gastas ":"you spend ","hoy":"today","lavadora, leche, wifi…":"washer, milk, wifi…","te has pasado ":"you have gone over by ","te quedan ":"you have left ","vasos, minutos…":"glasses, minutes…","¡Buenas noches!":"Good night!","¡Conectado! ":"Connected! ","¡Que vaya bien!":"Have a good one!","» activada":"\" activated","» y su historial?":"\" and its history?","»?":"\"?","¿Borrar el hábito «":"Delete the habit \"","¿Borrar la tarea «":"Delete the chore \"","¿Borrar «":"Delete \"","¿Cerrar BRAIN del todo? Dejarán de sonar los avisos hasta que lo vuelvas a abrir.":"Close BRAIN completely? Notifications will stop sounding until you open it again.","¿Qué hábito?":"Which habit?","¿Restaurar la copia del ":"Restore the backup from ","Últimos: ":"Latest: ","— Ninguno —":"— None —","⏰ Caduca pronto: ":"⏰ Expiring soon: ","✅ No hay nada encendido.":"✅ Nothing is on.","✓ Hecho":"✓ Done","Abre Home Assistant y entra en tu perfil (tu nombre, abajo a la izquierda).":"Open Home Assistant and go to your profile (your name, bottom left).","Acceso desde el móvil u otro PC":"Access from phone or another PC","Aceptar":"Accept","Agenda de los próximos 14 días":"Next 14 days","Ajustes":"Settings","Ajustes: sonidos y acceso desde el móvil":"Settings: sounds and access from the phone","Al cerrar la ventana, BRAIN se cierra del todo. Si prefieres que siga en segundo plano (icono junto al reloj) para que suenen los avisos, actívalo aquí.":"Closing the window closes BRAIN completely. If you would rather it keep running in the background (icon next to the clock) so notifications still sound, turn it on here.","Apunta en la lista de la compra solo lo que no tienes":"Log in the shopping list only what you do not have","Apuntar":"Log","Arrancar con Windows":"Start with Windows","Asistente: Home Assistant y energía":"Wizard: Home Assistant and energy","Avisos":"Notifications","Añadir un sonido":"Add a sound","BRAIN controla las luces, enchufes y persianas a través de Home Assistant. Si todavía no lo tienes, puedes saltar este paso y conectarlo más tarde.":"BRAIN controls lights, plugs and blinds through Home Assistant. If you do not have it yet, you can skip this step and connect it later.","Borrar conversación":"Clear conversation","Buscar en mi red":"Search my network","Buscar en todo (Ctrl+K)":"Search everything (Ctrl+K)","Básicos de casa para las recetas":"Pantry staples for recipes","Cada conversación tiene su propio hilo. Si le das un tema, BRAIN lo seguirá solo en esa conversación.":"Each conversation has its own thread. If you give it a topic, BRAIN will stick to it only in that conversation.","Cambiar entre tema claro y oscuro":"Switch between light and dark theme","Cambiar tema":"Change theme","Cancelar":"Cancel","Casa y energía":"Home and energy","Cerrar":"Close","Cerrar BRAIN":"Close BRAIN","Cerrar BRAIN del todo":"Close BRAIN completely","Cerrar sesión en este dispositivo":"Log out on this device","Comprar lo que falta":"Buy what is missing","Concepto":"Description","Conecta tu casa":"Connect your home","Conectando...":"Connecting...","Congelador":"Freezer","Contraseña de acceso":"Access password","Copiar":"Copy","Copiar la lista para enviarla por mensaje":"Copy the list to send it as a message","Copias de seguridad":"Backups","Coste de la luz":"Electricity cost","Crear copia ahora":"Create backup now","Descargar IA":"Download AI","Desmarca lo que no quieras en BRAIN (ni en el panel ni para la IA). Los dispositivos nuevos que añadas más adelante aparecerán solos.":"Uncheck what you do not want in BRAIN (not in the panel nor for the AI). New devices you add later will appear automatically.","Despensa":"Pantry","Dirección de Home Assistant":"Home Assistant address","Dispositivos de la casa":"Home devices","Editar":"Edit","Elegir dispositivos":"Choose devices","Elegir dispositivos de la casa":"Choose home devices","Elegir qué dispositivos quieres ver":"Choose which devices you want to see","Elige los sensores de tu inversor para ver la producción y el consumo en directo. Ya he marcado los que mejor encajan; deja «Ninguno» en lo que no tengas.":"Choose your inverter's sensors to see live production and consumption. I have already checked the best matches; leave \"None\" where you have nothing.","Energía ahora":"Energy now","Energía solar":"Solar energy","Enviar":"Send","Enviar al terminar de hablar":"Send when done speaking","Enviar una captura de la báscula":"Send a scale photo","Escríbeme o pulsa el micrófono":"Type to me or press the microphone","Gastos del mes":"This month's expenses","Guardar y seguir":"Save and continue","Hablar con BRAIN":"Talk to BRAIN","Hábitos de hoy":"Today's habits","Idioma":"Language","Importar":"Import","Importar lista":"Import list","Importar una lista de productos":"Import a product list","Importe en euros":"Amount in euros","Leer las respuestas en voz alta":"Read replies out loud","Lista de la compra":"Shopping list","Llave de acceso (token)":"Access key (token)","Manuales y notas":"Manuals and notes","Marca los que quieres ver y controlar con BRAIN. Los desmarcados desaparecen del panel y la IA no los toca.":"Check the ones you want to see and control with BRAIN. Unchecked ones disappear from the panel and the AI will not touch them.","Marcar leídos":"Mark read","Mensaje para BRAIN":"Message for BRAIN","Nevera":"Fridge","No quiero configurar nada ahora":"I don't want to set anything up now","Nueva":"New","Nueva contraseña (mínimo 8 caracteres)":"New password (minimum 8 characters)","Nueva conversación":"New conversation","Nuevo":"New","PDF, .txt, .md o .json":"PDF, .txt, .md or .json","Persona":"Person","Peso":"Weight","Pestaña «Seguridad», al final: «Tokens de acceso de larga duración».":"Tab \"Security\", at the bottom: \"Long-lived access tokens\".","Probar y guardar":"Test and save","Pulsa «Crear token», ponle el nombre BRAIN, copia el texto y pégalo aquí.":"Press \"Create token\", name it BRAIN, copy the text and paste it here.","Reintentar":"Retry","Saltar":"Skip","Seguir en segundo plano al cerrar la ventana":"Keep running in the background when the window closes","Sonidos de los avisos":"Notification sounds","Sube manuales, facturas o notas en PDF o texto. Luego pregúntale a BRAIN o usa la lupa de arriba.":"Upload manuals, bills or notes as PDF or text. Then ask BRAIN or use the search icon above.","Sube un sonido (.wav, .mp3 u .ogg, máximo 3 MB) y elige cuál suena para cada tipo de aviso.":"Upload a sound (.wav, .mp3 or .ogg, 3 MB maximum) and choose which one plays for each notification type.","Subir":"Upload","Tareas del hogar":"Household chores","Tarifa":"Rate","Tema":"Topic","Tema (opcional). Por ejemplo: Esta conversación es solo de cocina y recetas.":"Topic (optional). For example: This conversation is only about cooking and recipes.","Terminar":"Finish","Título":"Title","Título (por ejemplo: Recetas)":"Title (for example: Recipes)","¿Cómo consigo el token?":"How do I get the token?","¿En qué? (súper, gasolina, luz…)":"For what? (groceries, gas, electricity…)","¿Qué dispositivos quieres ver?":"Which devices do you want to see?","🌙 Buenas noches":"🌙 Good night","🚪 Salgo de casa":"🚪 Leaving home","Para conectarte desde fuera de casa hace falta Tailscale. Consulta la guía \"REMOTE_ACCESS.md\" para configurarlo.":"To connect from outside the home you need Tailscale. Check the \"REMOTE_ACCESS.md\" guide to set it up.","Herramientas":"Tools","Consumibles":"Supplies","luz":"light","enchufe":"plug","ventilador":"fan","persiana":"blind","clima":"thermostat","escena":"scene","script":"script","interruptor":"switch","reproductor":"player","humidificador":"humidifier","aspiradora":"vacuum","Alertas":"Alerts","Recordatorios":"Reminders","Resumen del día":"Day's summary","Automatizaciones":"Automations","Energía":"Energy","Información":"Information","Salida de casa":"Leaving home","Modelo de IA":"AI model","Un modelo más grande responde mejor pero más despacio; uno más pequeño responde antes.":"A bigger model answers better but more slowly; a smaller one answers sooner.","En uso":"In use","Usar":"Use","Modelo cambiado":"Model changed","Descargar y usar":"Download and use","Contexto":"Context"};
 let LANG = "es";
 try { LANG = localStorage.getItem("brain-idioma") || "es"; } catch (e) { /* sin almacenamiento */ }
 function T(s) { return LANG === "en" ? (I18N_EN[s] || s) : s; }
@@ -796,8 +819,11 @@ async function aplicarIdioma(code, guardarBackend) {
   LANG = code === "en" ? "en" : "es";
   try { localStorage.setItem("brain-idioma", LANG); } catch (e) { /* sin almacenamiento */ }
   traducirEstatico();
-  refrescarTrasIdioma();
+  // Guarda el idioma en el servidor ANTES de refrescar los paneles: si se refresca primero,
+  // /api/state todavía devuelve el idioma antiguo y refrescarEstado() lo deshace (bug del
+  // "hace falta darle dos veces").
   if (guardarBackend) { try { await enviarJSON("/api/language", { code: LANG }); } catch (e) { /* se reintenta al cargar */ } }
+  refrescarTrasIdioma();
 }
 traducirEstatico();
 
@@ -846,7 +872,7 @@ function confirmar(boton, accion, textoInicial) {
       return;
     }
     boton.dataset.confirmar = "1";
-    boton.textContent = "¿Seguro?";
+    boton.textContent = T("¿Seguro?");
     boton.classList.add("peligro");
     temporizador = setTimeout(() => {
       boton.dataset.confirmar = "0";
@@ -965,7 +991,7 @@ async function refrescarPanel() {
     if (r.shopping.length) {
       r.shopping.forEach((c) => compra.appendChild(fila(c.product, c.quantity, () => quitar("/api/shopping/remove", { product: c.product }, T("Quitado de la compra")))));
     } else {
-      compra.appendChild(el("li", "vacio", "No falta nada. Dime «apunta leche» o importa una lista."));
+      compra.appendChild(el("li", "vacio", T("No falta nada. Dime «apunta leche» o importa una lista.")));
     }
 
     /* despensa */
@@ -984,18 +1010,18 @@ async function refrescarPanel() {
         }
         const filaDesp = fila(a.name, a.quantity, () => quitar("/api/inventory/delete", { name: a.name, location: a.location }, T("Quitado de la despensa")));
         const dias = a.expires ? Math.round((new Date(a.expires + "T12:00:00") - new Date(new Date().toDateString() + " 12:00")) / 86400000) : null;
-        const chip = el("button", "etiqueta" + (dias !== null ? (dias < 0 ? " caducado" : dias <= 3 ? " pronto" : " ok") : ""), dias !== null ? diasTexto(dias) : "＋ caducidad");
+        const chip = el("button", "etiqueta" + (dias !== null ? (dias < 0 ? " caducado" : dias <= 3 ? " pronto" : " ok") : ""), dias !== null ? diasTexto(dias) : T("＋ caducidad"));
         chip.type = "button"; chip.style.cssText = "border:0;cursor:pointer"; chip.title = a.expires ? T("Caduca el ") + a.expires + T(". Pulsa para cambiarlo") : T("Anotar la fecha de caducidad");
         chip.addEventListener("click", () => pedirCaducidad(a));
         filaDesp.insertBefore(chip, filaDesp.querySelector(".quitar"));
         ul.appendChild(filaDesp);
       });
     } else {
-      desp.appendChild(el("p", "vacio", "Está vacía. Pulsa «Importar lista» y pega lo que tienes."));
+      desp.appendChild(el("p", "vacio", T("Está vacía. Pulsa «Importar lista» y pega lo que tienes.")));
     }
     const basicos = r.staples || [];
     $("basicos").style.display = basicos.length ? "" : "none";
-    $("basicosTexto").textContent = " " + basicos.join(", ") + ". Cuenta con ellos aunque no estén en la despensa.";
+    $("basicosTexto").textContent = " " + basicos.join(", ") + T(". Cuenta con ellos aunque no estén en la despensa.");
 
     /* peso */
     const peso = $("peso"); vaciar(peso);
@@ -1006,7 +1032,7 @@ async function refrescarPanel() {
       peso.appendChild(el("div", "vacio", T("Registrado el ") + u.date));
       peso.appendChild(lineaPeso(r.weight.map((x) => x.weight)));
     } else {
-      peso.appendChild(el("p", "vacio", "Aún no hay pesos. Dime «hoy peso 88,4»."));
+      peso.appendChild(el("p", "vacio", T("Aún no hay pesos. Dime «hoy peso 88,4».")));
     }
 
     /* agenda */
@@ -1016,7 +1042,7 @@ async function refrescarPanel() {
     const tareas = (ag.pending_tasks || []).map((t) => T("Pendiente: ") + t.title + (t.date ? " (" + t.date + ")" : ""));
     const todo = eventos.concat(tareas);
     if (todo.length) todo.forEach((t) => agenda.appendChild(el("li", "", t)));
-    else agenda.appendChild(el("li", "vacio", "Nada pendiente."));
+    else agenda.appendChild(el("li", "vacio", T("Nada pendiente.")));
 
     $("memory").textContent = r.memories + (r.memories === 1 ? T(" cosa recordada") : T(" cosas recordadas")) + T(" en la memoria de BRAIN.");
   } catch (e) { /* el panel no es crítico */ }
@@ -1140,7 +1166,7 @@ async function refrescarDispositivos() {
     const r = await api("/api/devices");
     vaciar(caja); vaciar(escenas);
     if (!r.connected) {
-      const p = el("p", "vacio", T("Para turn_on luces y ver tus dispositivos aquí, conecta Home Assistant. "));
+      const p = el("p", "vacio", T("Para encender luces y ver tus dispositivos aquí, conecta Home Assistant. "));
       const b = el("button", "suave", T("Conectar ahora")); b.type = "button";
       b.addEventListener("click", () => abrirAsistente(1));
       p.appendChild(b);
@@ -1268,11 +1294,12 @@ $("descargar").addEventListener("click", async () => {
 
 const SUGERENCIAS = ["¿Qué puedo cocinar hoy?", "Enciende la luz del salón", "Se ha acabado la leche", "¿Cuánto estoy consumiendo?"];
 function saludo() {
-  anadir("ia", "Hola, soy BRAIN. Puedo turn_on tus luces, llevar la despensa y la compra, proponerte recetas con lo que tienes, apuntar tu peso y tu agenda, y decirte cuánto gasta la casa. ¿Qué hacemos?");
+  anadir("ia", T("Hola, soy BRAIN. Puedo encender tus luces, llevar la despensa y la compra, proponerte recetas con lo que tienes, apuntar tu peso y tu agenda, y decirte cuánto gasta la casa. ¿Qué hacemos?"));
 }
 SUGERENCIAS.forEach((t) => {
-  const b = el("button", "", t); b.type = "button";
-  b.addEventListener("click", () => enviar(t));
+  const texto = T(t);
+  const b = el("button", "", texto); b.type = "button";
+  b.addEventListener("click", () => enviar(texto));
   $("sugerencias").appendChild(b);
 });
 
@@ -1287,7 +1314,7 @@ function abrirImportar(destino) {
   $("textoImportar").value = "";
   $("vistaPrevia").textContent = "";
   $("confirmarImportar").disabled = true;
-  $("confirmarImportar").textContent = "Añadir";
+  $("confirmarImportar").textContent = T("Añadir");
   dlg.showModal();
   $("textoImportar").focus();
 }
@@ -1350,7 +1377,7 @@ function mostrarVoz(texto, grabando) {
 function resultadoVoz(texto) {
   mostrarVoz("");
   texto = (texto || "").trim();
-  if (!texto) { aviso("No he oído nada. Pulsa el micrófono y habla cerca.", true); return; }
+  if (!texto) { aviso(T("No he oído nada. Pulsa el micrófono y habla cerca."), true); return; }
   if ($("autoenviar").checked) enviar(texto);
   else { $("entrada").value = texto; ajustarEntrada(); $("entrada").focus(); }
 }
@@ -1396,7 +1423,7 @@ async function empezarGrabacion() {
   let flujo;
   try { flujo = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true } }); }
   catch (e) {
-    aviso("No puedo usar el micrófono. Permítelo en el candado de la barra de direcciones y vuelve a intentarlo.", true);
+    aviso(T("No puedo usar el micrófono. Permítelo en el candado de la barra de direcciones y vuelve a intentarlo."), true);
     return;
   }
   const contexto = new (window.AudioContext || window.webkitAudioContext)();
@@ -1413,7 +1440,7 @@ async function empezarGrabacion() {
     proceso.disconnect(); fuente.disconnect(); flujo.getTracks().forEach((t) => t.stop());
     const frecuencia = contexto.sampleRate; contexto.close();
     boton.classList.remove("activo");
-    if (cancelar || !oyoVoz) { mostrarVoz(""); if (!cancelar) aviso("No he oído nada. Pulsa el micrófono y habla cerca.", true); return; }
+    if (cancelar || !oyoVoz) { mostrarVoz(""); if (!cancelar) aviso(T("No he oído nada. Pulsa el micrófono y habla cerca."), true); return; }
     mostrarVoz("Transcribiendo...");
     try {
       const r = await api("/api/voice", { method: "POST", headers: { "Content-Type": "audio/wav" }, body: aWav(trozos, frecuencia) });
@@ -1433,7 +1460,7 @@ async function empezarGrabacion() {
   fuente.connect(proceso); proceso.connect(contexto.destination);
   grabacion = { parar };
   boton.classList.add("activo");
-  const caja = mostrarVoz("Te escucho. Habla y haré una pausa cuando termines.", true);
+  const caja = mostrarVoz(T("Te escucho. Habla y haré una pausa cuando termines."), true);
   caja.appendChild(barra);
   const fin = el("button", "suave", "Terminar"); fin.type = "button"; fin.addEventListener("click", () => parar(false));
   const cancelar = el("button", "suave", "Cancelar"); cancelar.type = "button"; cancelar.addEventListener("click", () => parar(true));
@@ -1446,8 +1473,8 @@ function usarReconocimientoNavegador() {
   rec.onresult = (ev) => resultadoVoz(ev.results[0][0].transcript);
   rec.onerror = (ev) => {
     boton.classList.remove("activo");
-    if (ev.error === "network" || ev.error === "service-not-allowed") ofrecerInstalarVoz("Este navegador no puede reconocer voz por sí solo.");
-    else if (ev.error !== "no-speech" && ev.error !== "aborted") aviso("Error del micrófono: " + ev.error, true);
+    if (ev.error === "network" || ev.error === "service-not-allowed") ofrecerInstalarVoz(T("Este navegador no puede reconocer voz por sí solo."));
+    else if (ev.error !== "no-speech" && ev.error !== "aborted") aviso(T("Error del micrófono: ") + ev.error, true);
     else mostrarVoz("");
   };
   rec.onend = () => { boton.classList.remove("activo"); grabacion = null; };
@@ -1481,7 +1508,7 @@ async function seguirInstalacionVoz() {
 boton.addEventListener("click", async () => {
   if (grabacion) { grabacion.parar(false); return; }
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    aviso("Este navegador no permite usar el micrófono aquí. Abre BRAIN en http://127.0.0.1:8765.", true);
+    aviso(T("Este navegador no permite usar el micrófono aquí. Abre BRAIN en http://127.0.0.1:8765."), true);
     return;
   }
   let voz = { available: false };
@@ -1601,9 +1628,9 @@ $("leerAvisos").addEventListener("click", async () => { try { await enviarJSON("
 
 /* ------------------------------------------------- conversaciones paralelas */
 const TEMAS = [
-  ["Recetas", "Esta conversación es solo de cocina: recetas, menús y qué cocinar con lo que hay en casa."],
-  ["Casa", "Esta conversación es sobre la casa: domótica, energía y electrodomésticos."],
-  ["Salud", "Esta conversación es sobre mi peso, mis medidas y mis hábitos de salud."],
+  [T("Recetas"), T("Esta conversación es solo de cocina: recetas, menús y qué cocinar con lo que hay en casa.")],
+  [T("Casa"), T("Esta conversación es sobre la casa: domótica, energía y electrodomésticos.")],
+  [T("Salud"), T("Esta conversación es sobre mi peso, mis medidas y mis hábitos de salud.")],
 ];
 let listaConversaciones = [];
 
@@ -1618,7 +1645,7 @@ function pintarConversaciones() {
     b.addEventListener("click", () => abrirConversacion(c.id));
     barra.appendChild(b);
   });
-  const mas = el("button", "mas", "+"); mas.type = "button"; mas.title = "Nueva conversación"; mas.setAttribute("aria-label", "Nueva conversación");
+  const mas = el("button", "mas", "+"); mas.type = "button"; mas.title = T("Nueva conversación"); mas.setAttribute("aria-label", T("Nueva conversación"));
   mas.addEventListener("click", () => { $("convTitulo").value = ""; $("convTema").value = ""; $("dlgConversacion").showModal(); $("convTitulo").focus(); });
   barra.appendChild(mas);
   if (conversacionActual !== "general") {
@@ -1631,7 +1658,7 @@ function pintarConversaciones() {
     });
     const bor = el("button", "accion", "Eliminar"); bor.type = "button";
     bor.addEventListener("click", async () => {
-      if (!confirm("¿Eliminar esta conversación y todo su historial?")) return;
+      if (!confirm(T("¿Eliminar esta conversación y todo su historial?"))) return;
       try { await enviarJSON("/api/conversations/delete", { id: conversacionActual }); abrirConversacion("general"); } catch (e) { aviso(e.message, true); }
     });
     barra.appendChild(ren); barra.appendChild(bor);
@@ -1691,7 +1718,7 @@ $("archivoImagen").addEventListener("change", async () => {
   if (!archivo || ocupado) return;
   ocupado = true;
   $("sugerencias").style.display = "none";
-  anadir("yo", "📷 Captura de la báscula");
+  anadir("yo", T("📷 Captura de la báscula"));
   const espera = pensando();
   try {
     const blob = await reducirImagen(archivo, 1400);
@@ -1732,7 +1759,10 @@ $("archivoImagen").addEventListener("change", async () => {
 })();
 
 /* ---------------------------------------------------------------- gastos */
-function euros(n) { return Number(n).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €"; }
+const SIMBOLOS_MONEDA = { EUR: "€", USD: "$", GBP: "£", MXN: "MX$", ARS: "AR$", COP: "COL$", CLP: "CLP$", PEN: "S/", BRL: "R$", JPY: "¥", CHF: "CHF", CAD: "CA$", AUD: "A$" };
+let MONEDA = "EUR";
+try { MONEDA = localStorage.getItem("brain-moneda") || "EUR"; } catch (e) { /* sin almacenamiento */ }
+function euros(n) { return Number(n).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " " + (SIMBOLOS_MONEDA[MONEDA] || MONEDA); }
 async function refrescarGastos() {
   try { refrescarPresupuesto();
     const r = await api("/api/expenses");
@@ -1810,7 +1840,7 @@ async function rutina(tipo) {
       else if (r.error) nota(c, r.error);
       else if (!r.on.length) nota(c, T("✅ No hay nada encendido."));
       else {
-        nota(c, T("Esto está encendido. Marca lo que quieres turn_off:"));
+        nota(c, T("Esto está encendido. Marca lo que quieres apagar:"));
         const lista = el("div", "lista-marcar");
         r.on.forEach((d) => {
           const l = el("label"); const i = el("input"); i.type = "checkbox"; i.checked = true; i.value = d.entity;
@@ -1830,7 +1860,7 @@ async function rutina(tipo) {
       const seleccion = marcas.filter((m) => m.checked).map((m) => m.value);
       if (!seleccion.length) throw new Error(T("No has marcado nada."));
       const x = await enviarJSON("/api/routine/turn_off", { entities: seleccion });
-      aviso(x.turned_off.length + T(" apagado(s)") + (x.failures.length ? ", " + x.failures.length + T(" no se han podido turn_off") : ""), x.failures.length > 0);
+      aviso(x.turned_off.length + T(" apagado(s)") + (x.failures.length ? ", " + x.failures.length + T(" no se han podido apagar") : ""), x.failures.length > 0);
       refrescarDispositivos();
     } : null);
   } catch (e) { aviso(e.message, true); }
@@ -1870,7 +1900,7 @@ async function refrescarPresupuesto() {
 }
 
 /* ---- caducidades ---- */
-function diasTexto(d) { return d < 0 ? "caducado" : d === 0 ? "caduca hoy" : d === 1 ? "mañana" : "en " + d + " días"; }
+function diasTexto(d) { return d < 0 ? T("caducado") : d === 0 ? T("caduca hoy") : d === 1 ? T("mañana") : T("en {0} días").replace("{0}", d); }
 async function refrescarCaducan() {
   try {
     const r = await api("/api/expiries?days=5");
@@ -2405,8 +2435,45 @@ function pintarSonidos(d) {
   }
 }
 
+function pintarModelos(d) {
+  const caja = $("listaModelos");
+  vaciar(caja);
+  const d_ = d.download_state || {};
+  (d.installed || []).forEach((nombre) => {
+    const fila = el("div", "ajuste-fila");
+    const activo = d.current && nombre.toLowerCase() === String(d.current).toLowerCase();
+    fila.appendChild(el("span", "", nombre + (activo ? " ✓" : "")));
+    const boton = el("button", "secundario", activo ? T("En uso") : T("Usar"));
+    boton.type = "button";
+    boton.style.cssText = "height:34px;padding:0 14px;border-radius:10px;font-size:13px";
+    boton.disabled = !!activo;
+    boton.onclick = async () => {
+      try { pintarModelos(await enviarJSON("/api/models/select", { model: nombre })); aviso(T("Modelo cambiado")); }
+      catch (e) { aviso(e.message, true); }
+    };
+    fila.appendChild(boton);
+    caja.appendChild(fila);
+  });
+  (d.catalog || []).filter((m) => !m.installed).forEach((m) => {
+    const fila = el("div", "ajuste-fila");
+    fila.appendChild(el("span", "", m.label + " (" + m.download_gb + " GB)"));
+    const descargando = d_.active && d_.model === m.label;
+    const boton = el("button", "secundario", descargando ? d_.percent + " %" : T("Descargar y usar"));
+    boton.type = "button";
+    boton.style.cssText = "height:34px;padding:0 14px;border-radius:10px;font-size:13px";
+    boton.disabled = !!d_.active;
+    boton.onclick = async () => {
+      try { await enviarJSON("/api/models/download", { model: m.label }); aviso(T("Descargando ") + m.label); programarEstado(1500); }
+      catch (e) { aviso(e.message, true); }
+    };
+    fila.appendChild(boton);
+    caja.appendChild(fila);
+  });
+}
+
 async function cargarAjustes() {
   try { pintarSonidos(await api("/api/sounds")); } catch (e) { aviso(e.message, true); }
+  try { pintarModelos(await api("/api/models")); } catch (e) { aviso(e.message, true); }
   try {
     const datos = await api("/api/desktop");
     const esc = datos.available;
@@ -2431,6 +2498,13 @@ async function cargarAjustes() {
 }
 
 $("selIdioma").addEventListener("change", () => aplicarIdioma($("selIdioma").value, true));
+$("selMoneda").value = MONEDA;
+$("selMoneda").addEventListener("change", () => {
+  MONEDA = $("selMoneda").value;
+  try { localStorage.setItem("brain-moneda", MONEDA); } catch (e) { /* sin almacenamiento */ }
+  try { refrescarGastos(); } catch (e) { /* panel no visible */ }
+  try { refrescarEnergia(); } catch (e) { /* panel no visible */ }
+});
 $("ajustes").onclick = () => { dlgAjustes.showModal(); cargarAjustes(); };
 $("cerrarAjustes").onclick = () => dlgAjustes.close();
 $("archivoSonido").onchange = async (ev) => {

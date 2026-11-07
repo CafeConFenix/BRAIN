@@ -11,7 +11,7 @@ from brain.ai.vision import MAX_BYTES as MAX_IMAGE
 from brain.ai.vision import VisionError, save_reading, read_scale
 from brain.core import logger
 from brain.core.config import Config
-from brain.core.hardware import alternatives, save_model, recommend_model
+from brain.core.hardware import LEVELS, alternatives, read_saved_model, recommend_model, save_model
 from brain.i18n import language, t
 from brain.integrations.home_assistant import HomeAssistantError
 from brain.modules.system import BackupError
@@ -215,6 +215,88 @@ def launch_download(brain):
     threading.Thread(target=_download, args=(brain, _recommended()["label"]), daemon=True).start()
 
     return True
+
+
+def _download_exact(brain, label):
+    """Downloads exactly the requested model (no smaller fallbacks) and activates it."""
+
+    def progress(state, completed, total):
+        _download_state["state"] = state
+
+        if total:
+            _download_state["percent"] = int(completed * 100 / total)
+
+    try:
+        _download_state.update({"model": label, "percent": 0, "state": t("Starting..."), "error": ""})
+
+        try:
+            if brain.ai.ollama.download_model(label, progress=progress):
+                select_model(brain, label)
+                logger.system(f"Model {label} downloaded and activated from the web interface")
+
+                return
+        except OllamaError as error:
+            _download_state["error"] = str(error)
+            logger.error(f"Downloading {label}: {error}")
+
+        if not _download_state["error"]:
+            _download_state["error"] = t("Could not download the model.")
+    finally:
+        _download_state["active"] = False
+
+
+def launch_model_download(brain, label):
+    """Downloads one exact model (chosen by the user) in the background. True if underway."""
+
+    with _repair_lock:
+        if _download_state["active"]:
+            return False
+
+        _download_state.update({"active": True, "model": label, "percent": 0, "state": t("Starting..."), "error": ""})
+
+    threading.Thread(target=_download_exact, args=(brain, label), daemon=True).start()
+
+    return True
+
+
+def select_model(brain, label):
+    """Makes ``label`` the model BRAIN uses from now on (remembered between sessions)."""
+
+    save_model(label)
+    brain.ai.ollama.model = label
+    brain.ai.ollama._models_cache.clear()
+
+
+def model_catalog(brain):
+    """Installed models plus the recommended catalog, marking what is installed and active."""
+
+    try:
+        installed = [m for m in brain.ai.ollama.models() if "embed" not in m.lower()]
+    except OllamaError:
+        installed = []
+
+    try:
+        current = brain.ai.ollama.resolve_model()
+    except OllamaError:
+        current = None
+
+    installed_lower = {m.lower() for m in installed}
+    catalog = [
+        {
+            "label": level["label"],
+            "download_gb": level["download_state"],
+            "installed": level["label"].lower() in installed_lower,
+        }
+        for level in LEVELS
+    ]
+
+    return {
+        "current": current,
+        "installed": installed,
+        "catalog": catalog,
+        "saved": read_saved_model(),
+        "download_state": dict(_download_state),
+    }
 
 
 def build_state(brain):
@@ -774,6 +856,9 @@ def create_handler(brain, access=None, on_show=None, actions=None, settings=None
             if path == "/api/state":
                 return self._send(200, build_state(brain))
 
+            if path == "/api/models":
+                return self._send(200, model_catalog(brain))
+
             if path == "/api/summary":
                 return self._send(200, build_summary(brain))
 
@@ -950,6 +1035,32 @@ def create_handler(brain, access=None, on_show=None, actions=None, settings=None
                 launch_download(brain)
 
                 return self._send(200, build_state(brain))
+
+            if path == "/api/models/select":
+                label = (self._read_json() or {}).get("model", "").strip()
+
+                try:
+                    installed = {m.lower() for m in brain.ai.ollama.models()}
+                except OllamaError as error:
+                    return self._send(400, {"error": str(error)})
+
+                if not label or label.lower() not in installed:
+                    return self._send(400, {"error": t("That model is not installed.")})
+
+                select_model(brain, label)
+
+                return self._send(200, model_catalog(brain))
+
+            if path == "/api/models/download":
+                label = (self._read_json() or {}).get("model", "").strip()
+
+                if not label:
+                    return self._send(400, {"error": t("No model was given.")})
+
+                if not launch_model_download(brain, label):
+                    return self._send(409, {"error": t("A download is already underway.")})
+
+                return self._send(200, model_catalog(brain))
 
             if path == "/api/voice/install":
                 recognizer.install()
