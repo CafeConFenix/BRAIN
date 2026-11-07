@@ -102,7 +102,6 @@ def wav_to_audio(content):
     Raises VoiceError if the audio is not valid or is too long.
     """
 
-    import numpy
 
     try:
         with wave.open(io.BytesIO(content), "rb") as file:
@@ -120,6 +119,11 @@ def wav_to_audio(content):
             data = file.readframes(frames)
     except (wave.Error, EOFError) as error:
         raise VoiceError(t("I did not understand the audio received ({0}).", error)) from error
+    # numpy is only needed from here on, once we know the WAV itself is valid.
+    try:
+        import numpy
+    except ImportError as error:
+        raise VoiceError(t("Voice support is not installed (numpy is missing).")) from error
 
     audio = numpy.frombuffer(data, dtype=numpy.int16).astype(numpy.float32) / 32768.0
 
