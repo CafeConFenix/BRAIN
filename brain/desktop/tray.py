@@ -96,7 +96,10 @@ try { $icon.Dispose() } catch { }
 
 class Tray:
     def __init__(self, icon: Path, port: int):
-        self.icon = Path(icon)
+        # Don't rebuild an already-built Path: pathlib can't construct the
+        # other OS's flavour (e.g. PosixPath on a real Windows machine), and
+        # tests simulate "not on Windows" by faking os.name around this call.
+        self.icon = icon if isinstance(icon, Path) else Path(icon)
         self.port = port
         self.process: Optional[subprocess.Popen] = None
         self.stop_file = Path(Config.DATA) / "tray.stop"

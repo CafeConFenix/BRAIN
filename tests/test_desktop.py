@@ -513,7 +513,11 @@ class TestShutdownClean(CaseBrain):
     def test_main_no_relanza_outside_of_windows(self):
         import main
 
-        self.assertIsNone(main._relaunch_without_console(["--desktop"]))
+        # Force the "not on Windows" branch instead of relying on the runner's
+        # real OS: on an actual Windows machine this would otherwise relaunch
+        # a real pythonw.exe subprocess rather than returning None.
+        with mock.patch("main.os.name", "posix"):
+            self.assertIsNone(main._relaunch_without_console(["--desktop"]))
         self.assertTrue(main.read_arguments(["--close"]).close)
 
     def test_close_without_brain_open(self):
