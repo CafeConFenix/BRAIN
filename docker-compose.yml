@@ -1,0 +1,34 @@
+services:
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    # Uncomment to use an NVIDIA GPU (needs the nvidia-container-toolkit
+    # installed on the host):
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  brain:
+    build: .
+    depends_on:
+      - ollama
+    environment:
+      - BRAIN_OLLAMA_URL=http://ollama:11434
+      # Uncomment to use a specific model instead of BRAIN's automatic pick
+      # (pull it first: docker compose exec ollama ollama pull qwen3:4b):
+      # - BRAIN_MODEL=qwen3:4b
+    volumes:
+      - brain_data:/data
+    ports:
+      - "8765:8765"
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  brain_data:

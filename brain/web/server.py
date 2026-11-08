@@ -1,4 +1,5 @@
 import json
+import os
 import threading
 import time
 import webbrowser
@@ -346,10 +347,14 @@ def build_state(brain):
 
             if state["starting"]:
                 state["message"] = t("Starting the AI (Ollama)... the first time it may take up to a minute.")
-        else:
+        elif os.name == "nt":
             state["message"] = t(
                 "I cannot find Ollama on this computer. Run INSTALL.bat "
                 "(or install it from https://ollama.com/download)."
+            )
+        else:
+            state["message"] = t(
+                "I cannot find Ollama on this computer. Install it from https://ollama.com/download."
             )
 
     return state
@@ -1153,7 +1158,7 @@ def create_handler(brain, access=None, on_show=None, actions=None, settings=None
 
 
 def create_server(brain, port=None, access=None, on_show=None, actions=None, settings=None):
-    """Opens the web server on 127.0.0.1 (if the port is busy, tries the next ones)."""
+    """Opens the web server on Config.WEB_HOST (if the port is busy, tries the next ones)."""
 
     port = port or Config.WEB_PORT
 
@@ -1161,7 +1166,7 @@ def create_server(brain, port=None, access=None, on_show=None, actions=None, set
 
     for attempt in range(port, port + 10):
         try:
-            server = ThreadingHTTPServer(("127.0.0.1", attempt), handler)
+            server = ThreadingHTTPServer((Config.WEB_HOST, attempt), handler)
             server.daemon_threads = True
 
             return server, attempt

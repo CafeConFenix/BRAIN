@@ -362,7 +362,7 @@ class TestDesktop(CaseBrain):
             i18n.reset()
 
     def test_version(self):
-        self.assertEqual(Config.VERSION, "2.0.0")
+        self.assertEqual(Config.VERSION, "2.1.0")
 
 
 class TestPackage(unittest.TestCase):

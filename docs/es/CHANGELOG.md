@@ -4,6 +4,29 @@ Todos los cambios relevantes de BRAIN se documentan en este archivo.
 
 ---
 
+## [2.1.0] - 2026-11-08
+
+### Añadido
+
+* **Soporte para Linux / macOS con Docker.** Un `Dockerfile` y un `docker-compose.yml` levantan BRAIN y Ollama como dos contenedores ya conectados entre sí, sin configuración manual (`docker compose up -d`). Ver la nueva sección "Instalar en Linux / macOS" del README.
+* **Selector de modelo de IA.** En Ajustes ahora se ven todos los modelos de Ollama instalados, se puede cambiar entre ellos, y descargar y activar uno nuevo en segundo plano con barra de progreso — ya no te quedas atascado con un modelo lento sin forma de cambiarlo desde la interfaz.
+* **Moneda configurable.** Los importes de gastos y energía ya se pueden mostrar en varias monedas del mundo, no solo en euros.
+* Variable de entorno `BRAIN_HOST`: la dirección en la que escucha el servidor web (por defecto `127.0.0.1`, igual que siempre fuera de Docker). La imagen de Docker la pone en `0.0.0.0` para que el puerto publicado pueda llegar hasta ella.
+
+### Arreglado
+
+* Varios textos de la interfaz se quedaban en español sin importar el idioma elegido: el mensaje inicial del chat, "Conversación principal", las sugerencias de mensaje, la agenda de los próximos 14 días, y los avisos de peso, despensa y lista de la compra vacías.
+* Cambiar el idioma de la interfaz a veces necesitaba dos clics para aplicarse.
+* El panel de casa mostraba "turn_on"/"turn_off" sin traducir dentro de un texto por lo demás en español.
+* `wav_to_audio()` necesitaba numpy solo para rechazar un audio no válido, lo que provocaba un fallo en vez de un error normal en cualquier máquina sin numpy instalado (incluida la integración continua).
+* Se quitó una mención suelta a un archivo `.bat` del aviso de acceso remoto.
+
+### Verificado
+
+442 tests en verde; escaneo de idioma limpio; integración continua en verde en Ubuntu y Windows (Python 3.10 y 3.12).
+
+---
+
 ## [2.0.0] - 2026-11-05
 
 ### Cambiado

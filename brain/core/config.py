@@ -93,6 +93,9 @@ class Config:
     - BRAIN_THINK:      1 to turn on Qwen3's "think mode" (slower).
     - BRAIN_CONTEXT:    the AI's memory size in tokens (default 16384).
     - BRAIN_PORT:      web interface port (default 8765).
+    - BRAIN_HOST:      address the web server listens on (default 127.0.0.1,
+                        local-only; a Docker container sets this to 0.0.0.0
+                        so the port mapping can reach it).
     - BRAIN_POLL_SECONDS: how often, in seconds, it checks Home Assistant in the background (default 120).
     - BRAIN_SCHEDULER: 0 to turn off the background tasks.
     """
@@ -135,6 +138,10 @@ class Config:
 
     WEB_PORT = _env_int("BRAIN_PORT", 8765)
 
+    # Local-only by default: only this same machine can reach it directly
+    # (remote access still goes through the password-gated Tailscale check).
+    WEB_HOST = env("BRAIN_HOST", "127.0.0.1").strip() or "127.0.0.1"
+
     POLL_SECONDS = max(10, _env_int("BRAIN_POLL_SECONDS", 120))
 
     SCHEDULER = _env_bool("BRAIN_SCHEDULER", True)
@@ -142,6 +149,6 @@ class Config:
     # Model downloaded by the installer / the first-run assistant.
     DEFAULT_MODEL = "qwen3:4b"
 
-    VERSION = "2.0.0"
+    VERSION = "2.1.0"
 
     NAME = "BRAIN"

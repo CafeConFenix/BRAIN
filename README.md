@@ -6,7 +6,7 @@
 
 **A private, local-first AI assistant for your home — chat, pantry, shopping, solar energy and smart lights, running on your own PC with Ollama.**
 
-[![Version](https://img.shields.io/badge/version-2.0.0-5CC8C0?style=for-the-badge)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.1.0-5CC8C0?style=for-the-badge)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-F6BE55?style=for-the-badge)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-442%20passing-2EA043?style=for-the-badge)](tests)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-0F1722?style=for-the-badge)](#-one-click-install-on-windows)
@@ -131,7 +131,53 @@ Prefer a wizard installer? Double-click **`CREAR_SETUP.bat`** once: it builds a 
 | `CONFIGURAR_ACCESO.bat` | Sets the password and publishes BRAIN on your Tailscale network |
 | `DIAGNOSTICO.bat` | Shows what is installed and what is failing |
 
-**Linux / macOS:** `python3 main.py` (needs Python 3.9+ and [Ollama](https://ollama.com/download) with a model, e.g. `ollama pull qwen3:4b`). Variants: `--desktop`, `--console`, `--diagnose`, `--upgrade-model`.
+---
+
+## 🐧 Install on Linux / macOS
+
+BRAIN's core has zero pip dependencies, so it runs the same way on Linux and macOS as on Windows — just without the desktop window, tray icon and the one-click `.bat` installer, which are Windows-only conveniences.
+
+### Option A — directly with Python
+
+```bash
+# 1. Install Ollama and pull a model (skip if you already have one)
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull qwen3:4b          # a good fit for 8 GB of RAM; see the table above for bigger models
+
+# 2. Run BRAIN
+python3 main.py --web --no-browser
+```
+
+Then open `http://127.0.0.1:8765` yourself (there is no tray icon to tell you it's ready). Other useful flags: `--console` (chat in the terminal, no web UI at all), `--diagnose` (show what's installed and what's missing), `--upgrade-model` (re-measure your machine and pick a better model).
+
+To keep BRAIN running after you close the terminal, use a terminal multiplexer (`tmux`, `screen`) or set it up as a `systemd` user service.
+
+### Option B — Docker / Docker Compose (recommended if you don't already have Ollama)
+
+This starts both Ollama and BRAIN, each in its own container, already wired together:
+
+```bash
+git clone https://github.com/CafeConFenix/BRAIN.git
+cd BRAIN
+docker compose up -d
+```
+
+Then:
+
+```bash
+# Pull a model the first time (only needed once; it's kept in the ollama_data volume)
+docker compose exec ollama ollama pull qwen3:4b
+```
+
+Open `http://localhost:8765` — that's it. `docker compose logs -f brain` shows what BRAIN is doing, `docker compose down` stops it (your data and models stay in their volumes), and `docker compose up -d --build` rebuilds after you pull an update.
+
+What the compose file does, in plain terms:
+- **`ollama`**: runs Ollama itself, with its models stored in the `ollama_data` volume so they survive container rebuilds. If you have an NVIDIA GPU, uncomment the `deploy:` block in `docker-compose.yml` (needs the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) installed on the host) so it runs on the GPU instead of the CPU.
+- **`brain`**: builds BRAIN's image from the included `Dockerfile` and talks to the `ollama` container over Docker's internal network (`BRAIN_OLLAMA_URL=http://ollama:11434`) — no setup needed on your part. Its own data (pantry, chat history, backups…) lives in the `brain_data` volume, and port `8765` is published to your machine so you can open it from a browser.
+
+Home Assistant and Tailscale remote access work the same way as on Windows: open the web UI's Settings panel and connect them from there, no extra container needed.
+
+**What doesn't apply in a container:** the desktop window, tray icon and Windows notifications (there's no desktop to show them on — you'll use the web UI instead), and the microphone (it would need the host's audio devices passed through, which varies a lot by setup; if you need voice, Option A above is simpler).
 
 ---
 

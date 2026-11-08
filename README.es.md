@@ -33,7 +33,53 @@ Guía paso a paso y solución de problemas: [`WINDOWS_GUIDE.md`](docs/es/WINDOWS
 | `CONFIGURAR_ENERGIA.bat` | Elige los sensores del inversor para ver la producción y el consumo en tiempo real |
 | `CONFIGURAR_DOMOTICA.bat` | Conecta BRAIN con Home Assistant para controlar la casa ([guía](docs/es/SMART_HOME_GUIDE.md)) |
 
-En Linux o macOS: `python3 main.py` (web), `python3 main.py --console` o `python3 main.py --diagnose`. Necesita Python 3.9 o superior y [Ollama](https://ollama.com/download) con algún modelo (`ollama pull qwen3:4b`). No hay que instalar ningún paquete de Python.
+---
+
+## 🐧 Instalar en Linux / macOS
+
+El núcleo de BRAIN no tiene dependencias de pip, así que funciona igual en Linux y macOS que en Windows — solo sin la ventana propia, el icono junto al reloj y el instalador de doble clic, que son comodidades exclusivas de Windows.
+
+### Opción A — directamente con Python
+
+```bash
+# 1. Instala Ollama y descarga un modelo (sáltate esto si ya tienes uno)
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull qwen3:4b          # va bien con 8 GB de RAM; mira la tabla de arriba para modelos más grandes
+
+# 2. Arranca BRAIN
+python3 main.py --web --no-browser
+```
+
+Después abre tú mismo `http://127.0.0.1:8765` (no hay icono que te avise de que ya está listo). Otras opciones útiles: `--console` (chatear en la terminal, sin interfaz web), `--diagnose` (ver qué está instalado y qué falla), `--upgrade-model` (medir tu equipo de nuevo y elegir un modelo mejor).
+
+Para que siga funcionando al cerrar la terminal, usa `tmux`/`screen`, o móntalo como servicio de usuario de `systemd`.
+
+### Opción B — Docker / Docker Compose (recomendado si no tienes ya Ollama)
+
+Esto arranca Ollama y BRAIN, cada uno en su propio contenedor, ya conectados entre sí:
+
+```bash
+git clone https://github.com/CafeConFenix/BRAIN.git
+cd BRAIN
+docker compose up -d
+```
+
+Luego:
+
+```bash
+# Descarga un modelo la primera vez (solo hace falta una vez; se queda en el volumen ollama_data)
+docker compose exec ollama ollama pull qwen3:4b
+```
+
+Abre `http://localhost:8765` y ya está. `docker compose logs -f brain` te muestra qué está haciendo BRAIN, `docker compose down` lo para (tus datos y modelos se quedan en sus volúmenes), y `docker compose up -d --build` lo reconstruye cuando actualices el código.
+
+Qué hace el archivo de Docker Compose, explicado sin rodeos:
+- **`ollama`**: ejecuta Ollama, con sus modelos guardados en el volumen `ollama_data` para que sobrevivan a reconstrucciones del contenedor. Si tienes una GPU NVIDIA, descomenta el bloque `deploy:` de `docker-compose.yml` (necesita el [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) instalado en tu máquina) para que use la GPU en vez de la CPU.
+- **`brain`**: construye la imagen de BRAIN con el `Dockerfile` incluido y habla con el contenedor `ollama` por la red interna de Docker (`BRAIN_OLLAMA_URL=http://ollama:11434`) — no tienes que configurar nada para eso. Sus propios datos (despensa, historial de chat, copias de seguridad…) viven en el volumen `brain_data`, y el puerto `8765` queda publicado en tu máquina para que lo abras desde el navegador.
+
+Home Assistant y el acceso remoto con Tailscale funcionan igual que en Windows: se conectan desde el panel de Ajustes de la propia interfaz web, sin necesidad de ningún contenedor extra.
+
+**Lo que no aplica dentro de un contenedor:** la ventana propia, el icono junto al reloj y los avisos nativos de Windows (no hay escritorio donde mostrarlos — usarás la interfaz web en su lugar), y el micrófono (necesitaría pasar los dispositivos de audio del equipo anfitrión, que varía mucho según cómo tengas montado Docker; si necesitas voz, la Opción A de arriba es más sencilla).
 
 ---
 

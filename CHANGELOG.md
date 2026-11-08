@@ -4,6 +4,29 @@ All relevant BRAIN changes are documented in this file.
 
 ---
 
+## [2.1.0] - 2026-11-08
+
+### Added
+
+* **Linux / macOS support via Docker.** A `Dockerfile` and `docker-compose.yml` run BRAIN and Ollama as two containers, wired together with no manual setup (`docker compose up -d`). See the new "Install on Linux / macOS" section in the README.
+* **AI model switcher.** Settings now lists every installed Ollama model, lets you switch between them, and can download and activate a new one in the background with progress feedback — no more being stuck on a slow model with no way to change it from the UI.
+* **Configurable currency.** Expenses and energy amounts can now be shown in any of several world currencies instead of always euros.
+* `BRAIN_HOST` environment variable: the address the web server listens on (default `127.0.0.1`, unchanged for everyone outside Docker). The Docker image sets it to `0.0.0.0` so the published port can actually reach it.
+
+### Fixed
+
+* Several interface strings stayed in Spanish regardless of the selected language: the chat's welcome message, "Main conversation", message suggestions, the next-14-days agenda, and the empty-state messages for weight tracking, pantry and the shopping list.
+* Switching the interface language sometimes needed two clicks to take effect.
+* The home panel showed the untranslated "turn_on"/"turn_off" inside otherwise-Spanish text.
+* `wav_to_audio()` required numpy just to reject invalid audio, which crashed instead of reporting a normal error on any machine without numpy installed (including CI).
+* Removed a leftover `.bat` filename from the remote-access hint text.
+
+### Verified
+
+442 tests passing; clean language scan; CI green on Ubuntu and Windows (Python 3.10 and 3.12).
+
+---
+
 ## [2.0.0] - 2026-11-05
 
 ### Changed
