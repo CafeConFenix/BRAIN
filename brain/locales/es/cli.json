@@ -1,5 +1,6 @@
 {
   "I can't find Ollama on this computer. Run INSTALL.bat (or install it from https://ollama.com/download) and open BRAIN again.": "No encuentro Ollama en este equipo. Ejecuta INSTALAR.bat (o instálalo desde https://ollama.com/download) y vuelve a abrir BRAIN.",
+  "I can't find Ollama on this computer. Install it from https://ollama.com/download and open BRAIN again.": "No encuentro Ollama en este equipo. Instálalo desde https://ollama.com/download y vuelve a abrir BRAIN.",
   "Starting Ollama...": "Iniciando Ollama...",
   "I was not able to start Ollama. Open it from the Start menu and try again.": "No he conseguido arrancar Ollama. Ábrelo desde el menú Inicio y vuelve a intentarlo.",
   "Ollama has no AI model installed. Download it with: ollama pull {0}": "Ollama no tiene ningún modelo de IA instalado. Descárgalo con: ollama pull {0}",

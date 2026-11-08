@@ -32,9 +32,15 @@ def prepare_ai(brain, interactive=True):
 
     if not ollama.active_server():
         if find_executable() is None:
+            if os.name == "nt":
+                return False, t(
+                    "I can't find Ollama on this computer. Run INSTALL.bat "
+                    "(or install it from https://ollama.com/download) and open BRAIN again."
+                )
+
             return False, t(
-                "I can't find Ollama on this computer. Run INSTALL.bat "
-                "(or install it from https://ollama.com/download) and open BRAIN again."
+                "I can't find Ollama on this computer. Install it from "
+                "https://ollama.com/download and open BRAIN again."
             )
 
         if interactive:
